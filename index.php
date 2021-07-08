@@ -17,11 +17,7 @@ $app->addErrorMiddleware(true, true, true);
 
 // Add routes
 $app->get('/', function (Request $request, Response $response) {
-    $response->getBody()->write('
-        <div>
-            Home
-        </div>
-    ');
+    $response->getBody()->write('<div>Home</div>');
     return $response;
 });
 
