@@ -1,11 +1,19 @@
 {
     "name": "webdev00/php-project",
+    "authors": [
+        {
+            "name": "Eric Posas",
+            "email": "ericposas@outlook.com"
+        }
+    ],
     "require": {
         "slim/psr7": "^1.4",
         "nyholm/psr7": "^1.4",
         "nyholm/psr7-server": "^1.0",
         "guzzlehttp/psr7": "^1.4.2",
         "http-interop/http-factory-guzzle": "^1.0",
-        "laminas/laminas-diactoros": "^2.6"
+        "laminas/laminas-diactoros": "^2.6",
+        "slim/slim": "^4.8",
+        "slim/http": "^1.2"
     }
 }

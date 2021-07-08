@@ -1,13 +1,11 @@
 <?php
 
 require 'vendor/autoload.php';
-require_once 'classes/SomeClass.php';
 require_once 'controllers/TestController.php';
 
 // Slim framework 
 use Slim\Factory\AppFactory;
 use Controllers\TestController;
-use classes\SomeClass as MyClass;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

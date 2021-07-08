@@ -1,0 +1,7 @@
+#!/bin/bash
+
+composer require slim/slim:^4.8 slim/http:^1.2 slim/psr7:^1.4
+composer require nyholm/psr7:^1.4 nyholm/psr7-server:^1.0
+composer require guzzlehttp/psr7:^1.4.2 http-interop/http-factory-guzzle:^1.0
+composer require laminas/laminas-diactoros:^2.6
+composer install

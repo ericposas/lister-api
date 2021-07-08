@@ -2,7 +2,6 @@
 
 namespace Controllers;
 
-// use Psr\Container\ContainerInterface;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
