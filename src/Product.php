@@ -20,10 +20,6 @@ class Product
      * @ORM\Column(type="string")
      */
     protected $name;
-    /**
-     * @ORM\Column(type="string")
-     */
-    protected $price;
 
     public function getId()
     {
@@ -38,15 +34,5 @@ class Product
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    public function getPrice()
-    {
-      return $this->price;
-    }
-
-    public function setPrice($price)
-    {
-      $this->price = $price;
     }
 }
