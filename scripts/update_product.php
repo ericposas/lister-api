@@ -1,7 +1,6 @@
 <?php
 // update_product.php <id> <new-name>
-require_once 'bootstrap.php';
-require 'src/Product.php';
+require_once '../bootstrap.php';
 
 $id = $argv[1];
 $newName = $argv[2];

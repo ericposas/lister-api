@@ -1,7 +1,6 @@
 <?php
 // show_product.php <id>
-require_once 'bootstrap.php';
-require 'src/Product.php';
+require_once '../bootstrap.php';
 
 $id = $argv[1];
 $product = $entityManager->find('Product', $id);

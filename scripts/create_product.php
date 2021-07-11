@@ -1,7 +1,6 @@
 <?php
 // create_product.php <name>
-require_once 'bootstrap.php';
-require 'src/Product.php';
+require_once __DIR__.'/../bootstrap.php';
 
 $newProductName = $argv[1]; // argument from command line
 

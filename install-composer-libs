@@ -1,9 +1,10 @@
 #!/bin/bash
 
-composer require slim/slim:^4.8 slim/http:^1.2 slim/psr7:^1.4
-composer require nyholm/psr7:^1.4 nyholm/psr7-server:^1.0
-composer require guzzlehttp/psr7:^1.4.2 http-interop/http-factory-guzzle:^1.0
-composer require laminas/laminas-diactoros:^2.6
-composer require doctrine/orm:^2.9 doctrine/cache:^1.11
-composer require vlucas/phpdotenv:^5.3
+composer require \
+  slim/slim:^4.8 slim/http:^1.2 slim/psr7:^1.4 \
+  nyholm/psr7:^1.4 nyholm/psr7-server:^1.0 \
+  guzzlehttp/psr7:^1.4.2 http-interop/http-factory-guzzle:^1.0 \
+  laminas/laminas-diactoros:^2.6 \
+  doctrine/orm:^2.9 doctrine/cache:^1.11 \
+  vlucas/phpdotenv:^5.3 
 composer install

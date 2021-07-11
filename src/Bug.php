@@ -61,6 +61,11 @@ class Bug
     return $this->id;
   }
 
+  public function close()
+  {
+    $this->status = "CLOSE";
+  }
+
   public function setDescription($description)
   {
     $this->description = $description;
