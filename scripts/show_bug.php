@@ -1,6 +1,6 @@
 <?php
 // show_bug.php <id>
-require_once '../bootstrap.php';
+require_once __DIR__."/../bootstrap.php";
 
 if (empty($argv[1])) {
   echo "You must supply an id to lookup \n";

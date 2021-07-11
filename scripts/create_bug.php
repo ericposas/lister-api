@@ -1,6 +1,6 @@
 <?php
 // create_bug.php <reporter-id> <engineer-id> <product-id>
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__."/../bootstrap.php";
 
 if (empty($argv[1]) || empty($argv[2]) || empty($argv[3])) {
   echo "Please provide reported-id, engineer-id, and product-ids (comma-delimited list)";

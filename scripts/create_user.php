@@ -1,6 +1,6 @@
 <?php
 // create_user.php <name>
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__."/../bootstrap.php";
 
 if (empty($argv[1])) {
   echo "Please provide a name for new User \n";

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for file in $(find ./scripts -type f -name "*.php"); do
+	lineNo="$(cat $file | grep -n "require_once" | cut -c 1)";
+	sed -i '3s/.*/require_once __DIR__."\/..\/bootstrap.php";/' $file;
+done

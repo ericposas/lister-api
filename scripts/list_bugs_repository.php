@@ -1,15 +1,9 @@
 <?php
-// list_bugs.php
+// scripts/list_bugs_repository.php
 require_once __DIR__."/../bootstrap.php";
 
-// $dql = "SELECT b, e, r FROM Bug b JOIN b.engineer e JOIN b.reporter r ORDER BY b.created DESC";
-
-// $query = $entityManager->createQuery($dql);
-// $query->setMaxResults(30);
-// $bugs = $query->getResult();
-
-// above dql seems unecessary bc we can get all via the following..
-$bugs = $entityManager->getRepository('Bug')->findAll();
+// Now using BugRepository extended class with custom DQL logic
+$bugs = $entityManager->getRepository('Bug')->getRecentBugs();
 
 // each bug then grabs its own stored data on hydrate 
 foreach ($bugs as $bug) {

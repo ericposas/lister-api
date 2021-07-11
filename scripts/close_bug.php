@@ -1,6 +1,6 @@
 <?php
 // close_bug.php <bug-id>
-require_once __DIR__.'/../bootstrap.php';
+require_once __DIR__."/../bootstrap.php";
 
 if (empty($argv[1])) {
   echo "You need to provide a bug-id to close out \n\n";

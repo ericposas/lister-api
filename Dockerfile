@@ -18,6 +18,4 @@ COPY ./composer.json .
 EXPOSE 80
 EXPOSE 443
 
-#CMD ["apachectl", "-D", "FOREGROUND"]
 CMD bash -c "./install-composer-libs && apachectl -D FOREGROUND"
-#CMD bash -c "composer install && apachectl -D FOREGROUND"
