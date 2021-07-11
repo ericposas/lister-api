@@ -3,7 +3,7 @@
 require_once __DIR__."/../bootstrap.php";
 
 // Now using BugRepository extended class with custom DQL logic
-$bugs = $entityManager->getRepository('Bug')->getRecentBugs();
+$bugs = $entityManager->getRepository(Bug::class)->getRecentBugs();
 
 // each bug then grabs its own stored data on hydrate 
 foreach ($bugs as $bug) {
