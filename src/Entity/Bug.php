@@ -1,11 +1,13 @@
 <?php
-// src/Bug.php
+// src/Models/Bug.php
+
+namespace PHPapp\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass="BugRepository")
+ * @ORM\Entity(repositoryClass="PHPapp\ExtendedRepositories\BugRepository")
  * @ORM\Table(name="bugs")
  */
 class Bug

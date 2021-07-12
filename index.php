@@ -1,11 +1,13 @@
 <?php
 
+define('CWD', getcwd());
+
 require 'vendor/autoload.php';
-require_once 'controllers/TestController.php';
 
 // Slim framework 
 use Slim\Factory\AppFactory;
-use Controllers\TestController;
+use PHPapp\Controllers\TestController;
+use PHPapp\Controllers\BugController;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -24,6 +26,10 @@ $app->get('/', function (Request $request, Response $response) {
 $app->get('/test', TestController::class . ':get');
 $app->get('/test/[{arg1}]', TestController::class . ':get');
 $app->post('/test/[{arg1}]', TestController::class . ':post');
+
+// Testing some Models 
+$app->get('/bugs', BugController::class . ':get');
+
 
 $app->get('/hello/{name}', function (Request $request, Response $response, $args) {
     $name = $args['name'];

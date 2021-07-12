@@ -21,7 +21,10 @@
     },
     "autoload": {
         "psr-4": {
-            "": "src/"
+            "PHPapp\\": "src/",
+            "PHPapp\\Entity\\": "src/Entity",
+            "PHPapp\\Controllers\\": "src/Controllers",
+            "PHPapp\\ExtendedRepositories\\": "src/extRepositories"
         }
     }
 }

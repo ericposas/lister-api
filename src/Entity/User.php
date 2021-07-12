@@ -1,5 +1,7 @@
 <?php
-// src/User.php
+// src/models/User.php
+
+namespace PHPapp\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;

@@ -1,5 +1,7 @@
 <?php
-// src/Product.php
+// src/models/Product.php
+
+namespace PHPapp\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 

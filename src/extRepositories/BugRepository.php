@@ -1,5 +1,7 @@
 <?php
-// src/BugRepository.php
+// src/models/BugRepository.php
+
+namespace PHPapp\ExtendedRepositories;
 
 use Doctrine\ORM\EntityRepository;
 
