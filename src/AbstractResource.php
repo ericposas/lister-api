@@ -1,4 +1,13 @@
 <?php
+/**
+ * Thanks to: https://busypeoples.github.io/post/slim-doctrine/
+ * Was able to get the EntityManager instance in my Controller 
+ * by extending this super useful AbstractResource Class
+ * 
+ * This was key for combining Slim framework with Doctrine2,
+ * and probably any other non-Symfony framework
+ * 
+ */
 
 namespace PHPapp;
 
