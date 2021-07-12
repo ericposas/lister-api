@@ -1,5 +1,5 @@
 <?php
-// src/models/User.php
+// src/Entity/User.php
 
 namespace PHPapp\Entity;
 

@@ -1,5 +1,6 @@
 <?php
 
+// defined absolute path here for use in other files
 define('CWD', getcwd());
 
 require 'vendor/autoload.php';
@@ -24,12 +25,12 @@ $app->get('/', function (Request $request, Response $response) {
 });
 
 $app->get('/test', TestController::class . ':get');
-$app->get('/test/[{arg1}]', TestController::class . ':get');
+$app->get('/test/{arg1}/{arg2}', TestController::class . ':get');
 $app->post('/test/[{arg1}]', TestController::class . ':post');
 
 // Testing some Models 
 $app->get('/bugs', BugController::class . ':get');
-
+$app->post('/bugs/{reporter_id}/{engineer_id}/{product_ids}', BugController::class . ':post');
 
 $app->get('/hello/{name}', function (Request $request, Response $response, $args) {
     $name = $args['name'];

@@ -34,12 +34,47 @@ class BugController extends AbstractResource
     ]);
   }
   
-  public function post(Request $req, Response $res, array $args)
+  public function post(Request $req, Response $res, array $params)
   {
-    return $res->withJson([
-      'message' => 'a JSON response from the :post method',
-      'params' => $args
-    ], 201);
+
+    if (
+      isset($params) && $params['reporter_id'] &&
+      $params['engineer_id'] && $params['product_ids']) {
+      
+      $em = $this->getEntityManager()->getRepository('PHPapp\Entity\User');
+      
+      $productIds = explode(',', $params['product_ids']);
+      $reporter = $em->findOneBy([ 'id' => $params['reporter_id'] ]);
+      $engineer = $em->findOneBy([ 'id' => $params['engineer_id'] ]);
+      
+      $bug = new Bug();
+      $bug->setReporter($reporter);
+      $bug->setEngineer($engineer);
+      $bug->setDescription("Something does not work!");
+      $bug->setCreated(new \DateTime("now"));
+      $bug->setStatus("OPEN");
+  
+      foreach ($productIds as $productId) {
+        $product = $this->getEntityManager()->getRepository('PHPapp\Entity\Product')->findOneBy([ 'id' => $productId ]);
+        $bug->assignToProduct($product);
+      }
+
+      $em = $this->getEntityManager();
+      $em->persist($bug);
+      $em->flush();
+  
+      return $res->withJson([
+        'success' => true,
+        'message' => "Bug {$bug->getId()} was created by {$bug->getReporter()->getName()}."
+      ], 201);
+
+    } else {
+      return $res->withJson([
+        'success' => false,
+        'message' => 'please provide correct parameters'
+      ], 400);
+    }
+
   }
 
 }

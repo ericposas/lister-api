@@ -1,5 +1,5 @@
 <?php
-// src/Models/Bug.php
+// src/Entity/Bug.php
 
 namespace PHPapp\Entity;
 
@@ -78,7 +78,7 @@ class Bug
     return $this->description;
   }
 
-  public function setCreated(DateTime $created)
+  public function setCreated(\DateTime $created)
   {
     $this->created = $created->format('Y-m-d H:i:s');
   }

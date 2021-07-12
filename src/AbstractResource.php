@@ -11,14 +11,11 @@
 
 namespace PHPapp;
 
-require_once __DIR__.'/../vendor/autoload.php';
-
-
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
 // get env vars
-$denv = \Dotenv\Dotenv::createImmutable(__DIR__.'/..');
+$denv = \Dotenv\Dotenv::createImmutable(CWD);
 $denv->load();
 
 abstract class AbstractResource

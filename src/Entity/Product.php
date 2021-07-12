@@ -1,5 +1,5 @@
 <?php
-// src/models/Product.php
+// src/Entity/Product.php
 
 namespace PHPapp\Entity;
 
