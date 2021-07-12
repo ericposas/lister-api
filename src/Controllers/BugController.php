@@ -41,11 +41,11 @@ class BugController extends AbstractResource
       isset($params) && $params['reporter_id'] &&
       $params['engineer_id'] && $params['product_ids']) {
       
-      $em = $this->getEntityManager()->getRepository('PHPapp\Entity\User');
-      
+      $em = $this->getEntityManager();
+
       $productIds = explode(',', $params['product_ids']);
-      $reporter = $em->findOneBy([ 'id' => $params['reporter_id'] ]);
-      $engineer = $em->findOneBy([ 'id' => $params['engineer_id'] ]);
+      $reporter = $em->find('PHPapp\Entity\User', $params['reporter_id']);
+      $engineer = $em->find('PHPapp\Entity\User', $params['engineer_id']);
       
       $bug = new Bug();
       $bug->setReporter($reporter);
@@ -55,7 +55,7 @@ class BugController extends AbstractResource
       $bug->setStatus("OPEN");
   
       foreach ($productIds as $productId) {
-        $product = $this->getEntityManager()->getRepository('PHPapp\Entity\Product')->findOneBy([ 'id' => $productId ]);
+        $product = $this->getEntityManager()->find('PHPapp\Entity\Product', $productId);
         $bug->assignToProduct($product);
       }
 
