@@ -37,9 +37,13 @@ class BugController extends AbstractResource
   public function post(Request $req, Response $res, array $params)
   {
 
+    $parsedBody = json_decode($req->getBody());
+    $desc = $parsedBody->desc;
+
     if (
       isset($params) && $params['reporter_id'] &&
-      $params['engineer_id'] && $params['product_ids']) {
+      $params['engineer_id'] && $params['product_ids'] &&
+      !empty($desc)) {
       
       $em = $this->getEntityManager();
 
@@ -50,7 +54,7 @@ class BugController extends AbstractResource
       $bug = new Bug();
       $bug->setReporter($reporter);
       $bug->setEngineer($engineer);
-      $bug->setDescription("Something does not work!");
+      $bug->setDescription($desc);
       $bug->setCreated(new \DateTime("now"));
       $bug->setStatus("OPEN");
   

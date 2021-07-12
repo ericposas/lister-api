@@ -18,6 +18,9 @@ $app = AppFactory::create();
 // Add error middleware
 $app->addErrorMiddleware(true, true, true);
 
+// Add body parsing middleware
+// $app->addBodyParsingMiddleware();
+
 // Add routes
 $app->get('/', function (Request $request, Response $response) {
     $response->getBody()->write('<div>Home</div>');
