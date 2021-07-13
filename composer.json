@@ -17,7 +17,8 @@
         "slim/http": "^1.2",
         "doctrine/orm": "^2.9",
         "doctrine/cache": "^1.11",
-        "vlucas/phpdotenv": "^5.3"
+        "vlucas/phpdotenv": "^5.3",
+        "doctrine/migrations": "^3.2"
     },
     "autoload": {
         "psr-4": {

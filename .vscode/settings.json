@@ -1,0 +1,17 @@
+{
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default"
+      },
+      "previewLimit": 50,
+      "server": "db",
+      "port": 3306,
+      "driver": "MySQL",
+      "name": "PHPapp",
+      "database": "PHPapp",
+      "username": "root",
+      "password": "sfjlsdflsdl;fsakdfldsafljdsaf7843957924389532489572834"
+    }
+  ]
+}
