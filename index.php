@@ -7,39 +7,47 @@ require 'vendor/autoload.php';
 
 // Slim framework 
 use Slim\Factory\AppFactory;
-use PHPapp\Controllers\TestController;
+// use PHPapp\Controllers\TestController;
 use PHPapp\Controllers\BugController;
+use PHPapp\Controllers\UserController;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 // Instantiate App
 $app = AppFactory::create();
 
-// Add error middleware
+// Add middleware
 $app->addErrorMiddleware(true, true, true);
+$app->addBodyParsingMiddleware();
 
-// Add body parsing middleware
-// $app->addBodyParsingMiddleware();
+/**
+ * Grocery List Estimator API
+ * @version 1.0.1
+ */
 
-// Add routes
-$app->get('/', function (Request $request, Response $response) {
-    $response->getBody()->write('<div>Home</div>');
-    return $response;
-});
+/**
+ * POST createUser
+ * Summary: createUser
+ * Notes: Creates a new User model
+ * Output-Formats: [application/json]
+ * @param name: string - REQUEST BODY 
+ * @param contact: { email: string, phone: string } - REQUEST BODY 
+ */
+$app->POST('/users', UserController::class . ':post');
 
-$app->get('/test', TestController::class . ':get');
-$app->get('/test/{arg1}/{arg2}', TestController::class . ':get');
-$app->post('/test/[{arg1}]', TestController::class . ':post');
+/**
+ * GET getUser
+ * Summary: getUser
+ * Notes: Find a user by passing in the user&#39;s id 
+ * Output-Formats: [application/json]
+ * @param id: int
+ */
+$app->GET('/users/{id}', UserController::class . ':get');
 
 // Testing some Models 
 $app->get('/bugs', BugController::class . ':get');
 $app->post('/bugs/{reporter_id}/{engineer_id}/{product_ids}', BugController::class . ':post');
 
-$app->get('/hello/{name}', function (Request $request, Response $response, $args) {
-    $name = $args['name'];
-    $response->getBody()->write("Hello, $name");
-    return $response;
-});
 
 $app->run();
 
