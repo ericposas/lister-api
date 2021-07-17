@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
 // get env vars
-$denv = \Dotenv\Dotenv::createImmutable(CWD);
+$denv = \Dotenv\Dotenv::createImmutable(__DIR__.'/..');
 $denv->load();
 
 abstract class AbstractResource

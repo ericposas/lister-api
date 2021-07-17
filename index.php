@@ -1,16 +1,14 @@
 <?php
 
 // defined absolute path here for use in other files
-define('CWD', getcwd());
+// define('CWD', getcwd());
 
 require 'vendor/autoload.php';
 
 // Slim framework 
 use Slim\Factory\AppFactory;
-// use PHPapp\Controllers\TestController;
-use PHPapp\Controllers\BugController;
-use PHPapp\Controllers\UserController;
 use Slim\Http\Response as Response;
+use PHPapp\Controllers\UserController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 // Instantiate App
@@ -27,27 +25,34 @@ $app->addBodyParsingMiddleware();
 
 /**
  * POST createUser
- * Summary: createUser
+ * Summary: create a new User
  * Notes: Creates a new User model
  * Output-Formats: [application/json]
  * @param name: string - REQUEST BODY 
  * @param contact: { email: string, phone: string } - REQUEST BODY 
  */
-$app->POST('/users', UserController::class . ':post');
+$app->POST('/users', UserController::class . ':createUser');
+
+/**
+ * GET getUsers
+ * Summary: gets all Users
+ * Notes: Gets all User models
+ * Output-Formats: [application/json] 
+ */
+$app->GET('/users', UserController::class . ':getUsers');
 
 /**
  * GET getUser
- * Summary: getUser
- * Notes: Find a user by passing in the user&#39;s id 
+ * Summary: get a single User by id
+ * Notes: Find a user by passing in the user's id 
  * Output-Formats: [application/json]
  * @param id: int
  */
-$app->GET('/users/{id}', UserController::class . ':get');
+$app->GET('/users/{id}', UserController::class . ':getSingleUser');
 
 // Testing some Models 
-$app->get('/bugs', BugController::class . ':get');
-$app->post('/bugs/{reporter_id}/{engineer_id}/{product_ids}', BugController::class . ':post');
-
+// $app->get('/bugs', BugController::class . ':get');
+// $app->post('/bugs/{reporter_id}/{engineer_id}/{product_ids}', BugController::class . ':post');
 
 $app->run();
 
