@@ -44,17 +44,23 @@ $app->GET('/users', UserController::class . ':index');
  * @param name: string - REQUEST BODY 
  * @param contact: { email: string, phone: string } - REQUEST BODY 
  */
-$app->POST('/users', UserController::class . ':createUser');
+$app->POST('/users', UserController::class . ':create');
 
 /**
- * PUT createUser
- * Summary: update a User
- * Notes: Updates a user
+ * PUT updateUserContactInfo
+ * Summary: update a User's Contact card
  * Output-Formats: [application/json]
- * @param id: string - URL PARAM
+ * @param id: int- URL PARAM
  * @param contact: { email: string, phone: string } - REQUEST BODY 
  */
 $app->PUT("/users/{id}/contact", UserController::class . ':updateUserContactInfo');
+
+/**
+ * POST createList
+ * Summary: Add a new List object to a User
+ * @param id: int User ID -- URL PARAM
+ */
+$app->POST("/users/{id}/lists", UserController::class . ':createList');
 
 /**
  * GET getUser

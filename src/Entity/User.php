@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -40,9 +42,16 @@ class User
    * @JoinColumn(name="contact_id", referencedColumnName="id")
    */
   protected $contact;
+  
+  /**
+   * @OneToMany(targetEntity="GroceryList", mappedBy="owner", cascade={"persist"}, orphanRemoval=true)
+   * @var GroceryList[] Array of GroceryList objects
+   */
+  protected $lists;
 
   public function __construct()
   {
+      $this->lists = new ArrayCollection();
   }
 
   /**
@@ -91,6 +100,25 @@ class User
   public function setContact($contact)
   {
     $this->contact = $contact;
+    return $this;
+  }
+
+  /**
+   * Get the value of lists
+   */ 
+  public function getLists()
+  {
+    return $this->lists;
+  }
+
+  /**
+   * Set the value of lists
+   *
+   * @return  self
+   */ 
+  public function setLists($lists)
+  {
+    $this->lists = $lists;
     return $this;
   }
 }

@@ -7,6 +7,7 @@
         </data>
         <libraries xmlns="http://www.netbeans.org/ns/cdnjs-libraries/1"/>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>boolean</word>
             <word>nullable</word>
         </spellchecker-wordlist>
     </configuration>

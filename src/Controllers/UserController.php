@@ -21,10 +21,17 @@ class UserController extends AbstractResource
     foreach ($users as $idx => $user)
     {
         $data[$idx]["name"] = $user->getName();
-        $data[$idx]["contact info"] = array(
-            "email" => $user->getContact()->getEmail(),
-            "phone" => $user->getContact()->getPhone()
-        );
+        $contact = $user->getContact();
+        if (isset($contact))
+        {
+            $data[$idx]["contact info"] = array(
+                "email" => $user->getContact()->getEmail(),
+                "phone" => $user->getContact()->getPhone()
+            );
+        } else
+        {
+            $data[$idx]["contact info"] = "not yet set";
+        }
     }
 
     return $res->withJson([
@@ -32,6 +39,8 @@ class UserController extends AbstractResource
       "users" => $data
     ], 201);
   }
+  
+//  public function createList
   
   public function updateUserContactInfo(Request $request, Response $response, array $params)
   {
@@ -43,7 +52,7 @@ class UserController extends AbstractResource
       if ($setInfo === true)
       {
         return $response->withJson([
-            "message" => "updated User {$params->id}",
+            "message" => "updated User {$id}",
             "data changed" => array([
                 "email" => $body->email,
                 "phone" => $body->phone
@@ -51,7 +60,7 @@ class UserController extends AbstractResource
         ]);
       } else {
         return $response->withJson([
-            "message" => "Could not update User {$params->id}",
+            "message" => "Could not update User {$id}",
             "data changed" => "none"
         ]);
       }
@@ -65,19 +74,31 @@ class UserController extends AbstractResource
             $id = $args["id"];
             $repo = $this->getEntityManager()->getRepository(\PHPapp\Entity\User::class);
             $user = $repo->find($id);
+            $contact = $user->getContact();
             
             if (isset($user))
             {
-                return $res->withJson([
-                  'message' => "Retrieved user with id: {$id}",
-                  'user' => array(
-                      "name" => $user->getName(),
-                      "contact info" => array(
-                          "email" => $user->getContact()->getEmail(),
-                          "phone" => $user->getContact()->getPhone()
-                      )
-                   )
-                ], 201);
+                if (isset($contact))
+                {
+                    return $res->withJson([
+                      'message' => "Retrieved user with id: {$id}",
+                      'user' => array(
+                          "name" => $user->getName(),
+                          "contact info" => array(
+                              "email" => $user->getContact()->getEmail(),
+                              "phone" => $user->getContact()->getPhone()
+                          )
+                       )
+                    ], 201);
+                } else {
+                    return $res->withJson([
+                      'message' => "Retrieved user with id: {$id}",
+                      'user' => array(
+                          "name" => $user->getName(),
+                          "contact info" => "not set"
+                       )
+                    ], 201);
+                }
             } else
             {
                 return $res->withJson(array(
@@ -93,21 +114,24 @@ class UserController extends AbstractResource
         }
   }
 
-  public function createUser(Request $req, Response $res)
+  public function create(Request $req, Response $res)
   {
     $body = json_decode($req->getBody());
     $name = $body->name;
-    $contact = $body->contact;
     
     $em = $this->getEntityManager();
     $newUser = new User();
-    $newContact = new Contact();
-    $newContact->setEmail($contact->email);
-    $newContact->setPhone($contact->phone);
-//    $newContact->setUser($newUser);
-    $em->persist($newContact);
     $newUser->setName($name);
-    $newUser->setContact($newContact);
+    // if request body includes contact info
+    if (isset($body->contact))
+    {
+        $contact = $body->contact;
+        $newContact = new Contact();
+        $newContact->setEmail($contact->email);
+        $newContact->setPhone($contact->phone);
+        $em->persist($newContact);
+        $newUser->setContact($newContact);
+    }
     $em->persist($newUser);
     $em->flush();
 
