@@ -41,17 +41,18 @@ class UserController extends AbstractResource
   
   public function updateUserContactInfo(Request $request, Response $response, array $params)
   {
-      $em = $this->getEntityManager();
+//      $em = $this->getEntityManager();
       $id = $params["id"];
       $body = json_decode($request->getBody());
       $repo = $this->getEntityManager()->getRepository(User::class);
-      $contact = $repo->getUserContactInfo($id);
+      $repo->setUserContactInfo($id, $body);
+//      $contact = $repo->getUserContactInfo($id);
               
       if (isset($body->email) && isset($body->phone))
       {
-        $contact->setEmail($body->email);
-        $contact->setPhone($body->phone);
-        $em->flush();
+//        $contact->setEmail($body->email);
+//        $contact->setPhone($body->phone);
+//        $em->flush();
         return $response->withJson([
             "message" => "updated User {$params->id}",
             "data changed" => array([

@@ -14,7 +14,14 @@ class UserRepository extends EntityRepository
       $user = $repo->find($id);
       $existingContactInfo = $user->getContact();
       return $existingContactInfo;
-//      $contactInfo = json_decode($request->getBody());
-//      return $user = $em->find("PHPapp\Entity\User", $id);
+    }
+    
+    public function setUserContactInfo(int $id, $responseBody)
+    {
+        $contact = $this->getUserContactInfo($id);
+        $contact->setEmail($responseBody->email);
+        $contact->setPhone($responseBody->phone);
+        $this->getEntityManager()->flush();
+        return $contact;
     }
 }
