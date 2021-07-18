@@ -1,27 +1,23 @@
 <?php
-// src/models/BugRepository.php
 
-namespace PHPapp\ExtendedRepositories;
-
-use Doctrine\ORM\EntityRepository;
-
-class UserRepository extends EntityRepository
+class UserRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function getUserContactInfo(int $id)
+    
+    public function setContactDetails($body)
     {
-      $em = $this->getEntityManager();
-      $repo = $em->getRepository(\PHPapp\Entity\User::class);
-      $user = $repo->find($id);
-      $existingContactInfo = $user->getContact();
-      return $existingContactInfo;
+        // check if body data
+        if (isset($body->email) && isset($body->phone)) {
+            $contact = new Contact();
+            $contact->setUser($user);
+            $contact->setEmail($body->email);
+            $contact->setPhone($body->phone);
+            $em->persist($contact);    
+            $data["email set"] = true;
+            $data["phone set"] = true;
+        }
+        
+        return $contact;
+        
     }
     
-    public function setUserContactInfo(int $id, $responseBody)
-    {
-        $contact = $this->getUserContactInfo($id);
-        $contact->setEmail($responseBody->email);
-        $contact->setPhone($responseBody->phone);
-        $this->getEntityManager()->flush();
-        return $contact;
-    }
 }

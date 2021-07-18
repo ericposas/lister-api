@@ -14,8 +14,8 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity
- * @Table(name="contact")
+ * @Entity(repositoryClass="\PHPapp\ExtendedRepositories\ContactRepository")
+ * @Table(name="contacts")
  */
 class Contact {
 
@@ -33,8 +33,14 @@ class Contact {
     
     /**
      * @Column(type="string", length=32, unique=true, nullable=false)
+     * @JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $email;
+    
+    /**
+     * @OneToOne(targetEntity="User")
+     */
+    protected $user;
 
     /**
      * Get the value of id
@@ -82,4 +88,23 @@ class Contact {
         return $this;
     }
 
+
+    /**
+     * Get the value of user
+     */ 
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set the value of user
+     *
+     * @return  self
+     */ 
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
+    }
 }

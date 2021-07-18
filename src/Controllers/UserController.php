@@ -11,96 +11,76 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class UserController extends AbstractResource
 {
-
-  public function getUsers(Request $req, Response $res)
-  {
-    $qb = $this->getEntityManager()->createQueryBuilder();
-    $users = $qb->select("u", "c")
-            ->from("PHPapp\Entity\User", "u")
-            ->join("u.contact", "c")
-            ->orderBy("u.id", "ASC")
-            ->getQuery()
-            ->getArrayResult();
-    
-    foreach ($users as $key => $user)
+    public function index(Request $request, Response $response)
     {
-        $usersArr[$key] = array([
-            'name' => $user["name"],
-            'contact info' => array([
-                'email' => $user["contact"]["email"],
-                'phone' => $user["contact"]["phone"]
-            ])
+        $results = $this->getEntityManager()->createQueryBuilder()
+                ->select("u", "c")
+                ->from("PHPapp\Entity\Contact", "c")
+                ->join("c.user", "u")
+                ->getQuery()
+                ->getArrayResult();
+        
+        // return users with more info
+        $data = array();
+        foreach ($results as $idx => $result)
+        {
+            // flatten our data into simple json object 
+            $data[$idx]["name"] = $result["user"]["name"];
+            $data[$idx]["email"] = $result["email"];
+            $data[$idx]["phone"] = $result["phone"];
+        }
+        
+        return $response->withJson([
+            "users" => $data
         ]);
     }
-
-    return $res->withJson([
-      "message" => "retrieved list of all Users",
-      "users" => $usersArr
-    ], 201);
-  }
-  
-  public function updateUserContactInfo(Request $request, Response $response, array $params)
-  {
-//      $em = $this->getEntityManager();
-      $id = $params["id"];
-      $body = json_decode($request->getBody());
-      $repo = $this->getEntityManager()->getRepository(User::class);
-      $repo->setUserContactInfo($id, $body);
-//      $contact = $repo->getUserContactInfo($id);
-              
-      if (isset($body->email) && isset($body->phone))
-      {
-//        $contact->setEmail($body->email);
-//        $contact->setPhone($body->phone);
-//        $em->flush();
-        return $response->withJson([
-            "message" => "updated User {$params->id}",
-            "data changed" => array([
-                "email" => $body->email,
-                "phone" => $body->phone
-            ])
-        ]);
-      } else {
-        return $response->withJson([
-            "message" => "Could not update User {$params->id}",
-            "data changed" => "none"
-        ]);
-      }
-      
-  }
     
-  public function getSingleUser(Request $req, Response $res, array $args)
-  {
-    return $res->withJson([
-      'message' => 'a JSON response from the :get method',
-      'params' => $args
-    ], 201);
-  }
+    public function create(Request $request, Response $response)
+    {
+        $body = json_decode($request->getBody());
+        if (isset($body->name))
+        {
+            $em = $this->getEntityManager();
+            $repo = $em->getRepository(\PHPapp\Entity\User::class);
+            $user = new User();
+            $user->setName($body->name);
+            $em->persist($user);
+            
+            $data = array();
+            $data["name set"] = true;
 
-  public function createUser(Request $req, Response $res)
-  {
-    $body = json_decode($req->getBody());
-    $name = $body->name;
-    $contact = $body->contact;
+            $em->flush();
+
+            return $response->withJson([
+                "message" => "New user created.",
+                "info" => $data
+            ]);
+        } else {
+            return $response->withJson([
+                "message" => "Could not create a new User."
+            ]);
+        }
+        
+    }
     
-    $em = $this->getEntityManager();
-    $newUser = new User();
-    $newContact = new Contact();
-    $newContact->setEmail($contact->email);
-    $newContact->setPhone($contact->phone);
-//    $newContact->setUser($newUser);
-    $em->persist($newContact);
-    $newUser->setName($name);
-    $newUser->setContact($newContact);
-    $em->persist($newUser);
-    $em->flush();
-
-    return $res->withJson([
-      'message' => "Created a new User {$contact->name}",
-      'name' => $name,
-      'email' => $contact->email,
-      'phone' => $contact->phone,
-    ], 201);
-  }
-
+    public function show(Request $request, Response $response, array $params)
+    {
+        $id = $params["id"];
+        $results = $this->getEntityManager()->createQueryBuilder()
+                ->select("u", "c")
+                ->from("PHPapp\Entity\Contact", "c")
+                ->join("c.user", "u")
+                ->where("u.id = {$id}")
+                ->getQuery()
+                ->getArrayResult();
+        
+        return $response->withJson([
+            "user" => array(
+                "name" => $results[0]["user"]["name"],
+                "email" => $results[0]["email"],
+                "phone" => $results[0]["phone"],
+            )
+        ]);
+    }
+    
 }

@@ -9,6 +9,7 @@ require 'vendor/autoload.php';
 use Slim\Factory\AppFactory;
 use Slim\Http\Response as Response;
 use PHPapp\Controllers\UserController;
+use PHPapp\Controllers\ContactController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 // Instantiate App
@@ -24,6 +25,14 @@ $app->addBodyParsingMiddleware();
  */
 
 /**
+ * GET getUsers
+ * Summary: gets all Users
+ * Notes: Gets all User models
+ * Output-Formats: [application/json] 
+ */
+$app->GET('/users', UserController::class . ':index');
+
+/**
  * POST createUser
  * Summary: create a new User
  * Notes: Creates a new User model
@@ -31,25 +40,7 @@ $app->addBodyParsingMiddleware();
  * @param name: string - REQUEST BODY 
  * @param contact: { email: string, phone: string } - REQUEST BODY 
  */
-$app->POST('/users', UserController::class . ':createUser');
-
-/**
- * PUT createUser
- * Summary: update a User
- * Notes: Updates a user
- * Output-Formats: [application/json]
- * @param id: string - URL PARAM
- * @param contact: { email: string, phone: string } - REQUEST BODY 
- */
-$app->PUT("/users/{id}/contact", UserController::class . ':updateUserContactInfo');
-
-/**
- * GET getUsers
- * Summary: gets all Users
- * Notes: Gets all User models
- * Output-Formats: [application/json] 
- */
-$app->GET('/users', UserController::class . ':getUsers');
+$app->POST('/users', UserController::class . ':create');
 
 /**
  * GET getUser
@@ -58,11 +49,24 @@ $app->GET('/users', UserController::class . ':getUsers');
  * Output-Formats: [application/json]
  * @param id: int
  */
-$app->GET('/users/{id}', UserController::class . ':getSingleUser');
+$app->GET('/users/{id}', UserController::class . ':show');
 
-// Testing some Models 
-// $app->get('/bugs', BugController::class . ':get');
-// $app->post('/bugs/{reporter_id}/{engineer_id}/{product_ids}', BugController::class . ':post');
+/**
+ * GET
+ * Summary: Get all Contact objects
+ * Output-Formats: [application/json]
+ * @param id: string - URL PARAM
+ */
+$app->GET("/contacts", ContactController::class . ':index');
+
+/**
+ * GET
+ * Summary: Get contact info for a User
+ * Output-Formats: [application/json]
+ * @param id: string - URL PARAM
+ */
+$app->GET("/contacts/{id}", ContactController::class . ':show');
+
 
 $app->run();
 

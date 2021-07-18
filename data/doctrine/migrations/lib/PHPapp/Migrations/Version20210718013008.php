@@ -26,6 +26,7 @@ final class Version20210718013008 extends AbstractMigration
                 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
                 DROP TABLE IF EXISTS `example_table`;
+                DROP TABLE IF EXISTS `lists`;
                 
                 DROP TABLE IF EXISTS `users`;
                 CREATE TABLE `users` (
@@ -37,6 +38,7 @@ final class Version20210718013008 extends AbstractMigration
                   CONSTRAINT `FK_1483A5E9E7A1254A` FOREIGN KEY (`contact_id`) REFERENCES `contact` (`id`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
+                DROP TABLE IF EXISTS `contacts`;
                 DROP TABLE IF EXISTS `contact`;
                 CREATE TABLE `contact` (
                   `id` int NOT NULL AUTO_INCREMENT,
@@ -52,8 +54,10 @@ final class Version20210718013008 extends AbstractMigration
     public function down(Schema $schema): void
     {
         $sql = <<< SQL
+                DROP TABLE IF EXISTS `lists`;
                 DROP TABLE IF EXISTS `users`;
                 DROP TABLE IF EXISTS `contact`;
+                DROP TABLE IF EXISTS `contacts`;
                 DROP TABLE IF EXISTS `example_table`;
                 SQL;
         $this->addSql($sql);

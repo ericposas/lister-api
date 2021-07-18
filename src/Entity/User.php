@@ -3,20 +3,18 @@
 
 namespace PHPapp\Entity;
 
-use PHPapp\Entity\Share;
-use PHPapp\Entity\Contact;
 use Doctrine\ORM\Mapping\Id;
-use PHPapp\Entity\GroceryList;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity(repositoryClass="PHPapp\ExtendedRepositories\UserRepository")
+ * @Entity
  * @Table(name="users")
  */
 class User
@@ -34,15 +32,17 @@ class User
    * @var string
    */
   protected $name;
-
+  
   /**
-   * @OneToOne(targetEntity="Contact", mappedBy="user")
-   * @JoinColumn(name="contact_id", referencedColumnName="id")
+   * 
+   * @OneToMany(targetEntity="GroceryList", mappedBy="owner", cascade={"persist"}, orphanRemoval=true)
+   * @var GroceryList[] ArrayCollection of List objects
    */
-  protected $contact;
+  protected $lists;
 
   public function __construct()
   {
+      $this->lists = new ArrayCollection();
   }
 
   /**
@@ -74,23 +74,26 @@ class User
     return $this;
   }
 
-
   /**
-   * Get the value of contact
+   * Get arrayCollection of List objects
+   *
+   * @return  GroceryList[]
    */ 
-  public function getContact()
+  public function getLists()
   {
-    return $this->contact;
+    return $this->lists;
   }
 
   /**
-   * Set the value of contact
+   * Set arrayCollection of List objects
+   *
+   * @param  GroceryList[]  $lists  ArrayCollection of List objects
    *
    * @return  self
    */ 
-  public function setContact($contact)
+  public function setLists($lists)
   {
-    $this->contact = $contact;
+    $this->lists = $lists;
     return $this;
   }
 }
