@@ -118,6 +118,7 @@ class User
    */ 
   public function setLists($lists)
   {
+    $lists->setOwner($this);
     $this->lists[] = $lists;
     return $this;
   }

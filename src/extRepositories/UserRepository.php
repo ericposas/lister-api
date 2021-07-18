@@ -9,10 +9,71 @@ use Doctrine\ORM\EntityRepository;
 class UserRepository extends EntityRepository
 {
     /**
+     * @param $lists Users array of GenericList -- NULL or ARRAY
+     * @return $listData string | array 
+     */
+    public function getUserListsData($lists, $user)
+    {
+        if (isset($lists) && count($lists) > 0)
+        {   
+            $listsData = array();
+            foreach ($lists as $listIdx => $list)
+            {
+                $items = $list->getItems();
+                $listItems = array();
+                if (isset($items))
+                {
+                    foreach ($items as $idx => $item)
+                    {
+                        $meta = $item->getMeta();
+                        $icon = $item->getIcon();
+                        if (isset($meta) && isset($icon))
+                        {
+                            $listItems[] = array(
+                                "name" => $item->getName(),
+                                "meta" => $meta,
+                                "icon" => $icon
+                            );
+                        } else
+                        {
+                            $listItems[] = array("name" => $item->getName());
+                        }
+                    }
+                }
+                $listsData[]["list"] = array(
+                    "name" => $list->getName(),
+                    "items" => $listItems
+                );
+            }
+        } else
+        {
+            $listsData[]["list"] = "User {$user->getName()} has no lists.";
+        }
+        return $listsData;
+    }
+    
+    public function getUserContactData($contact, $user)
+    {
+        if (isset($contact))
+        {
+            $contactData = array(
+                "email" => $contact->getEmail(),
+                "phone" => $contact->getPhone()
+            );
+        } else
+        {
+            $contactData = "not yet set by User {$user->getName()}";
+        }
+        return $contactData;
+    }
+
+
+    /**
      * @param $id (User id)
      * @return array("user" => User, "contact" => Contact)
      */
-    public function getUserContactInfo(int $id)
+    // Local method setUserContactInfo() uses this method
+    public function getUserContact(int $id)
     {
       $em = $this->getEntityManager();
       $repo = $em->getRepository(\PHPapp\Entity\User::class);
@@ -40,7 +101,7 @@ class UserRepository extends EntityRepository
         if (isset($responseBody->email) && isset($responseBody->phone))
         {
             // array contains instance of User and Contact returned from the getUserContactInfo method
-            (array)$contactUser = $this->getUserContactInfo($id);
+            (array)$contactUser = $this->getUserContact($id);
             $contact = $contactUser["contact"];
             $user = $contactUser["user"];
             $contact->setEmail($responseBody->email);

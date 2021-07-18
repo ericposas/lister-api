@@ -15,23 +15,34 @@ class UserController extends AbstractResource
 
   public function index(Request $req, Response $res)
   {
-    $em = $this->getEntityManager()->getRepository(\PHPapp\Entity\User::class);
-    $users = $em->findAll();
+    $em = $this->getEntityManager();
+    $repo = $em->getRepository(\PHPapp\Entity\User::class);
+    $users = $repo->findAll();
     
     $data = array();
-    foreach ($users as $idx => $user)
+    if (isset($users))
     {
-        $data[$idx]["name"] = $user->getName();
-        $contact = $user->getContact();
-        if (isset($contact))
+        foreach ($users as $idx => $user)
         {
-            $data[$idx]["contact info"] = array(
-                "email" => $user->getContact()->getEmail(),
-                "phone" => $user->getContact()->getPhone()
-            );
-        } else
-        {
-            $data[$idx]["contact info"] = "not yet set";
+            $data[$idx]["name"] = $user->getName();
+            $contact = $user->getContact();
+            $lists = $user->getLists();
+
+            if (isset($contact))
+            {
+                $data[$idx]["contact info"] = $repo->getUserContactData($contact, $user);
+            } else
+            {
+                $data[$idx]["contact info"] = "User {$user->getName()} has not yet set any Contact info";
+            }
+
+            if (isset($lists))
+            {
+                $data[$idx]["lists"] = $repo->getUserListsData($lists, $user);
+            } else
+            {
+                $data[$idx]["lists"] = "User {$user->getName()} has not yet saved any lists";
+            }
         }
     }
 
@@ -54,7 +65,6 @@ class UserController extends AbstractResource
 
             $list = new GenericList();
             $list->setName($body->name);
-            $list->setOwner($user);
             $user->setLists($list);
             $em->persist($list);
             $em->flush();
@@ -95,7 +105,11 @@ class UserController extends AbstractResource
       }
       
   }
-    
+  
+  /**
+   * @return { user, contact info, lists }
+   * @param $id -- URL PARAM
+   */
   public function show(Request $req, Response $res, array $args)
   {
         if (isset($args["id"]))
@@ -104,25 +118,20 @@ class UserController extends AbstractResource
             $repo = $this->getEntityManager()->getRepository(\PHPapp\Entity\User::class);
             $user = $repo->find($id);
             $contact = $user->getContact();
+            $lists = $user->getLists();
             
             if (isset($user))
             {
-                if (isset($contact))
-                {
-                    $contactData = array(
-                        "email" => $user->getContact()->getEmail(),
-                        "phone" => $user->getContact()->getPhone()
-                    );
-                } else
-                {
-                    $contactData = "not yet set by User {$user->getName()}";
-                }
+                $contactData = $repo->getUserContactData($contact, $user);
+                $listsData = $repo->getUserListsData($lists, $user);
+                
                 return $res->withJson([
-                  'message' => "Retrieved user with id: {$id}",
-                  'user' => array(
-                      "name" => $user->getName(),
-                      "contact info" => $contactData
-                   )
+                    "message" => "Retrieved user with id: {$id}",
+                    "user" => array(
+                        "name" => $user->getName(),
+                        "contact info" => $contactData,
+                        "lists" => $listsData
+                     ),
                 ], 201);
             } else
             {

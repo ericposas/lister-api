@@ -9,6 +9,7 @@ require 'vendor/autoload.php';
 use Slim\Factory\AppFactory;
 use Slim\Http\Response as Response;
 use PHPapp\Controllers\UserController;
+use PHPapp\Controllers\ListsController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 // Instantiate App
@@ -27,6 +28,12 @@ $app->GET('/', function(Request $request, Response $response)
 {
     return $response->write("<div>Nothin</div>");
 });
+
+///////////////////////////////////////////////////////
+//
+// USERS
+//
+///////////////////////////////////////////////////////
 
 /**
  * GET getUsers
@@ -71,6 +78,14 @@ $app->POST("/users/{id}/lists", UserController::class . ':createList');
  */
 $app->GET('/users/{id}', UserController::class . ':show');
 
+
+///////////////////////////////////////////////////////
+//
+// LISTS
+//
+///////////////////////////////////////////////////////
+
+$app->POST('/lists/{id}/item', ListsController::class . ':create');
 
 $app->run();
 

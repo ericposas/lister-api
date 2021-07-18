@@ -2,15 +2,17 @@
 
 namespace PHPapp\Entity;
 
+use PHPapp\Entity\Item;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\GeneratedValue;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="PHPapp\ExtendedRepositories\ListRepository")
  * @Table(name="lists")
  */
 class GenericList
@@ -26,11 +28,22 @@ class GenericList
      * @Column(type="string", length=32, unique=true, nullable=false)
      */
     protected $name;
+    
+    /**
+     * @OneToMany(targetEntity="Item", mappedBy="owning_list", cascade={"persist"}, orphanRemoval=true)
+     * @var Item[]
+     */
+    protected $items;
 
     /**
      * @ManyToOne(targetEntity="User", cascade={"all"}, fetch="LAZY")
      */
     protected $owner;
+    
+    public function __construct()
+    {
+        $this->items = new ArrayCollection();
+    }
 
     /**
      * Get the value of id
@@ -75,6 +88,30 @@ class GenericList
     public function setOwner($owner)
     {
         $this->owner = $owner;
+        return $this;
+    }
+
+    /**
+     * Get the value of items
+     *
+     * @return  Item[]
+     */ 
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * Set the value of items
+     *
+     * @param  Item[]  $items
+     *
+     * @return  self
+     */ 
+    public function setItem(Item $item)
+    {
+        $item->setOwningList($this);
+        $this->items[] = $item;
         return $this;
     }
 }
