@@ -14,45 +14,60 @@ class UserController extends AbstractResource
 
   public function getUsers(Request $req, Response $res)
   {
-    $em = $this->getEntityManager();
-    $repo = $em->getRepository(User::class);
-//    $qb = $this->getEntityManager()->createQueryBuilder();
-//    $qb->select('u')
-//            ->from("User", "u")
-//            ->getQuery()
-//            ->getResult();
-    $users = $repo->findAll();
-    
-//    $em = $this->getEntityManager();
-//    $repo = $em->getRepository(User::class);
-//    $users = $repo->findAll();
-//    $usersArr = array();
-      
-//      $qb = $this->getEntityManager()->createQueryBuilder();
-//      $users = $qb->select("u")
-//              ->from("PHPapp\Entity\User", "u")
-//              ->join("PHPapp\Entity\Contact", "c")
-//              ->getQuery()
-//              ->getResult();
+    $qb = $this->getEntityManager()->createQueryBuilder();
+    $users = $qb->select("u", "c")
+            ->from("PHPapp\Entity\User", "u")
+            ->join("u.contact", "c")
+            ->orderBy("u.id", "ASC")
+            ->getQuery()
+            ->getArrayResult();
     
     foreach ($users as $key => $user)
     {
-        $contact = $user->getContact();
         $usersArr[$key] = array([
-            'name' => $user->getName(),
+            'name' => $user["name"],
             'contact info' => array([
-                'email' => $contact->getEmail(),
-                'phone' => $contact->getPhone()
+                'email' => $user["contact"]["email"],
+                'phone' => $user["contact"]["phone"]
             ])
         ]);
     }
 
     return $res->withJson([
-      'message' => 'a JSON response from the :get method',
-      'users' => $usersArr
+      "message" => "retrieved list of all Users",
+      "users" => $usersArr
     ], 201);
   }
   
+  public function updateUserContactInfo(Request $request, Response $response, array $params)
+  {
+      $em = $this->getEntityManager();
+      $id = $params["id"];
+      $body = json_decode($request->getBody());
+      $repo = $this->getEntityManager()->getRepository(User::class);
+      $contact = $repo->getUserContactInfo($id);
+              
+      if (isset($body->email) && isset($body->phone))
+      {
+        $contact->setEmail($body->email);
+        $contact->setPhone($body->phone);
+        $em->flush();
+        return $response->withJson([
+            "message" => "updated User {$params->id}",
+            "data changed" => array([
+                "email" => $body->email,
+                "phone" => $body->phone
+            ])
+        ]);
+      } else {
+        return $response->withJson([
+            "message" => "Could not update User {$params->id}",
+            "data changed" => "none"
+        ]);
+      }
+      
+  }
+    
   public function getSingleUser(Request $req, Response $res, array $args)
   {
     return $res->withJson([
@@ -61,7 +76,7 @@ class UserController extends AbstractResource
     ], 201);
   }
 
-  public function createUser(Request $req, Response $res, array $args)
+  public function createUser(Request $req, Response $res)
   {
     $body = json_decode($req->getBody());
     $name = $body->name;

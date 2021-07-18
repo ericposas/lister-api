@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="PHPapp\ExtendedRepositories\UserRepository")
  * @Table(name="users")
  */
 class User

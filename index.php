@@ -34,6 +34,16 @@ $app->addBodyParsingMiddleware();
 $app->POST('/users', UserController::class . ':createUser');
 
 /**
+ * PUT createUser
+ * Summary: update a User
+ * Notes: Updates a user
+ * Output-Formats: [application/json]
+ * @param id: string - URL PARAM
+ * @param contact: { email: string, phone: string } - REQUEST BODY 
+ */
+$app->PUT("/users/{id}/contact", UserController::class . ':updateUserContactInfo');
+
+/**
  * GET getUsers
  * Summary: gets all Users
  * Notes: Gets all User models
