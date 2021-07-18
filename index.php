@@ -23,6 +23,19 @@ $app->addBodyParsingMiddleware();
  * @version 1.0.1
  */
 
+$app->GET('/', function(Request $request, Response $response)
+{
+    return $response->write("<div>Nothin</div>");
+});
+
+/**
+ * GET getUsers
+ * Summary: gets all Users
+ * Notes: Gets all User models
+ * Output-Formats: [application/json] 
+ */
+$app->GET('/users', UserController::class . ':index');
+
 /**
  * POST createUser
  * Summary: create a new User
@@ -44,25 +57,14 @@ $app->POST('/users', UserController::class . ':createUser');
 $app->PUT("/users/{id}/contact", UserController::class . ':updateUserContactInfo');
 
 /**
- * GET getUsers
- * Summary: gets all Users
- * Notes: Gets all User models
- * Output-Formats: [application/json] 
- */
-$app->GET('/users', UserController::class . ':getUsers');
-
-/**
  * GET getUser
  * Summary: get a single User by id
  * Notes: Find a user by passing in the user's id 
  * Output-Formats: [application/json]
  * @param id: int
  */
-$app->GET('/users/{id}', UserController::class . ':getSingleUser');
+$app->GET('/users/{id}', UserController::class . ':show');
 
-// Testing some Models 
-// $app->get('/bugs', BugController::class . ':get');
-// $app->post('/bugs/{reporter_id}/{engineer_id}/{product_ids}', BugController::class . ':post');
 
 $app->run();
 

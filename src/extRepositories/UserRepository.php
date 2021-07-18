@@ -18,10 +18,15 @@ class UserRepository extends EntityRepository
     
     public function setUserContactInfo(int $id, $responseBody)
     {
-        $contact = $this->getUserContactInfo($id);
-        $contact->setEmail($responseBody->email);
-        $contact->setPhone($responseBody->phone);
-        $this->getEntityManager()->flush();
-        return $contact;
+        if (isset($body->email) && isset($body->phone))
+        {
+            $contact = $this->getUserContactInfo($id);
+            $contact->setEmail($responseBody->email);
+            $contact->setPhone($responseBody->phone);
+            $this->getEntityManager()->flush();
+            return true;
+        } else {
+            return false;
+        }
     }
 }

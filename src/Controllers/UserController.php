@@ -12,47 +12,36 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class UserController extends AbstractResource
 {
 
-  public function getUsers(Request $req, Response $res)
+  public function index(Request $req, Response $res)
   {
-    $qb = $this->getEntityManager()->createQueryBuilder();
-    $users = $qb->select("u", "c")
-            ->from("PHPapp\Entity\User", "u")
-            ->join("u.contact", "c")
-            ->orderBy("u.id", "ASC")
-            ->getQuery()
-            ->getArrayResult();
+    $em = $this->getEntityManager()->getRepository(\PHPapp\Entity\User::class);
+    $users = $em->findAll();
     
-    foreach ($users as $key => $user)
+    $data = array();
+    foreach ($users as $idx => $user)
     {
-        $usersArr[$key] = array([
-            'name' => $user["name"],
-            'contact info' => array([
-                'email' => $user["contact"]["email"],
-                'phone' => $user["contact"]["phone"]
-            ])
-        ]);
+        $data[$idx]["name"] = $user->getName();
+        $data[$idx]["contact info"] = array(
+            "email" => $user->getContact()->getEmail(),
+            "phone" => $user->getContact()->getPhone()
+        );
     }
 
     return $res->withJson([
       "message" => "retrieved list of all Users",
-      "users" => $usersArr
+      "users" => $data
     ], 201);
   }
   
   public function updateUserContactInfo(Request $request, Response $response, array $params)
   {
-//      $em = $this->getEntityManager();
       $id = $params["id"];
       $body = json_decode($request->getBody());
       $repo = $this->getEntityManager()->getRepository(User::class);
-      $repo->setUserContactInfo($id, $body);
-//      $contact = $repo->getUserContactInfo($id);
+      $setInfo = $repo->setUserContactInfo($id, $body);
               
-      if (isset($body->email) && isset($body->phone))
+      if ($setInfo === true)
       {
-//        $contact->setEmail($body->email);
-//        $contact->setPhone($body->phone);
-//        $em->flush();
         return $response->withJson([
             "message" => "updated User {$params->id}",
             "data changed" => array([
@@ -69,12 +58,39 @@ class UserController extends AbstractResource
       
   }
     
-  public function getSingleUser(Request $req, Response $res, array $args)
+  public function show(Request $req, Response $res, array $args)
   {
-    return $res->withJson([
-      'message' => 'a JSON response from the :get method',
-      'params' => $args
-    ], 201);
+        if (isset($args["id"]))
+        {
+            $id = $args["id"];
+            $repo = $this->getEntityManager()->getRepository(\PHPapp\Entity\User::class);
+            $user = $repo->find($id);
+            
+            if (isset($user))
+            {
+                return $res->withJson([
+                  'message' => "Retrieved user with id: {$id}",
+                  'user' => array(
+                      "name" => $user->getName(),
+                      "contact info" => array(
+                          "email" => $user->getContact()->getEmail(),
+                          "phone" => $user->getContact()->getPhone()
+                      )
+                   )
+                ], 201);
+            } else
+            {
+                return $res->withJson(array(
+                    "message" => "Could not retrieve user with id: {$id}"
+                ));
+            }
+
+        } else
+        {
+            return $res->withJson(array(
+                "message" => "No id parameter provided in route"
+            ));
+        }
   }
 
   public function createUser(Request $req, Response $res)
