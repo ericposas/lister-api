@@ -6,7 +6,7 @@ namespace PHPapp\Entity;
 use PHPapp\Entity\Share;
 use PHPapp\Entity\Contact;
 use Doctrine\ORM\Mapping\Id;
-use PHPapp\Entity\GroceryList;
+use PHPapp\Entity\GenericList;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -44,8 +44,8 @@ class User
   protected $contact;
   
   /**
-   * @OneToMany(targetEntity="GroceryList", mappedBy="owner", cascade={"persist"}, orphanRemoval=true)
-   * @var GroceryList[] Array of GroceryList objects
+   * @OneToMany(targetEntity="GenericList", mappedBy="owner", cascade={"persist"}, orphanRemoval=true)
+   * @var GenericList[] Array of GenericList objects
    */
   protected $lists;
 
@@ -118,7 +118,7 @@ class User
    */ 
   public function setLists($lists)
   {
-    $this->lists = $lists;
+    $this->lists[] = $lists;
     return $this;
   }
 }

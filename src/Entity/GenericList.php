@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
  * @Entity
  * @Table(name="lists")
  */
-class GroceryList
+class GenericList
 {
     /**
      * @Id

@@ -6,6 +6,7 @@ namespace PHPapp\Controllers;
 use PHPapp\Entity\User;
 use PHPapp\Entity\Contact;
 use PHPapp\AbstractResource;
+use PHPapp\Entity\GenericList;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -40,7 +41,35 @@ class UserController extends AbstractResource
     ], 201);
   }
   
-//  public function createList
+  public function createList(Request $request, Response $response, array $params)
+  {
+      $id = $params["id"];
+      $body = json_decode($request->getBody());
+      
+      if (isset($id) && isset($body->name))
+      {
+            $em = $this->getEntityManager();
+            $repo = $em->getRepository(User::class);
+            $user = $repo->find($id);
+
+            $list = new GenericList();
+            $list->setName($body->name);
+            $list->setOwner($user);
+            $user->setLists($list);
+            $em->persist($list);
+            $em->flush();
+
+            return $response->withJson([
+                "message" => "Added a list to User {$user->getName()}"
+            ], 201);
+      } else
+      {
+            return $response->withJson([
+                "message" => "Sorry, we couldn't add a new list to User {$id}"
+            ], 201);
+      }
+      
+  }
   
   public function updateUserContactInfo(Request $request, Response $response, array $params)
   {
@@ -80,25 +109,21 @@ class UserController extends AbstractResource
             {
                 if (isset($contact))
                 {
-                    return $res->withJson([
-                      'message' => "Retrieved user with id: {$id}",
-                      'user' => array(
-                          "name" => $user->getName(),
-                          "contact info" => array(
-                              "email" => $user->getContact()->getEmail(),
-                              "phone" => $user->getContact()->getPhone()
-                          )
-                       )
-                    ], 201);
-                } else {
-                    return $res->withJson([
-                      'message' => "Retrieved user with id: {$id}",
-                      'user' => array(
-                          "name" => $user->getName(),
-                          "contact info" => "not set"
-                       )
-                    ], 201);
+                    $contactData = array(
+                        "email" => $user->getContact()->getEmail(),
+                        "phone" => $user->getContact()->getPhone()
+                    );
+                } else
+                {
+                    $contactData = "not yet set by User {$user->getName()}";
                 }
+                return $res->withJson([
+                  'message' => "Retrieved user with id: {$id}",
+                  'user' => array(
+                      "name" => $user->getName(),
+                      "contact info" => $contactData
+                   )
+                ], 201);
             } else
             {
                 return $res->withJson(array(
