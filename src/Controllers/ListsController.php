@@ -7,6 +7,8 @@ use PHPapp\Entity\Item;
 use PHPapp\AbstractResource;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use PHPapp\ExtendedRepositories\DuplicateItemException;
+//use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 
 class ListsController extends AbstractResource
 {
@@ -15,7 +17,7 @@ class ListsController extends AbstractResource
      * @param int $id -- List id
      * @description Creates a new Item and adds it to a List
      */
-    public function create(Request $request, Response $response, array $params)
+    public function createItem(Request $request, Response $response, array $params)
     {
         $id = $params["id"];
         $body = json_decode($request->getBody());
@@ -28,24 +30,18 @@ class ListsController extends AbstractResource
         {
             if (isset($body->name))
             {
-                $item = new Item();
-                $item->setName($body->name);
-                if (isset($body->icon))
+                $itemCreateSucceeded = $repo->createItemIfUniqueInUserList($list, $body);
+                if ((bool)$itemCreateSucceeded)
                 {
-                    $item->setIcon($body->icon);
-                }
-                if (isset($body->meta))
+                    return $response->withJson([
+                        "message" => "A new Item was created and saved to {$user->getName()}'s List {$list->getName()}"
+                    ]);
+                } else
                 {
-                    $item->setMeta($body->meta);
+                    return $response->withJson([
+                        "message" => "Could not save a new Item"
+                    ]);
                 }
-                $em->persist($item);
-                $list->setItem($item);
-
-                $em->flush();
-                
-                return $response->withJson([
-                    "message" => "Added new Item {$body->name} to List {$list->getName()} for {$user->getName()}"
-                ]); 
 
             } else
             {

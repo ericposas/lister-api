@@ -24,18 +24,28 @@ class Item
     protected $id;
     
     /**
-     * @Column(type="string", length=32, unique=true, nullable=false)
+     * @Column(type="string", length=64, unique=false, nullable=false)
      */
     protected $name;
     
     /**
-     * @Column(type="string", length=32, unique=true, nullable=true)
+     * @Column(type="string", length=255, unique=false, nullable=true)
      * @var URL to resource
      */
     protected $icon;
+    
+    /**
+     * @Column(type="string", length=255, unique=false, nullable=true)
+     */
+    protected $image;
+    
+    /**
+     * @Column(type="string", length=255, unique=false, nullable=true)
+     */
+    protected $link;
 
     /**
-     * @Column(type="string", length=32, unique=true, nullable=true)
+     * @Column(type="string", length=255, unique=true, nullable=true)
      * @var METADATA -- Any data stored as JSON string
      */
     protected $meta;
@@ -90,7 +100,7 @@ class Item
      *
      * @return  self
      */ 
-    public function setIcon(URL $icon)
+    public function setIcon($icon)
     {
         $this->icon = $icon;
         return $this;
@@ -113,7 +123,7 @@ class Item
      *
      * @return  self
      */ 
-    public function setMeta(METADATA $meta)
+    public function setMeta($meta)
     {
         $this->meta = $meta;
         return $this;
@@ -135,6 +145,44 @@ class Item
     public function setOwningList(GenericList $owning_list)
     {
         $this->owning_list = $owning_list;
+        return $this;
+    }
+
+    /**
+     * Get the value of image
+     */ 
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * Set the value of image
+     *
+     * @return  self
+     */ 
+    public function setImage($image)
+    {
+        $this->image = $image;
+        return $this;
+    }
+
+    /**
+     * Get the value of link
+     */ 
+    public function getLink()
+    {
+        return $this->link;
+    }
+
+    /**
+     * Set the value of link
+     *
+     * @return  self
+     */ 
+    public function setLink($link)
+    {
+        $this->link = $link;
         return $this;
     }
 }

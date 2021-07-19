@@ -9,6 +9,7 @@ require 'vendor/autoload.php';
 use Slim\Factory\AppFactory;
 use Slim\Http\Response as Response;
 use PHPapp\Controllers\UserController;
+use PHPapp\Controllers\ItemController;
 use PHPapp\Controllers\ListsController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -74,7 +75,8 @@ $app->POST("/users/{id}/lists", UserController::class . ':createList');
  * Summary: get a single User by id
  * Notes: Find a user by passing in the user's id 
  * Output-Formats: [application/json]
- * @param id: int
+ * @param int $id
+ * @return JSON { message, user { name, contact info, lists } }
  */
 $app->GET('/users/{id}', UserController::class . ':show');
 
@@ -85,8 +87,35 @@ $app->GET('/users/{id}', UserController::class . ':show');
 //
 ///////////////////////////////////////////////////////
 
-$app->POST('/lists/{id}/item', ListsController::class . ':create');
+/**
+ * CREATE Item
+ * Summary: creates a new Item and attaches it to a List
+ * @param int $id URL PARAM -- id of the List object you'd
+ * ..like to attach the new Item to
+ */
+$app->POST('/lists/{id}/item', ListsController::class . ':createItem');
+
+///////////////////////////////////////////////////////
+//
+// ITEMS
+//
+///////////////////////////////////////////////////////
+
+/**
+ * GET Item
+ * Summary: get a single User by id
+ * Notes: Find a user by passing in the user's id 
+ * Output-Formats: [application/json]
+ * @param int $id
+ * @return JSON { string "message", Item "item" }
+ */
+$app->GET('/items/{id}', ItemController::class . ':show');
+
+/**
+ * UPDATE
+ * Summary: Update an existing list item
+ * @param JSON { string "name", JSON blob "meta", string "icon" }
+ */
+$app->PUT('/items/{id}', ItemController::class . ':update');
 
 $app->run();
-
-?>

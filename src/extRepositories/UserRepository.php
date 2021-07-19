@@ -25,19 +25,13 @@ class UserRepository extends EntityRepository
                 {
                     foreach ($items as $idx => $item)
                     {
-                        $meta = $item->getMeta();
-                        $icon = $item->getIcon();
-                        if (isset($meta) && isset($icon))
-                        {
-                            $listItems[] = array(
-                                "name" => $item->getName(),
-                                "meta" => $meta,
-                                "icon" => $icon
-                            );
-                        } else
-                        {
-                            $listItems[] = array("name" => $item->getName());
-                        }
+                        $listItems[] = array(
+                            "name" => $item->getName(),
+                            "meta" => $item->getMeta(),
+                            "icon" => $item->getIcon(),
+                            "image" => $item->getImage(),
+                            "link" => $item->getLink(),
+                        );
                     }
                 }
                 $listsData[]["list"] = array(
