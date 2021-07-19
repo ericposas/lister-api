@@ -11,7 +11,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class ListsController extends AbstractResource
 {
     /**
+     * @action POST
      * @param int $id -- List id
+     * @description Creates a new Item and adds it to a List
      */
     public function create(Request $request, Response $response, array $params)
     {
@@ -20,6 +22,7 @@ class ListsController extends AbstractResource
         $em = $this->getEntityManager();
         $repo = $em->getRepository(\PHPapp\Entity\GenericList::class);
         $list = $repo->find($id);
+        $user = $repo->getUserByListId($id);
         
         if (isset($list))
         {
@@ -39,10 +42,11 @@ class ListsController extends AbstractResource
                 $list->setItem($item);
 
                 $em->flush();
-
+                
                 return $response->withJson([
-                    "message" => "Added new Item {$body->name} to List {$list->getName()}"
-                ]);
+                    "message" => "Added new Item {$body->name} to List {$list->getName()} for {$user->getName()}"
+                ]); 
+
             } else
             {
                 return $response->withJson([

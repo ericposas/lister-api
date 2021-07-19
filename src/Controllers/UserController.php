@@ -52,26 +52,47 @@ class UserController extends AbstractResource
     ], 201);
   }
   
+  /**
+   * @action POST
+   * @param int $id -- User id
+   * @return { message }
+   */
   public function createList(Request $request, Response $response, array $params)
   {
       $id = $params["id"];
       $body = json_decode($request->getBody());
+      $em = $this->getEntityManager();
+      $listRepo = $em->getRepository(GenericList::class);
+      $userRepo = $em->getRepository(User::class);
       
       if (isset($id) && isset($body->name))
       {
-            $em = $this->getEntityManager();
-            $repo = $em->getRepository(User::class);
-            $user = $repo->find($id);
-
-            $list = new GenericList();
-            $list->setName($body->name);
-            $user->setLists($list);
-            $em->persist($list);
-            $em->flush();
-
-            return $response->withJson([
-                "message" => "Added a list to User {$user->getName()}"
-            ], 201);
+            $user = $userRepo->find($id);
+            // check for existing list 
+            $existingList = $listRepo->findBy(["name" => "{$body->name}"]);
+            foreach($existingList as $namedList)
+            {
+                $exListData = $namedList->getName();
+            }
+            
+            // if there is no list existing, create a new list
+            if (empty($exListData))
+            {
+                $list = new GenericList();
+                $list->setName($body->name);
+                $user->setLists($list);
+                $em->persist($list);
+                $em->flush();
+                
+                return $response->withJson([
+                    "message" => "Added a list to User {$user->getName()}"
+                ], 201);
+            } else
+            {
+                return $response->withJson([
+                    "message" => "Looks like this user already has a list named {$body->name}"
+                ], 201);
+            }
       } else
       {
             return $response->withJson([

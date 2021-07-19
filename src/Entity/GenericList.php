@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity(repositoryClass="PHPapp\ExtendedRepositories\ListRepository")
@@ -25,7 +26,7 @@ class GenericList
     protected $id;
     
     /**
-     * @Column(type="string", length=32, unique=true, nullable=false)
+     * @Column(type="string", length=32, unique=false, nullable=false)
      */
     protected $name;
     
