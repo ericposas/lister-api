@@ -40,9 +40,11 @@ class UserController extends AbstractResource
                     "Id", "Name", "Icon", "Image", "Link", "Meta"
                 ];
                 foreach ($items as $item) {
-                    
-                    $itemData[]["id"] = $item->getId();
-                    $itemData[]["name"] = $item->getName();
+                    $itemData[]["item"] = [
+                        "id" => $item->getId(),
+                        "name" => $item->getName(),
+                        "meta" => $item->getMeta(),
+                    ];
                 }
                 
                 $listData["items"] = $itemData;

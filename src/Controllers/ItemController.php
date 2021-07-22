@@ -29,7 +29,7 @@ class ItemController extends \PHPapp\AbstractResource
 
                     $newItem = new Item();
                     $newItem->addParentlist($list);
-                    $itemRepo->populateItemProperties($newItem, $body);
+                    $itemRepo->dynamicSetAllItemProperties($newItem, $body);
                     
                     $em->persist($newItem);
                     $em->flush();

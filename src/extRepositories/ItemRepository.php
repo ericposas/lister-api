@@ -6,7 +6,7 @@ namespace PHPapp\ExtendedRepositories;
 class ItemRepository extends \Doctrine\ORM\EntityRepository
 {
     
-    public function populateItemProperties($newItem, $body)
+    public function dynamicSetAllItemProperties($newItem, $body)
     {
         $props = [ "Icon", "Image", "Link", "Meta", "Name" ];
         # Loop through props and dynamically call methods to set each 
