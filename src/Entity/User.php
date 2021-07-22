@@ -38,8 +38,8 @@ class User
   protected $name;
 
   /**
-   * @OneToOne(targetEntity="Contact", mappedBy="user")
-   * @JoinColumn(name="contact_id", referencedColumnName="id")
+   * @OneToOne(targetEntity="Contact")
+   * @JoinColumn(name="contact_id", referencedColumnName="id", onDelete="CASCADE")
    */
   protected $contact;
   
