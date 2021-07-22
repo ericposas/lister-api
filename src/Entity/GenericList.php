@@ -1,5 +1,5 @@
 <?php
-// src/Entity/GroceryList.php -- PHPapp\Entity\GroceryList.php
+// src/Entity/GenericList.php
 
 namespace PHPapp\Entity;
 
@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
  * @Entity
  * @Table(name="lists")
  */
-class GroceryList
+class GenericList
 {
     /**
      * @Id

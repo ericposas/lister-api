@@ -35,8 +35,8 @@ class User
   
   /**
    * 
-   * @OneToMany(targetEntity="GroceryList", mappedBy="owner", cascade={"persist"}, orphanRemoval=true)
-   * @var GroceryList[] ArrayCollection of List objects
+   * @OneToMany(targetEntity="GenericList", mappedBy="owner", cascade={"persist"}, orphanRemoval=true)
+   * @var GenericList[] ArrayCollection of List objects
    */
   protected $lists;
 
@@ -77,7 +77,7 @@ class User
   /**
    * Get arrayCollection of List objects
    *
-   * @return  GroceryList[]
+   * @return  GenericList[]
    */ 
   public function getLists()
   {
@@ -87,13 +87,14 @@ class User
   /**
    * Set arrayCollection of List objects
    *
-   * @param  GroceryList[]  $lists  ArrayCollection of List objects
+   * @param  GenericList[]  $lists  ArrayCollection of List objects
    *
    * @return  self
    */ 
-  public function setLists($lists)
+  public function setLists($list)
   {
-    $this->lists = $lists;
+    $list->setOwner($this);
+    $this->lists = $list;
     return $this;
   }
 }

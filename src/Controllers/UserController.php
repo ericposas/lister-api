@@ -13,21 +13,17 @@ class UserController extends AbstractResource
 {
     public function index(Request $request, Response $response)
     {
-        $results = $this->getEntityManager()->createQueryBuilder()
-                ->select("u", "c")
-                ->from("PHPapp\Entity\Contact", "c")
-                ->join("c.user", "u")
-                ->getQuery()
-                ->getArrayResult();
+        $contacts = $this->getEntityManager()
+                ->getRepository(Contact::class)
+                ->findAll();
         
-        // return users with more info
-        $data = array();
-        foreach ($results as $idx => $result)
+        foreach ($contacts as $c)
         {
-            // flatten our data into simple json object 
-            $data[$idx]["name"] = $result["user"]["name"];
-            $data[$idx]["email"] = $result["email"];
-            $data[$idx]["phone"] = $result["phone"];
+            $data[]["user"] = [
+                "name" => $c->getUser()->getName(),
+                "email" => $c->getEmail(),
+                "phone" => $c->getPhone(),
+            ];
         }
         
         return $response->withJson([
@@ -44,16 +40,19 @@ class UserController extends AbstractResource
             $repo = $em->getRepository(\PHPapp\Entity\User::class);
             $user = new User();
             $user->setName($body->name);
+            if (isset($body->email))
+            {
+                $contact = new Contact();
+                $contact->setEmail($body->email);
+                $contact->setPhone($body->phone);
+                $contact->setUser($user);
+                $em->persist($contact);
+            }
             $em->persist($user);
-            
-            $data = array();
-            $data["name set"] = true;
-
             $em->flush();
 
             return $response->withJson([
-                "message" => "New user created.",
-                "info" => $data
+                "message" => "New user {$body->name} created."
             ]);
         } else {
             return $response->withJson([

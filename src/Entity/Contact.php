@@ -33,12 +33,12 @@ class Contact {
     
     /**
      * @Column(type="string", length=32, unique=true, nullable=false)
-     * @JoinColumn(name="user_id", referencedColumnName="id")
      */
     protected $email;
     
     /**
      * @OneToOne(targetEntity="User")
+     * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
      */
     protected $user;
 
