@@ -13,20 +13,30 @@ class UserController extends AbstractResource
 {
     public function index(Request $request, Response $response)
     {
-        $repo = $this->getEntityManager()
-                ->getRepository(User::class);
+        $users = $this->getEntityManager()
+                ->getRepository(User::class)
+                ->findAll();
         
-        $allUsers = $repo->getAllUsersIncludeContactInfo();
-        
-        if (isset($allUsers)) {
-            return $response->withJson([
-                "users" => $allUsers
-            ]);
-        } else {
-            return $response->withJson([
-                "message" => "Sorry, we couldn't get all users"
-            ]);
+        if (empty($users)) {
+            return $response->withJson([ "message" => "We couldn't find any Users" ]);
         }
+        
+        foreach ($users as $user) {
+            $contact = $user->getContact();
+            $contactInfo = [
+                "email" => isset($contact) ? $user->getContact()->getEmail() : null,
+                "phone" => isset($contact) ? $user->getContact()->getPhone() : null,
+            ];
+            
+            $data[] = [
+                "name" => $user->getName(),
+                "contactInfo" => $contactInfo
+            ];
+        }
+        
+        return $response->withJson([
+            "users" => $data
+        ]);
         
     }
     
@@ -66,17 +76,21 @@ class UserController extends AbstractResource
             
             $user = $this->getEntityManager()
                     ->getRepository(User::class)
-                    ->getSingleUser($id);
+                    ->find($id);
+            $data = [];
+            $contact = $user->getContact();
+            $email = isset($contact) ? $contact->getEmail() : null;
+            $phone = isset($contact) ? $contact->getPhone() : null;
+            isset($user) ? $data["name"] = $user->getName() : null;
+            isset($email) ? $data["email"] = $email : null;
+            isset($phone) ? $data["phone"] = $phone : null;
             
-            if (isset($user) && $user != false) {
-                return $response->withJson([
-                    "user" => $user
-                ]);
-            }
+            return $response->withJson([ "user" => $data ]);
             
         } else {
             return $response->withJson([ "message" => "No User found with an id of {$id}" ]);
         }
+        
         return $response->withJson([
             "message" => "Could not get the User"
         ]);
@@ -90,19 +104,22 @@ class UserController extends AbstractResource
             $user = $em->getRepository(User::class)
                     ->find($id);
 
-            $emailRef = $user->getContact()->getEmail();
+            $contact = $user->getContact();
+            if (isset($contact)) {
+                $emailRef = $user->getContact()->getEmail();
+            }
             
             if (isset($user)) {
                 $contact = $user->getContact();
-                $contact->addUser(null);
-                $user->addContact(null);
-                $em->flush();
-                $em->remove($user);
-                $em->remove($contact);
+                $user->addContact(null); # set any contact_id REFERENCE to null 
+                $em->flush(); # flush that change to database to invalidate Foreign Key rel.
+                # We removed contact_id REF, but since Contact still holds an FK through user_id
+                # it will be cascade deleted when User is deleted
+                $em->remove($user); # now we can delete the User and delete should cascade
                 $em->flush();
 
                 return $response->withJson([
-                    "message" => "Removed User {$user->getName()} at {$emailRef}"
+                    "message" => isset($emailRef) ? "Removed User {$user->getName()} at {$emailRef}" : "{$user->getName()} User removed"
                 ]);
             } else {
                 return $response->withJson([

@@ -8,6 +8,7 @@ use Slim\Http\Response as Response;
 use PHPapp\Controllers\UserController;
 use PHPapp\Controllers\ItemController;
 use PHPapp\Controllers\ListsController;
+use PHPapp\Controllers\ContactController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 // Instantiate App
@@ -40,6 +41,21 @@ $app->delete("/users/{id}", UserController::class . ":delete");
 
 # Creates a new List and attaches to a User at $id
 $app->post("/users/{id}/list", ListsController::class . ":create");
+
+# Adds or Updates User contact data
+/**
+ * @param requestBody $body { email?, phone? }
+ */
+$app->post("/users/{id}/contact", PHPapp\Controllers\ContactController::class . ":create");
+
+/////////////////////////////////////////////////////
+//
+//  CONTACT
+//
+/////////////////////////////////////////////////////
+
+$app->delete("/contacts/{id}", PHPapp\Controllers\ContactController::class . ":delete");
+
 
 /////////////////////////////////////////////////////
 //
