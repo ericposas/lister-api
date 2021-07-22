@@ -17,6 +17,7 @@ class ItemController extends \PHPapp\AbstractResource
         $body = json_decode($request->getBody());
         $em = $this->getEntityManager();
         $repo = $em->getRepository(GenericList::class);
+        $itemRepo = $em->getRepository(Item::class);
         
         if (isset($id)) {
             
@@ -28,18 +29,8 @@ class ItemController extends \PHPapp\AbstractResource
 
                     $newItem = new Item();
                     $newItem->addParentlist($list);
-                    $props = [ "Icon", "Image", "Link", "Meta", "Name" ];
-
-                    # Loop through props and dynamically call methods to set each 
-                    foreach ($props as $prop) {
-                        $bodyProp = strtolower($prop);
-                        $gotProp = $body->{$bodyProp};
-                        $_setProp = "set{$prop}";
-                        if (isset($gotProp)) {
-                            $newItem->{$_setProp}($gotProp);
-                        }
-                    }
-
+                    $itemRepo->populateItemProperties($newItem, $body);
+                    
                     $em->persist($newItem);
                     $em->flush();
 

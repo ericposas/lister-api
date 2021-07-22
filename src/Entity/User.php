@@ -84,7 +84,7 @@ class User
    *
    * @return  GenericList[]
    */ 
-  public function getList()
+  public function getLists()
   {
     return $this->lists;
   }

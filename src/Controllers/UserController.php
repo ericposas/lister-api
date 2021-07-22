@@ -24,13 +24,35 @@ class UserController extends AbstractResource
         foreach ($users as $user) {
             $contact = $user->getContact();
             $contactInfo = [
-                "email" => isset($contact) ? $user->getContact()->getEmail() : null,
-                "phone" => isset($contact) ? $user->getContact()->getPhone() : null,
+                "id" => isset($contact) ? $contact->getId() : null,
+                "email" => isset($contact) ? $contact->getEmail() : null,
+                "phone" => isset($contact) ? $contact->getPhone() : null,
             ];
+            $lists = $user->getLists();
+            $listData = array();
+            foreach ($lists as $list) {
+                $listData["id"] = $list->getId();
+                $listData["name"] = $list->getName();
+                
+                $items = $list->getItems();
+                $itemData = array();
+                $props = [
+                    "Id", "Name", "Icon", "Image", "Link", "Meta"
+                ];
+                foreach ($items as $item) {
+                    
+                    $itemData[]["id"] = $item->getId();
+                    $itemData[]["name"] = $item->getName();
+                }
+                
+                $listData["items"] = $itemData;
+            }
             
             $data[] = [
+                "id" => $user->getId(),
                 "name" => $user->getName(),
-                "contactInfo" => $contactInfo
+                "contactInfo" => $contactInfo,
+                "lists" => $listData
             ];
         }
         
