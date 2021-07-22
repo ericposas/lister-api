@@ -22,22 +22,22 @@ class Contact {
     /**
      * @Id
      * @GeneratedValue
-     * @Column(type="integer")
+     * @Column(type="integer", length=32, nullable=true)
      */
     protected $id;
     
     /**
-     * @Column(type="string", length=32, nullable=false)
+     * @Column(type="string", length=32, nullable=true)
      */
     protected $phone;
     
     /**
-     * @Column(type="string", length=32, unique=true, nullable=false)
+     * @Column(type="string", length=32, unique=true, nullable=true)
      */
     protected $email;
     
     /**
-     * @OneToOne(targetEntity="User")
+     * @OneToOne(targetEntity="User", cascade={"persist", "remove"})
      * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
      */
     protected $user;
@@ -102,8 +102,11 @@ class Contact {
      *
      * @return  self
      */ 
-    public function setUser($user)
+    public function addUser($user)
     {
+        if (!empty($user)) {
+            $user->addContact($this);
+        }
         $this->user = $user;
         return $this;
     }

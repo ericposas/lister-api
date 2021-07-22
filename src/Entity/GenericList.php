@@ -7,8 +7,10 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
@@ -23,15 +25,33 @@ class GenericList
      * @var int
      */
     protected $id;
+    
+    /**
+     * @Column(type="string", length=255, unique=false, nullable=false)
+     * @var string
+     */
+    protected $name;
+    
+    /**
+     * @Column(type="string", length=255, unique=false, nullable=true)
+     * @var string
+     */
+    protected $description;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="parentlist", cascade={"persist"}, orphanRemoval=true)
+     */
+    protected $items;
 
     /**
      * @ManyToOne(targetEntity="User", cascade={"all"}, fetch="LAZY")
+     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id", onDelete="cascade")
      */
     protected $owner;
 
     public function __construct()
     {
-        
+        $this->items = new ArrayCollection();
     }
 
     /**
@@ -57,9 +77,75 @@ class GenericList
      *
      * @return  self
      */ 
-    public function setOwner($owner)
+    public function addOwner($owner)
     {
+        $owner->setList($this);
         $this->owner = $owner;
+        return $this;
+    }
+
+    /**
+     * Get the value of name
+     *
+     * @return  string
+     */ 
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the value of name
+     *
+     * @param  string  $name
+     *
+     * @return  self
+     */ 
+    public function setName(string $name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Get the value of description
+     *
+     * @return  string
+     */ 
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set the value of description
+     *
+     * @param  string  $description
+     *
+     * @return  self
+     */ 
+    public function setDescription(string $description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * Get the value of items
+     */ 
+    public function getItems()
+    {
+        return $this->items;
+    }
+
+    /**
+     * Set the value of items
+     *
+     * @return  self
+     */ 
+    public function setItem($items)
+    {
+        $this->items[] = $items;
         return $this;
     }
 }

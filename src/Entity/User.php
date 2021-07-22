@@ -6,6 +6,7 @@ namespace PHPapp\Entity;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\OneToMany;
@@ -14,7 +15,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="PHPapp\ExtendedRepositories\UserRepository")
  * @Table(name="users")
  */
 class User
@@ -34,9 +35,13 @@ class User
   protected $name;
   
   /**
-   * 
+   * @OneToOne(targetEntity="Contact")
+   * @JoinColumn(name="contact_id", referencedColumnName="id")
+   */
+  protected $contact;
+  
+  /**
    * @OneToMany(targetEntity="GenericList", mappedBy="owner", cascade={"persist"}, orphanRemoval=true)
-   * @var GenericList[] ArrayCollection of List objects
    */
   protected $lists;
 
@@ -79,7 +84,7 @@ class User
    *
    * @return  GenericList[]
    */ 
-  public function getLists()
+  public function getList()
   {
     return $this->lists;
   }
@@ -91,10 +96,32 @@ class User
    *
    * @return  self
    */ 
-  public function setLists($list)
+  public function setList($list)
   {
-    $list->setOwner($this);
-    $this->lists = $list;
+    $this->lists[] = $list;
+    return $this;
+  }
+
+  /**
+   * Get the value of contactInfo
+   *
+   * @return  string
+   */ 
+  public function getContact()
+  {
+    return $this->contact;
+  }
+
+  /**
+   * Set the value of contactInfo
+   *
+   * @param  string  $contactInfo
+   *
+   * @return  self
+   */ 
+  public function addContact($contact)
+  {
+    $this->contact = $contact;
     return $this;
   }
 }

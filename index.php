@@ -1,15 +1,13 @@
 <?php
 
-// defined absolute path here for use in other files
-// define('CWD', getcwd());
-
 require 'vendor/autoload.php';
 
 // Slim framework 
 use Slim\Factory\AppFactory;
 use Slim\Http\Response as Response;
 use PHPapp\Controllers\UserController;
-use PHPapp\Controllers\ContactController;
+use PHPapp\Controllers\ItemController;
+use PHPapp\Controllers\ListsController;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 // Instantiate App
@@ -19,53 +17,42 @@ $app = AppFactory::create();
 $app->addErrorMiddleware(true, true, true);
 $app->addBodyParsingMiddleware();
 
-/**
- * Grocery List Estimator API
- * @version 1.0.1
- */
+/////////////////////////////////////////////////////
+//
+//  USERS
+//
+/////////////////////////////////////////////////////
 
-/**
- * GET getUsers
- * Summary: gets all Users
- * Notes: Gets all User models
- * Output-Formats: [application/json] 
- */
-$app->GET('/users', UserController::class . ':index');
+# Gets all Users 
+$app->get("/users", UserController::class . ":index");
 
-/**
- * POST createUser
- * Summary: create a new User
- * Notes: Creates a new User model
- * Output-Formats: [application/json]
- * @param name: string - REQUEST BODY 
- * @param contact: { email: string, phone: string } - REQUEST BODY 
- */
-$app->POST('/users', UserController::class . ':create');
+# Gets a single User by $id
+$app->get("/users/{id}", UserController::class . ":show");
 
+# Creates a new User
 /**
- * GET getUser
- * Summary: get a single User by id
- * Notes: Find a user by passing in the user's id 
- * Output-Formats: [application/json]
- * @param id: int
+ * @param requestBody $body { name, email?, phone? }
  */
-$app->GET('/users/{id}', UserController::class . ':show');
+$app->post("/users", UserController::class . ":create");
 
-/**
- * GET
- * Summary: Get all Contact objects
- * Output-Formats: [application/json]
- * @param id: string - URL PARAM
- */
-$app->GET("/contacts", ContactController::class . ':index');
+# Deletes a User
+$app->delete("/users/{id}", UserController::class . ":delete");
 
-/**
- * GET
- * Summary: Get contact info for a User
- * Output-Formats: [application/json]
- * @param id: string - URL PARAM
- */
-$app->GET("/contacts/{id}", ContactController::class . ':show');
+# Creates a new List and attaches to a User at $id
+$app->post("/users/{id}/list", ListsController::class . ":create");
+
+/////////////////////////////////////////////////////
+//
+//  LISTS
+//
+/////////////////////////////////////////////////////
+
+$app->get("/lists", ListsController::class . ":index");
+
+# Deletes a List of $id
+$app->delete("/lists/{id}", ListsController::class . ":delete");
+
+$app->post("/lists/{id}/item", ItemController::class . ":create");
 
 
 $app->run();
