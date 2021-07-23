@@ -43,6 +43,11 @@ class Item {
     protected $meta;
     
     /**
+     * @ORM\Column(type="string", length=255, unique=false, nullable=true)
+     */
+    protected $description;
+    
+    /**
      * @ORM\ManyToOne(targetEntity="GenericList", cascade={"all"}, fetch="LAZY")
      * @ORM\JoinColumn(name="parentlist_id", referencedColumnName="id", onDelete="cascade")
      */
@@ -169,6 +174,25 @@ class Item {
     {
         $parentlist->setItem($this);
         $this->parentlist = $parentlist;
+        return $this;
+    }
+
+    /**
+     * Get the value of description
+     */ 
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set the value of description
+     *
+     * @return  self
+     */ 
+    public function setDescription($description)
+    {
+        $this->description = $description;
         return $this;
     }
 }

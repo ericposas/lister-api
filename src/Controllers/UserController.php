@@ -21,6 +21,7 @@ class UserController extends AbstractResource
             return $response->withJson([ "message" => "We couldn't find any Users" ]);
         }
         
+        $data = array();
         foreach ($users as $user) {
             $contact = $user->getContact();
             $contactInfo = [
@@ -30,24 +31,24 @@ class UserController extends AbstractResource
             ];
             $lists = $user->getLists();
             $listData = array();
+            
             foreach ($lists as $list) {
-                $listData["id"] = $list->getId();
-                $listData["name"] = $list->getName();
-                
                 $items = $list->getItems();
                 $itemData = array();
-                $props = [
-                    "Id", "Name", "Icon", "Image", "Link", "Meta"
-                ];
                 foreach ($items as $item) {
-                    $itemData[]["item"] = [
-                        "id" => $item->getId(),
-                        "name" => $item->getName(),
-                        "meta" => $item->getMeta(),
-                    ];
+                    foreach (\PHPapp\ExtendedRepositories\ItemRepository::$props as $prop) {
+                        $bprop = strtolower($prop);
+                        $getProp = "get{$prop}";
+                        $properties["{$bprop}"] = $item->{$getProp}();
+                    }
+                    $itemData[]["item"] = $properties;
                 }
-                
-                $listData["items"] = $itemData;
+
+                $listData[] = [
+                    "id" => $list->getId(),
+                    "name" => $list->getName(),
+                    "items" => $itemData
+                ];
             }
             
             $data[] = [

@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity
+ * @Entity(repositoryClass="PHPapp\ExtendedRepositories\ListRepository")
  * @Table(name="lists")
  */
 class GenericList

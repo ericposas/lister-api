@@ -49,4 +49,41 @@ class ItemController extends \PHPapp\AbstractResource
             return $response->withJson([ "message" => "Please provide a List {id}" ]);
         }
     }
+    
+    public function update(Request $request, Response $response, array $params)
+    {
+        $id = $params["id"];
+        $body = json_decode($request->getBody());
+        $em = $this->getEntityManager();
+        $repo = $em->getRepository(Item::class);
+        
+        $item = $repo->find($id);
+            
+        if (empty($id)) {
+            return $response->withJson([
+                "message" => "Please provide the id of the Item you want to update"
+            ]);
+        }
+        
+        if (isset($body)) {
+            if (empty($item)) {
+                return $response->withJson([
+                    "message" => "No Item exists with an id of {$id}"
+                ]);
+            } else {
+                $item = $repo->dynamicSetAllItemProperties($item, $body);
+            }
+            $em->flush();
+            
+            return $response->withJson([
+                "item" => "Item {$item->getName()} was updated with new properties"
+            ]);
+        }
+        
+        return $response->withJson([
+            "message" => "You need to provide a request body with optional params: { name, icon, image, link, meta }"
+        ]);
+        
+    }
+    
 }

@@ -39,8 +39,11 @@ $app->post("/users", UserController::class . ":create");
 # Deletes a User
 $app->delete("/users/{id}", UserController::class . ":delete");
 
-# Creates a new List and attaches to a User at $id
-$app->post("/users/{id}/list", ListsController::class . ":create");
+/////////////////////////////////////////////////////
+//
+//  CONTACT
+//
+/////////////////////////////////////////////////////
 
 # Adds or Updates User contact data
 /**
@@ -48,14 +51,8 @@ $app->post("/users/{id}/list", ListsController::class . ":create");
  */
 $app->post("/users/{id}/contact", PHPapp\Controllers\ContactController::class . ":create");
 
-/////////////////////////////////////////////////////
-//
-//  CONTACT
-//
-/////////////////////////////////////////////////////
-
+# Delete a Contact by Contact id
 $app->delete("/contacts/{id}", PHPapp\Controllers\ContactController::class . ":delete");
-
 
 /////////////////////////////////////////////////////
 //
@@ -63,14 +60,31 @@ $app->delete("/contacts/{id}", PHPapp\Controllers\ContactController::class . ":d
 //
 /////////////////////////////////////////////////////
 
+# Get all Lists
 $app->get("/lists", ListsController::class . ":index");
+
+# TODO: Get and show a List by id
+$app->get("/lists/{id}", ListsController::class . ":show");
+
+# Creates a new List and attaches to a User at $id 
+$app->post("/users/{id}/list", ListsController::class . ":create");
 
 # Deletes a List of $id
 $app->delete("/lists/{id}", ListsController::class . ":delete");
 
+
+/////////////////////////////////////////////////////
+//
+//  ITEMS
+//
+/////////////////////////////////////////////////////
+
+# Creates a new Item and assigns to designated List id
 $app->post("/lists/{id}/item", ItemController::class . ":create");
+
+# Updates and Item by id
+$app->put("/items/{id}", ItemController::class . ":update");
 
 
 $app->run();
 
-?>

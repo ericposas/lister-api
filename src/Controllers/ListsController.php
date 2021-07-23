@@ -18,34 +18,40 @@ class ListsController extends AbstractResource
         $listRepo = $em->getRepository(GenericList::class);
         $lists = $listRepo->findAll();
         
+        $listData = array();
         foreach ($lists as $list) {
-            
-            $listData = array();
             $items = $list->getItems();
-            
+            $itemData = array();
             foreach ($items as $item) {
-                
-                $props = [ "Icon", "Image", "Link", "Meta", "Name" ];
-                foreach ($props as $prop) {
-                    $lowcase = strtolower($prop);
-                    $_getProp = "get{$prop}";
-                    $itemData["{$lowcase}"] = $item->{$_getProp}($gotProp);
+                foreach (\PHPapp\ExtendedRepositories\ItemRepository::$props as $prop) {
+                    $bprop = strtolower($prop);
+                    $getProp = "get{$prop}";
+                    $properties["{$bprop}"] = $item->{$getProp}();
                 }
-                
-                $listData[]["item"] = $itemData;
-                
+                $itemData[]["item"] = $properties;
             }
-            
-            $data[] = [
-              "user"    =>  $list->getOwner()->getName(),
-              "lists"   =>  $listData
+
+            $listData[] = [
+                "id" => $list->getId(),
+                "owner" => $list->getOwner()->getName(),
+                "name" => $list->getName(),
+                "description" => $list->getDescription(),
+                "items" => $itemData
             ];
         }
         
         return $response->withJson([
-            "data" => $data
+            "data" => $listData
         ]);
         
+    }
+    
+    public function show(Request $request, Response $response, array $params)
+    {
+        # TODO
+        return $response->withJson([
+            "message" => "TODO: ListsController -- show()"
+        ]);
     }
     
     public function create(Request $request, Response $response, array $params)
