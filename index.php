@@ -30,6 +30,9 @@ $app->get("/users", UserController::class . ":index");
 # Gets a single User by $id
 $app->get("/users/{id}", UserController::class . ":show");
 
+# Get a single Users lists by User id
+$app->get("/users/{id}/lists", UserController::class . ":showLists");
+
 # Creates a new User
 /**
  * @param requestBody $body { name, email?, phone? }
@@ -63,7 +66,7 @@ $app->delete("/contacts/{id}", PHPapp\Controllers\ContactController::class . ":d
 # Get all Lists
 $app->get("/lists", ListsController::class . ":index");
 
-# TODO: Get and show a List by id
+# Get and show a List by id
 $app->get("/lists/{id}", ListsController::class . ":show");
 
 # Creates a new List and attaches to a User at $id 

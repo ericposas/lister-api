@@ -11,11 +11,14 @@ use Doctrine\ORM\Query\Expr\Join;
 
 class UserController extends AbstractResource
 {
+    
     public function index(Request $request, Response $response)
     {
         $users = $this->getEntityManager()
                 ->getRepository(User::class)
                 ->findAll();
+        $listRepo = $this->getEntityManager()
+                ->getRepository(\PHPapp\Entity\GenericList::class);
         
         if (empty($users)) {
             return $response->withJson([ "message" => "We couldn't find any Users" ]);
@@ -30,26 +33,7 @@ class UserController extends AbstractResource
                 "phone" => isset($contact) ? $contact->getPhone() : null,
             ];
             $lists = $user->getLists();
-            $listData = array();
-            
-            foreach ($lists as $list) {
-                $items = $list->getItems();
-                $itemData = array();
-                foreach ($items as $item) {
-                    foreach (\PHPapp\ExtendedRepositories\ItemRepository::$props as $prop) {
-                        $bprop = strtolower($prop);
-                        $getProp = "get{$prop}";
-                        $properties["{$bprop}"] = $item->{$getProp}();
-                    }
-                    $itemData[]["item"] = $properties;
-                }
-
-                $listData[] = [
-                    "id" => $list->getId(),
-                    "name" => $list->getName(),
-                    "items" => $itemData
-                ];
-            }
+            $listData = $listRepo->getListData($lists);
             
             $data[] = [
                 "id" => $user->getId(),
@@ -119,6 +103,36 @@ class UserController extends AbstractResource
         return $response->withJson([
             "message" => "Could not get the User"
         ]);
+    }
+    
+    public function showLists(Request $request, Response $response, array $params)
+    {
+        $id = $params["id"];
+        if (isset($id)) {
+            $em = $this->getEntityManager();
+            $user = $em->getRepository(User::class)
+                    ->find($id);
+            $listRepo = $this->getEntityManager()
+                ->getRepository(\PHPapp\Entity\GenericList::class);
+            
+            if (empty($user)) {
+                return $response->withJson([
+                    "message" => "User does not exist"
+                ]);
+            }
+            $lists = $user->getLists();
+            $listData = $listRepo->getListData($lists);
+            if (empty($listData)) {
+                return $response->withJson([
+                    "message" => "User {$user->getName()} has no lists"
+                ]);
+            }
+        }
+        
+        return $response->withJson([
+            "lists" => $listData
+        ]);
+        
     }
     
     public function delete(Request $request, Response $response, array $params)

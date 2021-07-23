@@ -5,21 +5,22 @@ namespace PHPapp\ExtendedRepositories;
 class ListRepository extends \Doctrine\ORM\EntityRepository
 {
     
-//    public function populateListData($list, array $listData)
-//    {
-//        $listData["id"] = $list->getId();
-//        $listData["name"] = $list->getName();
-//
-//        $items = $list->getItems();
-//        foreach ($items as $item) {
-//            $itemData[] = $this->getEntityManager()
-//                    ->getRepository(\PHPapp\Entity\Item::class)
-//                    ->dynamicGetAllItemProperties($item);
-//        }
-//
-//        $listData["items"] = $itemData;
-//        
-//        return $listData;
-//    }
+    public function getListData($lists)
+    {
+        foreach ($lists as $list) {
+            $items = $list->getItems();
+            $itemRepo = $this->getEntityManager()
+                    ->getRepository(\PHPapp\Entity\Item::class);
+            $itemData = $itemRepo->getItemData($items);
+
+            $listData[] = [
+                "owner" => $list->getOwner()->getName(),
+                "id" => $list->getId(),
+                "name" => $list->getName(),
+                "items" => $itemData
+            ];
+        }
+        return $listData;
+    }
     
 }
