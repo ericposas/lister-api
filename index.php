@@ -2,21 +2,22 @@
 
 require 'vendor/autoload.php';
 
-// Slim framework 
 use Slim\Factory\AppFactory;
-use Slim\Http\Response as Response;
 use PHPapp\Controllers\UserController;
 use PHPapp\Controllers\ItemController;
 use PHPapp\Controllers\ListsController;
 use PHPapp\Controllers\ContactController;
-use Psr\Http\Message\ServerRequestInterface as Request;
 
-// Instantiate App
+/////////////////////////////////////////////////////
+//
+//  SLIM
+//
+/////////////////////////////////////////////////////
+
 $app = AppFactory::create();
-
-// Add middleware
 $app->addErrorMiddleware(true, true, true);
 $app->addBodyParsingMiddleware();
+
 
 /////////////////////////////////////////////////////
 //
@@ -42,6 +43,7 @@ $app->post("/users", UserController::class . ":create");
 # Deletes a User
 $app->delete("/users/{id}", UserController::class . ":delete");
 
+
 /////////////////////////////////////////////////////
 //
 //  CONTACT
@@ -52,10 +54,14 @@ $app->delete("/users/{id}", UserController::class . ":delete");
 /**
  * @param requestBody $body { email?, phone? }
  */
-$app->post("/users/{id}/contact", PHPapp\Controllers\ContactController::class . ":create");
+$app->post("/users/{id}/contact", ContactController::class . ":create");
 
 # Delete a Contact by Contact id
-$app->delete("/contacts/{id}", PHPapp\Controllers\ContactController::class . ":delete");
+$app->delete("/contacts/{id}", ContactController::class . ":delete");
+
+# Update a Contact card by Contact id
+//$app->put("/contacts/{id}", ContactController::class . ":update");
+
 
 /////////////////////////////////////////////////////
 //
@@ -72,8 +78,18 @@ $app->get("/lists/{id}", ListsController::class . ":show");
 # Creates a new List and attaches to a User at $id 
 $app->post("/users/{id}/list", ListsController::class . ":create");
 
+# Update a List by List id
+//$app->put("/lists/{id}", ListsController::class . ":update");
+
 # Deletes a List of $id
 $app->delete("/lists/{id}", ListsController::class . ":delete");
+
+
+/////////////////////////////////////////////////////
+//
+//  SHARES
+//
+/////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////
@@ -82,12 +98,22 @@ $app->delete("/lists/{id}", ListsController::class . ":delete");
 //
 /////////////////////////////////////////////////////
 
+# List all Items
+//$app->get("/items", ItemController::class . ":index");
+
+# Get a single Item by id
+//$app->get("/items/{id}", ItemController::class . ":show");
+
 # Creates a new Item and assigns to designated List id
 $app->post("/lists/{id}/item", ItemController::class . ":create");
 
 # Updates and Item by id
 $app->put("/items/{id}", ItemController::class . ":update");
 
+# Delete an Item by Item id
+//$app->delete("/items/{id}", ItemController::class . ":delete");
 
+
+# Run Slim Framework
 $app->run();
 
