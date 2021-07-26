@@ -2,13 +2,11 @@ version: '3.2'
 
 services:
   php:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    image: webdev00/php-project_php:latest
     ports: 
       - 80:80
-    volumes: 
-      - ./:/var/www/html
+#    volumes: 
+#      - ./:/var/www/html
       
   db:
     image: mysql
