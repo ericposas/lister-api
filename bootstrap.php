@@ -21,8 +21,8 @@ $conn = array(
     'host' => $_ENV['GOOGLE_DB_HOST'],
     'port' => 3306,
     'dbname' => $_ENV['GOOGLE_DB_NAME'],
-    'user' => $_ENV['GOOGLE_ROOT_USER'],
-    'password' => $_ENV['GOOGLE_ROOT_PASSWORD'],
+    'user' => $_ENV['GOOGLE_DB_ROOT_USER'],
+    'password' => $_ENV['GOOGLE_DB_ROOT_PASSWORD'],
     'charset' => 'utf8'
 );
 
