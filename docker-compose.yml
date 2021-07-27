@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   php:
-    image: webdev00/phpapp
+    image: webdev00/phpapp:latest
     build: 
       context: .
       dockerfile: Dockerfile

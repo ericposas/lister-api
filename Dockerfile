@@ -1,4 +1,10 @@
 FROM ubuntu:latest
+
+ARG GOOGLE_DB_NAME
+ARG GOOGLE_DB_HOST
+ARG GOOGLE_DB_ROOT_USER
+ARG GOOGLE_DB_ROOT_PASSWORD
+
 WORKDIR /var/www/html
 RUN apt-get upgrade && apt-get update
 RUN apt-get -y install software-properties-common nano
