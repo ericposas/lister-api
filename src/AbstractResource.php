@@ -51,11 +51,11 @@ abstract class AbstractResource
     // database configuration parameters
     $conn = array(
         'driver' => 'pdo_mysql',
-        'host' => 'db',
+        'host' => $_ENV['GOOGLE_DB_HOST'],
         'port' => 3306,
-        'dbname' => $_ENV['MYSQL_DB_NAME'],
-        'user' => $_ENV['MYSQL_ROOT_USER'],
-        'password' => $_ENV['MYSQL_ROOT_PASSWORD'],
+        'dbname' => $_ENV['GOOGLE_DB_NAME'],
+        'user' => $_ENV['GOOGLE_ROOT_USER'],
+        'password' => $_ENV['GOOGLE_ROOT_PASSWORD'],
         'charset' => 'utf8'
     );
 

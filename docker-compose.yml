@@ -2,6 +2,7 @@ version: '3.2'
 
 services:
   php:
+    image: webdev00/phpapp
     build: 
       context: .
       dockerfile: Dockerfile
@@ -10,19 +11,20 @@ services:
     volumes: 
       - ./:/var/www/html
       
-  db:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    environment: 
-      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-    volumes: 
-      - mysql-data:/var/lib/mysql
+#  db:
+#    image: mysql
+#    command: --default-authentication-plugin=mysql_native_password
+#    restart: always
+#    environment: 
+#      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+#    volumes: 
+#      - mysql-data:/var/lib/mysql
 
   adminer:
     image: adminer
     restart: always
     ports: 
       - 8080:8080
+
 volumes: 
   mysql-data:
