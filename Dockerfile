@@ -9,6 +9,9 @@ RUN apt-get install -y php7.4-cli php7.4-json php7.4-common php7.4-mysql php7.4-
 #COPY ./install-composer .
 #COPY ./composer.json .
 RUN git clone https://github.com/ericposas/lister-api.git
+RUN cd lister-api
+RUN git checkout feature/google-db-integration
+RUN cd ..
 RUN cp -r lister-api/* .
 COPY ./install-composer-libs .
 RUN ./install-composer && composer --version
