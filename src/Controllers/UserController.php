@@ -3,11 +3,9 @@
 namespace PHPapp\Controllers;
 
 use PHPapp\Entity\User;
-use PHPapp\Entity\Contact;
 use PHPapp\AbstractResource;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Doctrine\ORM\Query\Expr\Join;
 
 class UserController extends AbstractResource
 {

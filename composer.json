@@ -25,7 +25,8 @@
             "PHPapp\\": "src/",
             "PHPapp\\Entity\\": "src/Entity",
             "PHPapp\\Controllers\\": "src/Controllers",
-            "PHPapp\\ExtendedRepositories\\": "src/extRepositories"
+            "PHPapp\\ExtendedRepositories\\": "src/extRepositories",
+            "PHPapp\\Middleware\\": "src/Middleware"
         }
     }
 }
