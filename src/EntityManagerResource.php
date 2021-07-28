@@ -18,7 +18,7 @@ use Doctrine\ORM\Tools\Setup;
 $denv = \Dotenv\Dotenv::createImmutable(__DIR__.'/..');
 $denv->load();
 
-abstract class AbstractResource
+abstract class EntityManagerResource
 {
   /**
    * @var \Doctrine\ORM\EntityManager

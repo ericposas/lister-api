@@ -3,11 +3,11 @@
 namespace PHPapp\Controllers;
 
 use PHPapp\Entity\User;
-use PHPapp\AbstractResource;
+use PHPapp\EntityManagerResource;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class UserController extends AbstractResource
+class UserController extends EntityManagerResource
 {
     
     public function index(Request $request, Response $response)

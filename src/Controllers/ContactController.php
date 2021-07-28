@@ -8,7 +8,7 @@ use PHPapp\Entity\Contact;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class ContactController extends \PHPapp\AbstractResource
+class ContactController extends \PHPapp\EntityManagerResource
 {
     
     public function create(Request $request, Response $response, array $params)

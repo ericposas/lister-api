@@ -49,7 +49,7 @@ $uselessInjectHelloMw = function (Request $request,  RequestHandler $handler) {
 /////////////////////////////////////////////////////
 
 $app->get("/", function (Request $request, Response $response) {
-    return $response->write("<h2>Home.</h2>");
+    return $response->write("<h2>Home Updated.</h2>");
 })->add(CountMiddleware::class . ":appendUserCount");
 
 /////////////////////////////////////////////////////

@@ -11,7 +11,7 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
  *
  * @author webdev00
  */
-class CountMiddleware extends \PHPapp\AbstractResource {
+class CountMiddleware extends \PHPapp\EntityManagerResource {
     
     public function appendUserCount (Request $request, RequestHandler $handler) {
         
