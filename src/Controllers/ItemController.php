@@ -8,7 +8,7 @@ use PHPapp\Entity\GenericList;
 use Slim\Http\Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class ItemController extends \PHPapp\AbstractResource
+class ItemController extends \PHPapp\EntityManagerResource
 {
     
     public function create(Request $request, Response $response, array $params)

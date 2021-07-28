@@ -4,12 +4,12 @@ namespace PHPapp\Controllers;
 
 use PHPapp\Entity\Item;
 use PHPapp\Entity\User;
-use PHPapp\AbstractResource;
+use PHPapp\EntityManagerResource;
 use PHPapp\Entity\GenericList;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class ListsController extends AbstractResource
+class ListsController extends EntityManagerResource
 {
     
     public function index(Request $request, Response $response)

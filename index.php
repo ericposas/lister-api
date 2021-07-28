@@ -7,6 +7,11 @@ use PHPapp\Controllers\UserController;
 use PHPapp\Controllers\ItemController;
 use PHPapp\Controllers\ListsController;
 use PHPapp\Controllers\ContactController;
+use Slim\Http\Response as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+
+use PHPapp\Middleware\CountMiddleware;
 
 /////////////////////////////////////////////////////
 //
@@ -15,9 +20,37 @@ use PHPapp\Controllers\ContactController;
 /////////////////////////////////////////////////////
 
 $app = AppFactory::create();
-$app->addErrorMiddleware(true, true, true);
+$app->addRoutingMiddleware();
 $app->addBodyParsingMiddleware();
+$app->addErrorMiddleware(true, true, true);
 
+/////////////////////////////////////////////////////
+//
+//  MIDDLEWARE
+//
+/////////////////////////////////////////////////////
+
+$uselessInjectHelloMw = function (Request $request,  RequestHandler $handler) {
+    $existing = $handler->handle($request)->getBody();
+    $newResp = new Slim\Psr7\Response(); # <-- we have to use this other type of Response object in the middleware
+    $newResp->getBody()->write(<<<EOL
+        <div>
+            {$existing}
+            <h4>Helloooo</h4>
+        </div>
+    EOL);
+    return $newResp;
+};
+
+/////////////////////////////////////////////////////
+//
+//  PUBLIC STATIC
+//
+/////////////////////////////////////////////////////
+
+$app->get("/", function (Request $request, Response $response) {
+    return $response->write("<h2>Home Updated.</h2>");
+})->add(CountMiddleware::class . ":appendUserCount");
 
 /////////////////////////////////////////////////////
 //
