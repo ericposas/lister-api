@@ -2,14 +2,9 @@ version: '3.2'
 
 services:
   php:
-    image: webdev00/phpapp-dev:latest
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    image: webdev00/lister-api:latest
     ports: 
       - 80:80
-    volumes: 
-      - ./:/var/www/html
       
   db:
     image: mysql
