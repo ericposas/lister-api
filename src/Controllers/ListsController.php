@@ -104,4 +104,27 @@ class ListsController extends EntityManagerResource
         ], 400);
     }
     
+    public function delete(Request $request, Response $response, array $params)
+    {
+        $id = $params["id"];
+        $em = $this->getEntityManager();
+        $repo = $em->getRepository(GenericList::class);
+        
+        $list = $repo->find($id);
+        
+        if (empty($id)) {
+            return $response->withJson([
+                "message" => "Please provide the id of the List you want to delete"
+            ]);
+        }
+        
+        $em->remove($list);
+        $em->flush();
+        
+        return $response->withJson([
+            "message" => "Successfully deleted User {$list->getOwner()->getName()}'s List {$list->getName()}"
+        ]);
+        
+    }
+    
 }
