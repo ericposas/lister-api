@@ -44,7 +44,7 @@ class GenericList
     protected $items;
 
     /**
-     * @ManyToOne(targetEntity="User", cascade={"all"}, fetch="LAZY")
+     * @ManyToOne(targetEntity="User", fetch="LAZY")
      * @ORM\JoinColumn(name="owner_id", referencedColumnName="id", onDelete="cascade")
      */
     protected $owner;

@@ -48,11 +48,10 @@ class Item {
     protected $description;
     
     /**
-     * @ORM\ManyToOne(targetEntity="GenericList", cascade={"all"}, fetch="LAZY")
-     * @ORM\JoinColumn(name="parentlist_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="GenericList", fetch="LAZY")
+     * @ORM\JoinColumn(name="parentlist_id", referencedColumnName="id", onDelete="cascade")
      */
     protected $parentlist;
-    
 
     /**
      * Get the value of id
