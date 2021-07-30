@@ -77,4 +77,27 @@ class ItemController extends \PHPapp\EntityManagerResource
         
     }
     
+    public function delete(Request $request, Response $response, array $params)
+    {
+        $id = $params["id"];
+        $em = $this->getEntityManager();
+        $repo = $em->getRepository(Item::class);
+        
+        $item = $repo->find($id);
+        
+        if (empty($id)) {
+            return $response->withJson([
+                "message" => "Please provide the id of the Item you want to delete"
+            ]);
+        }
+        
+        $em->remove($item);
+        $em->flush();
+        
+        return $response->withJson([
+            "message" => "Item {$item->getName()} was successfully deleted from {$item->getParentlist()->getOwner()->getName()}'s List {$item->getParentlist()->getName()}"
+        ]);
+        
+    }
+    
 }

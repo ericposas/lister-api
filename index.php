@@ -144,7 +144,7 @@ $app->post("/lists/{id}/item", ItemController::class . ":create");
 $app->put("/items/{id}", ItemController::class . ":update");
 
 # Delete an Item by Item id
-//$app->delete("/items/{id}", ItemController::class . ":delete");
+$app->delete("/items/{id}", ItemController::class . ":delete");
 
 
 # Run Slim Framework

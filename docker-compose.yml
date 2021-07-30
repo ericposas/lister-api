@@ -3,6 +3,8 @@ version: '3.2'
 services:
   php:
     image: webdev00/lister-api:latest
+    build:
+      context: .
     ports: 
       - 80:80
       

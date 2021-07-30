@@ -49,7 +49,7 @@ class Item {
     
     /**
      * @ORM\ManyToOne(targetEntity="GenericList", cascade={"all"}, fetch="LAZY")
-     * @ORM\JoinColumn(name="parentlist_id", referencedColumnName="id", onDelete="cascade")
+     * @ORM\JoinColumn(name="parentlist_id", referencedColumnName="id")
      */
     protected $parentlist;
     

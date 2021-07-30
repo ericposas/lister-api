@@ -39,7 +39,7 @@ class GenericList
     protected $description;
     
     /**
-     * @ORM\OneToMany(targetEntity="Item", mappedBy="parentlist", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Item", mappedBy="parentlist", cascade={"persist"})
      */
     protected $items;
 
