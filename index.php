@@ -7,11 +7,20 @@ use PHPapp\Controllers\UserController;
 use PHPapp\Controllers\ItemController;
 use PHPapp\Controllers\ListsController;
 use PHPapp\Controllers\ContactController;
+use PHPapp\Controllers\LoginController;
+use PHPapp\Controllers\LogoutController;
+use PHPapp\Controllers\AuthCodeController;
+
+use Auth0\SDK\Auth0;
+
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 use PHPapp\Middleware\CountMiddleware;
+
+$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
 /////////////////////////////////////////////////////
 //
@@ -44,13 +53,43 @@ $uselessInjectHelloMw = function (Request $request,  RequestHandler $handler) {
 
 /////////////////////////////////////////////////////
 //
+//  LOGIN
+//
+/////////////////////////////////////////////////////
+
+$app->get("/login", LoginController::class);
+
+$app->get("/logout", LogoutController::class);
+
+//$app->get("/authcode", AuthCodeController::class);
+
+///////////////////////////////////////////////////////
+//
 //  PUBLIC STATIC
 //
 /////////////////////////////////////////////////////
 
 $app->get("/", function (Request $request, Response $response) {
-    return $response->write("<h2>Home Updated.</h2>");
-})->add(CountMiddleware::class . ":appendUserCount");
+    
+    $auth0 = new Auth0(PHPapp\Helpers\AuthConfig::getConfig());
+
+      $userInfo = $auth0->getUser();
+//      $refTok = $auth0->getRefreshToken();
+
+      if (!$userInfo) {
+          $response->getBody()->write("not logged in.");
+          return $response;
+      } else {
+          return $response->withJson([
+              "user" => $userInfo,
+//              "refreshToken" => $refTok
+          ]);
+      }
+});
+
+//$app->get("/", function (Request $request, Response $response) {
+//    return $response->write("<h2>Home Updated.</h2>");
+//})->add(CountMiddleware::class . ":appendUserCount");
 
 /////////////////////////////////////////////////////
 //
