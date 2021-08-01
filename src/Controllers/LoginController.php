@@ -21,11 +21,19 @@ class LoginController {
 	if (!$userInfo) {
             $auth0->login();
 	} else {
+            
 //            return $response->withRedirect("/");
-            $response->getBody()->write((string) json_encode([
-                "api_token" => $auth0->getIdToken()
-            ]));
-            return $response->withHeader("content-type", "application/json");
+            
+//            $response->getBody()->write((string) json_encode([
+//                "api_token" => $auth0->getIdToken()
+//            ]));
+//            return $response->withHeader("content-type", "application/json");
+            
+            $response->getBody()->write(""
+                    . "<div>Your API token:</div>"
+                    . "{$auth0->getIdToken()}"
+                    . "<div></div>");
+            return $response;
 	}
 
     }

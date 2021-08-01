@@ -64,10 +64,11 @@ $verifyJWT = function (Request $request, RequestHandler $handler) {
     $api_token = \PHPapp\Helpers\GetAuthorizationTokenFromHeader::getToken($request);
     
     if (empty($api_token)) {
-        $response->getBody()->write((string) json_encode([
-            "message" => "you need to log in to get a jwt, then you can make API calls"
-        ]));
-        $response = $response->withHeader("content-type", "application/json");
+//        $response->getBody()->write((string) json_encode([
+//            "message" => "you need to log in to get a jwt by hitting the endpoint /get-token, then you can make API calls"
+//        ]));
+//        $response = $response->withHeader("content-type", "application/json");
+        $response->getBody()->write("you need to log in to get a jwt by hitting the endpoint /get-token, then you can make API calls");
         return $response;
     }
     
@@ -107,11 +108,11 @@ $verifyJWT = function (Request $request, RequestHandler $handler) {
 
 /////////////////////////////////////////////////////
 //
-//  LOGIN
+//  GET API TOKEN
 //
 /////////////////////////////////////////////////////
 
-$app->get("/login", LoginController::class);
+$app->get("/get-token", LoginController::class);
 
 $app->get("/logout", LogoutController::class);
 

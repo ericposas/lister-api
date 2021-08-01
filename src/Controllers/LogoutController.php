@@ -16,9 +16,15 @@ class LogoutController {
         
         $auth0 = new Auth0(\PHPapp\Helpers\AuthConfig::getConfig());
         
-	$auth0->logout();
+	$auth0->logout();      
+        $guzzle = new \GuzzleHttp\Client([
+            "base_uri" => "https://{$_ENV["AUTH0_DOMAIN"]}/v2/"
+        ]);
+        $guzzleResponse = $guzzle->request("GET", "logout?returnTo={$_SESSION["AUTH0_REDIRECT_URI"]}&client_id={$_SESSION["AUTH0_CLIENT_ID"]}");
         
-        return $response->withRedirect("/");
+        return $response->withJson([
+            "logout" => $guzzleResponse
+        ]);
 
     }
     
