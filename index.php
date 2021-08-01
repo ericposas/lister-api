@@ -68,7 +68,7 @@ $verifyJWT = function (Request $request, RequestHandler $handler) {
 //            "message" => "you need to log in to get a jwt by hitting the endpoint /get-token, then you can make API calls"
 //        ]));
 //        $response = $response->withHeader("content-type", "application/json");
-        $response->getBody()->write("you need to log in to get a jwt by hitting the endpoint /get-token, then you can make API calls");
+        $response->getBody()->write("Log in or sign up to get a jwt token by hitting the endpoint /get-token, then you can make API calls");
         return $response;
     }
     
