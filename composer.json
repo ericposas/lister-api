@@ -19,7 +19,8 @@
         "doctrine/cache": "^1.11",
         "vlucas/phpdotenv": "^5.3",
         "doctrine/migrations": "^3.2",
-        "auth0/auth0-php": "~7.0"
+        "auth0/auth0-php": "~7.0",
+        "lcobucci/jwt": "^4.1"
     },
     "autoload": {
         "psr-4": {

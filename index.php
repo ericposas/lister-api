@@ -19,6 +19,12 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 use PHPapp\Middleware\CountMiddleware;
 
+# jwt token parsing -- move to middleware __invoke-able class
+use Auth0\SDK\Helpers\JWKFetcher;
+use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
+use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
+use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
+
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
@@ -51,6 +57,54 @@ $uselessInjectHelloMw = function (Request $request,  RequestHandler $handler) {
     return $newResp;
 };
 
+$verifyJWT = function (Request $request, RequestHandler $handler) {
+    
+    $response = new Slim\Psr7\Response();
+    
+    $api_token = \PHPapp\Helpers\GetAuthorizationTokenFromHeader::getToken($request);
+    
+    if (empty($api_token)) {
+        $response->getBody()->write((string) json_encode([
+            "message" => "you need to log in to get a jwt, then you can make API calls"
+        ]));
+        $response = $response->withHeader("content-type", "application/json");
+        return $response;
+    }
+    
+    $token_issuer = "https://{$_ENV["AUTH0_DOMAIN"]}/";
+    $jwks_fetcher = new JWKFetcher();
+    $jwks = $jwks_fetcher->getKeys("{$token_issuer}.well-known/jwks.json");
+    $signature_verifier = new AsymmetricVerifier($jwks);
+    
+    $token_verifier = new IdTokenVerifier(
+            $token_issuer,
+            $_ENV["AUTH0_CLIENT_ID"],
+            $signature_verifier
+    );
+    
+    try {
+        $decoded_token = $token_verifier->verify($api_token);
+        
+        // check jwt, if good, then go ahead and allow api call to go through
+        if (isset($decoded_token)) {
+            $handled = $handler->handle($request)->getBody();
+            $response = new Slim\Psr7\Response();
+            $response->getBody()->write((string) $handled);
+            return $response->withAddedHeader("content-type", "application/json");
+        } else {
+            $response->getBody()->write((string) json_encode([
+                "user" => "user has no token in session, is not logged in"
+            ]));
+            return $response->withAddedHeader("content-type", "application/json");
+        }
+        
+    } catch (Exception $ex) {
+        $response->getBody()->write("Caught Exception - {$ex->getMessage()}");
+        return $response;
+    }
+    
+};
+
 /////////////////////////////////////////////////////
 //
 //  LOGIN
@@ -61,8 +115,6 @@ $app->get("/login", LoginController::class);
 
 $app->get("/logout", LogoutController::class);
 
-//$app->get("/authcode", AuthCodeController::class);
-
 ///////////////////////////////////////////////////////
 //
 //  PUBLIC STATIC
@@ -71,21 +123,21 @@ $app->get("/logout", LogoutController::class);
 
 $app->get("/", function (Request $request, Response $response) {
     
-    $auth0 = new Auth0(PHPapp\Helpers\AuthConfig::getConfig());
-
-      $userInfo = $auth0->getUser();
-//      $refTok = $auth0->getRefreshToken();
-
-      if (!$userInfo) {
-          $response->getBody()->write("not logged in.");
-          return $response;
-      } else {
-          return $response->withJson([
-              "user" => $userInfo,
-//              "refreshToken" => $refTok
-          ]);
-      }
-});
+    $api_token = \PHPapp\Helpers\GetAuthorizationTokenFromHeader::getToken($request);
+    
+    if (isset($api_token)) {
+        return $response->withJson([
+            "status" => "you are authorized to make API calls with the provided token",
+            "authorized" => true
+        ]);
+    }
+    
+    return $response->withJson([
+        "status" => "not authorized to access API",
+        "authorized" => false
+    ]);
+    
+})->add($verifyJWT);
 
 //$app->get("/", function (Request $request, Response $response) {
 //    return $response->write("<h2>Home Updated.</h2>");
@@ -98,7 +150,7 @@ $app->get("/", function (Request $request, Response $response) {
 /////////////////////////////////////////////////////
 
 # Gets all Users 
-$app->get("/users", UserController::class . ":index");
+$app->get("/users", UserController::class . ":index")->add($verifyJWT);
 
 # Gets a single User by $id
 $app->get("/users/{id}", UserController::class . ":show");

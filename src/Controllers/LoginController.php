@@ -19,9 +19,13 @@ class LoginController {
 	$userInfo = $auth0->getUser();
 
 	if (!$userInfo) {
-		$auth0->login();
+            $auth0->login();
 	} else {
-            return $response->withRedirect("/");
+//            return $response->withRedirect("/");
+            $response->getBody()->write((string) json_encode([
+                "api_token" => $auth0->getIdToken()
+            ]));
+            return $response->withHeader("content-type", "application/json");
 	}
 
     }
