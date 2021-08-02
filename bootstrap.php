@@ -18,11 +18,11 @@ $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__.'/src'), $i
 // database configuration parameters
 $conn = array(
     'driver' => 'pdo_mysql',
-    'host' => $_ENV['GOOGLE_DB_HOST'],
+    'host' => $_ENV['DB_HOST'],
     'port' => 3306,
-    'dbname' => $_ENV['GOOGLE_DB_NAME'],
-    'user' => $_ENV['GOOGLE_DB_ROOT_USER'],
-    'password' => $_ENV['GOOGLE_DB_ROOT_PASSWORD'],
+    'dbname' => $_ENV['DB_NAME'],
+    'user' => $_ENV['DB_ROOT_USER'],
+    'password' => $_ENV['DB_ROOT_PASSWORD'],
     'charset' => 'utf8'
 );
 
