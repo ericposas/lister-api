@@ -96,7 +96,7 @@ $app->get("/users/{id}/lists", UserController::class . ":showLists");
 /**
  * @param requestBody $body { name, email?, phone? }
  */
-$app->post("/users", UserController::class . ":create");
+$app->post("/users", UserController::class . ":create")->add(\PHPapp\Middleware\VerifyJWTMiddleware::class);
 
 # Deletes a User
 $app->delete("/users/{id}", UserController::class . ":delete");
