@@ -48,16 +48,18 @@ abstract class EntityManagerResource
     $useSimpleAnnotationReader = false;
     $config = Setup::createAnnotationMetadataConfiguration(array('Models'), $isDevMode, $proxyDir, $cache, $useSimpleAnnotationReader);
 
+    $conn = \PHPapp\Helpers\DBConnectionHelper::getDBConnection();
+    
     // database configuration parameters
-    $conn = array(
-        'driver' => 'pdo_mysql',
-        'host' => $_ENV['DB_HOST'],
-        'port' => 3306,
-        'dbname' => $_ENV['DB_NAME'],
-        'user' => $_ENV['DB_ROOT_USER'],
-        'password' => $_ENV['DB_ROOT_PASSWORD'],
-        'charset' => 'utf8'
-    );
+//    $conn = array(
+//        'driver' => 'pdo_mysql',
+//        'host' => $_ENV['DB_HOST'],
+//        'port' => 3306,
+//        'dbname' => $_ENV['DB_NAME'],
+//        'user' => $_ENV['DB_ROOT_USER'],
+//        'password' => $_ENV['DB_ROOT_PASSWORD'],
+//        'charset' => 'utf8'
+//    );
 
     // return "why no .env vars? {$_ENV}";
 

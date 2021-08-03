@@ -2,8 +2,7 @@
 
 namespace PHPapp\Helpers;
 
-$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__."/../..");
-$dotenv->load();
+\Dotenv\Dotenv::createImmutable(__DIR__."/../..")->load();
 
 /**
  * Description of AuthConfig
@@ -18,7 +17,7 @@ class AuthConfig {
             'domain' => $_ENV["AUTH0_DOMAIN"],
             'client_id' => $_ENV["AUTH0_CLIENT_ID"],
             'client_secret' => $_ENV["AUTH0_CLIENT_SECRET"],
-            'redirect_uri' => $_ENV["AUTH0_REDIRECT_URI"],
+            'redirect_uri' => $_ENV["ENV"] == "local" ? $_ENV["LOCAL_AUTH0_REDIRECT_URI"] : $_ENV["AUTH0_REDIRECT_URI"],
             'scope' => 'openid profile email',
             'persist_access_token' => true,
             'persist_id_token' => true

@@ -2,21 +2,12 @@
 
 use Doctrine\DBAL\DriverManager;
 
-$dot = Dotenv\Dotenv::createImmutable(__DIR__);
-$dot->load();
+\Dotenv\Dotenv::createImmutable(__DIR__)->load();
 
 return DriverManager::getConnection([
-  'dbname' => getenv('MYSQL_DB_NAME'),
-  'user' => getenv('MYSQL_ROOT_USER'),
-  'password' => getenv('MYSQL_ROOT_PASSWORD'),
-  'host' => 'localhost',
+  'dbname' => getenv("ENV") == "local" ? getenv("LOCAL_DB_NAME") : getenv("GOOGLE_DB_NAME"),
+  'user' => getenv("ENV") == "local" ? getenv("LOCAL_DB_ROOT_USER") : getenv("GOOGLE_DB_ROOT_USER"),
+  'password' => getenv("ENV") == "local" ? getenv("LOCAL_DB_ROOT_PASSWORD") : getenv("GOOGLE_DB_ROOT_PASSWORD"),
+  'host' => getenv("ENV") == "local" ? getenv("LOCAL_DB_HOST") : getenv("GOOGLE_DB_HOST"),
   'driver' => 'pdo_mysql',
 ]);
-
-// return [
-//   'dbname' => 'db',
-//   'user' => 'root',
-//   'password' => '',
-//   'host' => 'localhost',
-//   'driver' => 'pdo_mysql',
-// ];

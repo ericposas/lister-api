@@ -25,8 +25,7 @@ use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
 
-$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+\Dotenv\Dotenv::createImmutable(__DIR__)->load();
 
 /////////////////////////////////////////////////////
 //

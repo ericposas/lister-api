@@ -6,15 +6,12 @@ use Auth0\SDK\Auth0;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-// get env vars
-$denv = \Dotenv\Dotenv::createImmutable(__DIR__."/../..");
-$denv->load();
-
 class LoginController {
     
     public function __invoke(Request $request, Response $response) {
         
-        $auth0 = new Auth0(\PHPapp\Helpers\AuthConfig::getConfig());
+        $auth0Config = \PHPapp\Helpers\AuthConfig::getConfig();
+        $auth0 = new Auth0($auth0Config);
         
 	$userInfo = $auth0->getUser();
 

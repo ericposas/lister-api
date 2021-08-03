@@ -2,3 +2,4 @@
 .htaccess
 vendor/
 /nbproject/private/
+/mysql-data
