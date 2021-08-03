@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="\PHPapp\ExtendedRepositories\APIUserRepository")
  * @ORM\Table(name="api_users")
  */
 class APIUser {
@@ -63,12 +63,12 @@ class APIUser {
         return $this->id;
     }
     
-    public function getTokens($token)
+    public function getTokens()
     {
         return $this->tokens;
     }
     
-    public function setToken($token)
+    public function setToken(\PHPapp\Entity\WhitelistedToken $token)
     {
         $this->tokens[] = $token;
         return $this;
@@ -79,7 +79,7 @@ class APIUser {
         return $this->nickname;
     }
     
-    public function setNickname($nickname)
+    public function setNickname(string $nickname)
     {
         $this->nickname = $nickname;
         return $this;
@@ -90,7 +90,7 @@ class APIUser {
         return $this->name;
     }
     
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
         return $this;
@@ -101,7 +101,7 @@ class APIUser {
         return $this->picture;
     }
     
-    public function setPicture($picture)
+    public function setPicture(string $picture)
     {
         $this->picture = $picture;
         return $this;
@@ -112,7 +112,7 @@ class APIUser {
         return $this->updated_at;
     }
     
-    public function setUpdatedAt($updated_at)
+    public function setUpdatedAt(string $updated_at)
     {
         $this->updated_at = $updated_at;
         return $this;
@@ -123,7 +123,7 @@ class APIUser {
         return $this->email;
     }
     
-    public function setEmail($email)
+    public function setEmail(string $email)
     {
         $this->email = $email;
         return $this;
@@ -134,7 +134,7 @@ class APIUser {
         return $this->email_verified;
     }
     
-    public function setEmailVerified($email_verified)
+    public function setEmailVerified(string $email_verified)
     {
         $this->email_verified = $email_verified;
         return $this;

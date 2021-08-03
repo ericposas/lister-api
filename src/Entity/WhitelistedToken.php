@@ -18,7 +18,7 @@ class WhitelistedToken {
     protected $id;
     
     /**
-     * @ORM\Column(type="string", length="999", unique=true, nullable=false)
+     * @ORM\Column(type="text", length="65535")
      */
     protected $jwt;
     
