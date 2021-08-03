@@ -32,7 +32,7 @@ class Contact {
     protected $phone;
     
     /**
-     * @Column(type="string", length=32, unique=true, nullable=true)
+     * @Column(type="string", length=100, unique=true, nullable=true)
      */
     protected $email;
     

@@ -23,27 +23,27 @@ class Item {
     protected $name;
     
     /**
-     * @ORM\Column(type="string", length=255, unique=false, nullable=true)
+     * @ORM\Column(type="string", length=999, unique=false, nullable=true)
      */
     protected $icon;
     
     /**
-     * @ORM\Column(type="string", length=255, unique=false, nullable=true)
+     * @ORM\Column(type="string", length=999, unique=false, nullable=true)
      */
     protected $image;
     
     /**
-     * @ORM\Column(type="string", length=255, unique=false, nullable=true)
+     * @ORM\Column(type="string", length=999, unique=false, nullable=true)
      */
     protected $link;
     
     /**
-     * @ORM\Column(type="string", length=255, unique=false, nullable=true)
+     * @ORM\Column(type="string", length=999, unique=false, nullable=true)
      */
     protected $meta;
     
     /**
-     * @ORM\Column(type="string", length=255, unique=false, nullable=true)
+     * @ORM\Column(type="string", length=999, unique=false, nullable=true)
      */
     protected $description;
     

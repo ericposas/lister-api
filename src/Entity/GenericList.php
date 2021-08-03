@@ -33,7 +33,7 @@ class GenericList
     protected $name;
     
     /**
-     * @Column(type="string", length=255, unique=false, nullable=true)
+     * @Column(type="string", length=999, unique=false, nullable=true)
      * @var string
      */
     protected $description;

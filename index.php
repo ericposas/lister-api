@@ -63,13 +63,13 @@ $verifyJWT = function (Request $request, RequestHandler $handler) {
     $api_token = \PHPapp\Helpers\GetAuthorizationTokenFromHeader::getToken($request);
     
     if (empty($api_token)) {
-//        $response->getBody()->write((string) json_encode([
-//            "message" => "you need to log in to get a jwt by hitting the endpoint /get-token, then you can make API calls"
-//        ]));
-//        $response = $response->withHeader("content-type", "application/json");
         $response->getBody()->write("Log in or sign up to get a jwt token by hitting the endpoint /get-token, then you can make API calls");
         return $response;
     }
+    
+    # check the token against the token_whitelist table
+    # reject if the token is not found
+    
     
     $token_issuer = "https://{$_ENV["AUTH0_DOMAIN"]}/";
     $jwks_fetcher = new JWKFetcher();
@@ -83,13 +83,22 @@ $verifyJWT = function (Request $request, RequestHandler $handler) {
     );
     
     try {
-        $decoded_token = $token_verifier->verify($api_token);
+        $decoded_token = $token_verifier->verify($api_token, ["nonce", "max_age"]);
+        $sub = $decoded_token["sub"];
+        
+        # check the "sub" claim in the supplied token
+        if ($sub !== $_ENV["AUTH0_SUB"]) {
+            $response->getBody()->write((string)[
+                "message" => "sub claim does not match the expected value"
+            ]);
+            return $response;
+        }
         
         // check jwt, if good, then go ahead and allow api call to go through
         if (isset($decoded_token)) {
-            $handled = $handler->handle($request)->getBody();
+            $handled = (string)$handler->handle($request)->getBody();
             $response = new Slim\Psr7\Response();
-            $response->getBody()->write((string) $handled);
+            $response->getBody()->write("{$handled}");
             return $response->withAddedHeader("content-type", "application/json");
         } else {
             $response->getBody()->write((string) json_encode([

@@ -26,7 +26,18 @@ class LoginController {
 //            ]));
 //            return $response->withHeader("content-type", "application/json");
             
+//            var_dump((string) json_encode($userInfo));
+            
+            foreach($userInfo as $key => $data) {
+                $userData[$key] = $data;
+            }
+            
+            $userDataString = (string)json_encode($userData);
+            
             $response->getBody()->write(""
+                    . "{$userDataString}"
+                    . "<br/>"
+                    . "<br/>"
                     . "<div>Your API token:</div>"
                     . "{$auth0->getIdToken()}"
                     . "<div></div>");
