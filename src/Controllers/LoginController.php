@@ -31,7 +31,7 @@ class LoginController extends \PHPapp\EntityManagerResource {
             
             if (!$existingApiUser) {
                 echo "No user by the name {$userInfo["name"]} <br><br>";
-                echo "Creating user and saving to database...";
+                echo "Creating user and saving to database... <br><br>";
                 $apiUser = new APIUser();
                 $apiUser->setName($userInfo["name"])
                         ->setNickname($userInfo["nickname"])
@@ -39,18 +39,16 @@ class LoginController extends \PHPapp\EntityManagerResource {
                         ->setEmail($userInfo["email"])
                         ->setEmailVerified($userInfo["email_verified"])
                         ->setUpdatedAt($userInfo["updated_at"]);
-                $token = new \PHPapp\Entity\WhitelistedToken();
-                $token->setJWT($auth0->getIdToken());
-                $token->addOwner($apiUser);
                 $em->persist($apiUser);
-                $em->flush();
+                #$em->flush();
                 # display new token
                 $tokens[] = $auth0->getIdToken();
+                # set existingApiUser to newly created one
+                $existingApiUser = $apiUser;
+                
             } else {
                 $existingApiUser = $existingApiUser[0];
-                echo "User is already in Lister API's database, updating..."
-                . "<br>"
-                        . "<br>";
+                echo "User is already in Lister API's database, updated existing user. <br><br>";
                 # api user is already in our database, so update them
                 $existingApiUser->setName($userInfo["name"])
                         ->setNickname($userInfo["nickname"])
@@ -58,46 +56,41 @@ class LoginController extends \PHPapp\EntityManagerResource {
                         ->setEmail($userInfo["email"])
                         ->setEmailVerified($userInfo["email_verified"])
                         ->setUpdatedAt($userInfo["updated_at"]);
-                if (empty($existingWhitelistedToken)) {
-                    $newToken = new \PHPapp\Entity\WhitelistedToken();
-                    $newToken->setJWT($auth0->getIdToken());
-                    $newToken->addOwner($existingApiUser);
-                    $em->flush();
-                }
-                # check whitelisted_tokens for incoming jwt value
-                # if different, set a new token in user's tokens
-                # -- display all tokens
-                $existingTokens = $existingApiUser->getTokens();
-                foreach($existingTokens as $key => $existingToken) {
-                    $tokens[] = $existingToken->getJWT();
+            }
+            
+            if (empty($existingWhitelistedToken)) {
+                $existingWhitelistedToken = $existingWhitelistedToken[0];
+                $deletedTokensRepo = $em->getRepository(\PHPapp\Entity\DeletedToken::class);
+                $deletedTokenRecords = $deletedTokensRepo->findBy([ "jwt" => $auth0->getIdToken() ]);
+                if (empty($deletedTokenRecords)) {
+                    $token = new \PHPapp\Entity\WhitelistedToken();
+                    $token->setJWT($auth0->getIdToken());
+                    $token->addOwner($existingApiUser);
+                } else {
+                    echo "Looks like this token has already been deleted.<br>";
+                    echo "Please generate a new one.";
+                    return $response;
                 }
             }
-            //
             
-//            foreach($userInfo as $key => $data) {
-//                $userData[$key] = $data;
-//            }
+            $em->flush();
             
-//            $userDataString = (string)json_encode($userData);
+            # check whitelisted_tokens for incoming jwt value
+            # if different, set a new token in user's tokens
+            # -- display all tokens
+            $existingTokens = $existingApiUser->getTokens();
+            foreach($existingTokens as $key => $existingToken) {
+                $tokens[] = $existingToken->getJWT();
+            }
             
-//            $response->getBody()->write((string) json_encode([
-//                "tokens" => $tokens
-//            ]));
-            
-            if ($existingApiUser) {
-                $_s = count($existingTokens) > 1 ? "s" : "";
-                echo ""
-                . "<div>Your API Token{$_s}:</div>";
-                foreach ($existingTokens as $existingToken) {
-                    echo ""
-                    . "<br>"
-                    . "<div>{$existingToken->getJWT()}</div>";
-                }
-            } else {
-                echo ""
-                . "<div>Your Token:</div>"
-                . "<br>"
-                . "<div>{$auth0->getIdToken()}</div>";
+            $_s = count($existingTokens) > 1 ? "s" : "";
+            echo ""
+            . "<div>Your API Token{$_s}:</div>";
+            foreach ($existingTokens as $existingToken) {
+                $tokId = $existingToken->getId();
+                echo "<br><div>{$existingToken->getJWT()}</div>";
+                echo "<br><a href=\"/delete-token/{$existingToken->getId()}\"><button>Delete Token</button></a>";
+                echo "<a href=\"\"><button>Generate New Token</button></a>";
             }
             
             return $response;

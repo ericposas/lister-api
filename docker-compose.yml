@@ -18,12 +18,14 @@ services:
       MYSQL_ROOT_PASSWORD: $LOCAL_DB_ROOT_PASSWORD
     volumes: 
       - ./mysql-data:/var/lib/mysql
+    ports:
+      - 3307:3306
 
   adminer:
     image: adminer
     restart: always
     ports: 
-      - 8080:8080
+      - 8082:8080
 
 volumes: 
   mysql-data:

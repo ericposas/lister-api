@@ -6,9 +6,10 @@ use Slim\Factory\AppFactory;
 use PHPapp\Controllers\UserController;
 use PHPapp\Controllers\ItemController;
 use PHPapp\Controllers\ListsController;
-use PHPapp\Controllers\ContactController;
 use PHPapp\Controllers\LoginController;
+use PHPapp\Controllers\TokenController;
 use PHPapp\Controllers\LogoutController;
+use PHPapp\Controllers\ContactController;
 use PHPapp\Controllers\AuthCodeController;
 
 use Slim\Http\Response as Response;
@@ -79,12 +80,22 @@ $app->get("/", function (Request $request, Response $response) {
 
 /////////////////////////////////////////////////////
 //
+//  API TOKENS
+//
+/////////////////////////////////////////////////////
+
+# Delete token
+$app->get("/delete-token/{id}", TokenController::class . ":delete");
+//$app->delete("/tokens/{id}", TokenController::class . ":delete");
+
+/////////////////////////////////////////////////////
+//
 //  USERS
 //
 /////////////////////////////////////////////////////
 
 # Gets all Users 
-$app->get("/users", UserController::class . ":index")->add(\PHPapp\Middleware\VerifyJWTMiddleware::class);
+$app->get("/users", UserController::class . ":index")->add(VerifyJWTMiddleware::class);
 
 # Gets a single User by $id
 $app->get("/users/{id}", UserController::class . ":show");
@@ -96,7 +107,7 @@ $app->get("/users/{id}/lists", UserController::class . ":showLists");
 /**
  * @param requestBody $body { name, email?, phone? }
  */
-$app->post("/users", UserController::class . ":create")->add(\PHPapp\Middleware\VerifyJWTMiddleware::class);
+$app->post("/users", UserController::class . ":create")->add(VerifyJWTMiddleware::class);
 
 # Deletes a User
 $app->delete("/users/{id}", UserController::class . ":delete");
