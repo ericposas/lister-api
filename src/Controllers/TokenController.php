@@ -34,7 +34,7 @@ class TokenController extends EntityManagerResource {
 //            "message" => "token {$params["id"]} was deleted."
 //        ]);
         
-        return $response->withRedirect("/get-token");
+        return $response->withRedirect("/my-tokens");
         
     }
     
@@ -47,7 +47,7 @@ class TokenController extends EntityManagerResource {
         
         $auth0->logout();
         
-        return $response->withRedirect("/get-token");
+        return $response->withRedirect("/my-tokens");
     }
     
 }

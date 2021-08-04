@@ -19,6 +19,8 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use PHPapp\Middleware\CountMiddleware;
 use PHPapp\Middleware\VerifyJWTMiddleware;
 
+use Auth0\SDK\Auth0;
+
 \Dotenv\Dotenv::createImmutable(__DIR__)->load();
 
 /////////////////////////////////////////////////////
@@ -46,7 +48,7 @@ $app->addErrorMiddleware(true, true, true);
 //
 /////////////////////////////////////////////////////
 
-$app->get("/get-token", LoginController::class);
+$app->get("/my-tokens", LoginController::class); # also handles the generation of new tokens by redirecting back to this route
 
 $app->get("/logout", LogoutController::class);
 
@@ -57,22 +59,8 @@ $app->get("/logout", LogoutController::class);
 /////////////////////////////////////////////////////
 
 $app->get("/", function (Request $request, Response $response) {
-    
-    $api_token = \PHPapp\Helpers\GetAuthorizationTokenFromHeader::getToken($request);
-    
-    if (isset($api_token)) {
-        return $response->withJson([
-            "status" => "you are authorized to make API calls with the provided token",
-            "authorized" => true
-        ]);
-    }
-    
-    return $response->withJson([
-        "status" => "not authorized to access API",
-        "authorized" => false
-    ]);
-    
-})->add(\PHPapp\Middleware\VerifyJWTMiddleware::class);
+    return $response->withRedirect("/my-tokens");
+}); //->add(\PHPapp\Middleware\VerifyJWTMiddleware::class);
 
 //$app->get("/", function (Request $request, Response $response) {
 //    return $response->write("<h2>Home Updated.</h2>");

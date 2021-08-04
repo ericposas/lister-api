@@ -48,7 +48,7 @@ class LoginController extends \PHPapp\EntityManagerResource {
                 
             } else {
                 $existingApiUser = $existingApiUser[0];
-                echo "User is already in Lister API's database, updated existing user. <br><br>";
+                echo "You're logged in as {$auth0->getUser()["name"]}<br><br>";
                 # api user is already in our database, so update them
                 $existingApiUser->setName($userInfo["name"])
                         ->setNickname($userInfo["nickname"])
@@ -94,7 +94,7 @@ class LoginController extends \PHPapp\EntityManagerResource {
                 $tokId = $existingToken->getId();
                 echo "<br><div>{$existingToken->getJWT()}</div>";
                 echo "<br><a href=\"/delete-token/{$existingToken->getId()}\"><button>Delete Token</button></a>";
-                echo "<a style=\"margin-left: 1rem;\" href=\"/generate-new-token\"><button>Generate New Token</button></a>";
+                echo "<a style=\"margin-left: 1rem;\" href=\"/generate-new-token\"><button>Generate New Token</button></a><br>";
             }
             
             return $response;

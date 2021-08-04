@@ -39,7 +39,7 @@ class VerifyJWTMiddleware extends \PHPapp\EntityManagerResource {
         $whitelisted_token = $repo->findBy([ "jwt" => $api_token ]);
         if (empty($whitelisted_token[0])) {
             $response->getBody()->write((string)json_encode([
-                "message" => "This token was not found in our whitelist, sorry."
+                "message" => "You cannot access resources because this token was not found in our whitelist, sorry."
             ]));
             return $response->withAddedHeader("content-type", "application/json");
         }
