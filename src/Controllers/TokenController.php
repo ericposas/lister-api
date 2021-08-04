@@ -6,6 +6,8 @@ use PHPapp\EntityManagerResource;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+use Auth0\SDK\Auth0;
+        
 /**
  * Description of TokenController
  *
@@ -13,7 +15,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class TokenController extends EntityManagerResource {
 
-    public function delete (Request $request, Response $response, array $params) {
+    public function delete (Request $request, Response $response, array $params)
+    {
         $em = $this->getEntityManager();
         $whitelistedTokenRepo = $em->getRepository(\PHPapp\Entity\WhitelistedToken::class);
         $deletedTokenRepo = $em->getRepository(\PHPapp\Entity\DeletedToken::class);
@@ -27,10 +30,24 @@ class TokenController extends EntityManagerResource {
         
         $em->flush();
         
-        return $response->withJson([
-            "message" => "token {$params["id"]} was deleted."
-        ]);
+//        return $response->withJson([
+//            "message" => "token {$params["id"]} was deleted."
+//        ]);
         
+        return $response->withRedirect("/get-token");
+        
+    }
+    
+    public function generate (Request $request, Response $response)
+    {
+        $em = $this->getEntityManager();
+        
+        $auth0Config = \PHPapp\Helpers\AuthConfig::getConfig();
+        $auth0 = new Auth0($auth0Config);
+        
+        $auth0->logout();
+        
+        return $response->withRedirect("/get-token");
     }
     
 }

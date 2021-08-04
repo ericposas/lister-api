@@ -86,7 +86,9 @@ $app->get("/", function (Request $request, Response $response) {
 
 # Delete token
 $app->get("/delete-token/{id}", TokenController::class . ":delete");
-//$app->delete("/tokens/{id}", TokenController::class . ":delete");
+
+# Generate token
+$app->get("/generate-new-token", TokenController::class . ":generate");
 
 /////////////////////////////////////////////////////
 //

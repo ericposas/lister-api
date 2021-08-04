@@ -67,8 +67,12 @@ class LoginController extends \PHPapp\EntityManagerResource {
                     $token->setJWT($auth0->getIdToken());
                     $token->addOwner($existingApiUser);
                 } else {
-                    echo "Looks like this token has already been deleted.<br>";
-                    echo "Please generate a new one.";
+//                    echo "Looks like this token has already been deleted.<br>";
+//                    echo "Please generate a new one.";
+//                    return $response;
+                    
+                    echo "<br><div>You have no tokens</div><br>";
+                    echo "<a style=\"margin-left: 0rem;\" href=\"/generate-new-token\"><button>Generate New Token</button></a>";
                     return $response;
                 }
             }
@@ -90,7 +94,7 @@ class LoginController extends \PHPapp\EntityManagerResource {
                 $tokId = $existingToken->getId();
                 echo "<br><div>{$existingToken->getJWT()}</div>";
                 echo "<br><a href=\"/delete-token/{$existingToken->getId()}\"><button>Delete Token</button></a>";
-                echo "<a href=\"\"><button>Generate New Token</button></a>";
+                echo "<a style=\"margin-left: 1rem;\" href=\"/generate-new-token\"><button>Generate New Token</button></a>";
             }
             
             return $response;
