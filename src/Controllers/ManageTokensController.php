@@ -20,16 +20,7 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
         echo \PHPapp\HTMLHelpers\GenerateHTML::getHeadContent();
         echo \PHPapp\HTMLHelpers\GenerateHTML::getHeaderTitleBar();
         echo ""
-        . "<div style=\""
-                . "color: #fff;"
-                . "top: 1.25rem;"
-                . "right: 6rem;"
-                . "text-align: right;"
-                . "position: absolute;"
-                . "font-weight: bold;"
-                . "\">"
-                . "{$userInfo["name"]}"
-        . "</div>"
+        . "<div class=\"username--right\">{$userInfo["name"]}</div>"
         . "<br>"
         . "<div class=\"container\">";
         
@@ -88,12 +79,7 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
                 . "Your API Token{$_s}:"
                 . "</h3>";
         foreach ($existingTokens as $existingToken) {
-            $tokId = $existingToken->getId();
-            echo ""
-            . "<div class=\"api-token-row\">"
-            .       "<div>{$existingToken->getJWT()}</div>"
-            . \PHPapp\HTMLHelpers\GenerateHTML::getDeleteTokenButtonHTML($existingToken->getId())
-            . "</div>";
+            echo \PHPapp\HTMLHelpers\GenerateHTML::getTokenRow($existingToken->getJWT(), $existingToken->getId());
         }
         
         echo "</div>"; // closes .container 

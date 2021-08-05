@@ -15,95 +15,45 @@ class GenerateHTML {
     public static function getHeadContent(): string {
         return ""
         . "<head>"
-                . "<style>"
-                . "html, body {"
-                . "margin: 0;="
-                . "}"
-                . ".title-bar {"
-                . "margin: 0;"
-                . "padding: 2rem;"
-                . "color: #FFF;"
-                . "background-color: #1E88E5;"
-                . "}"
-                . ".subtitle-content {"
-                . "font-size: 1.35rem;"
-                . "}"
-                . ".username {"
-                . "font-weight: bold;"
-                . "font-size: 1.25rem;"
-                . "}"
-                . ".container {"
-                . "margin: 1rem;"
-                . "}"
-                . ".api-token-row {"
-                . "margin: 0 0 .5rem 0;"
-                . "padding: 1rem;"
-                . "border-radius: 3px;"
-                . "border: #BDBDBD solid 1px;"
-                . "background-color: #E0E0E0;"
-                . "word-wrap: break-word;"
-                . "}"
-                . ".button-hover {"
-                . "transition: all .15s;"
-                . "}"
-                . ".button-hover:hover {"
-                . "cursor: pointer;"
-                . "transition: all .25s;"
-                . "transform: scale(1.05);"
-                . "}"
-                . ".delete-button {"
-                . "color: #fff;"
-                . "border: none;"
-                . "padding: .5rem;"
-                . "font-size: 1rem;"
-                . "border-radius: 3px;"
-                . "margin: -.5rem 0 0 0;"
-                . "background-color: #F44336;"
-                . "}"
-                . ".generate-button {"
-                . "color: #fff;"
-                . "border: none;"
-                . "padding: .5rem;"
-                . "font-size: 1rem;"
-                . "border-radius: 3px;"
-                . "margin: -.5rem 0 0 0;"
-                . "background-color: #1976D2;"
-                . "}"
-                . ".login-button {"
-                . "color: #fff;"
-                . "border: none;"
-                . "padding: .5rem;"
-                . "font-size: 1rem;"
-                . "border-radius: 3px;"
-                . "margin: .75rem 0 0 0;"
-                . "background-color: #1976D2;"
-                . "}"
-                . ".logout-button {"
-                . "border: none;"
-                . "color: #fff;"
-                . "top: .75rem;"
-                . "right: .75rem;"
-                . "padding: .5rem;"
-                . "font-size: 1rem;"
-                . "position: absolute;"
-                . "font-size: 1rem;"
-                . "border-radius: 3px;"
-                . "background-color: #FF5722;"
-                . "}"
-                . "</style>"
+            . "<link rel=\"stylesheet\" href=\"./public/css/main.css\" />"
+            . "<script src=\"./public/js/main.js\"></script>"
         . "</head>";
     }
     
+    /**
+     * @param string $jwtString JWT string to display in the row
+     * @param string $id Id of the token -- for delete button
+     * @return string Returns html for a single JWT token row
+     */
+    public static function getTokenRow($jwtString, $id): string {
+        return ""
+        . "<div class=\"api-token-row\">"
+            . "<div class=\"api-token-row__inner\">"
+                . "{$jwtString}"
+            . "</div>"
+            . "<div class=\"api-token-row__tooltip api-token-row__tooltip--hidden\">"
+                . "Copy API Token"
+            . "</div>"
+            . \PHPapp\HTMLHelpers\GenerateHTML::getDeleteTokenButtonHTML($id)
+        . "</div>";
+    }
+    
+    /**
+     * @return string Gets the html string for the Header Title bar
+     */
     public static function getHeaderTitleBar(): string
     {
         return html_entity_decode(""
-        . "<h1 class=\"title-bar\">"
+        . "<h1 class=\"header__titlebar\">"
             . "Lister API"
-            . "<span class=\"subtitle-content\">: Create Lists that hold collections of Items</span>"
+            . "<span class=\"header__subtitle\">: Create Lists that hold collections of Items</span>"
         . "</h1>"
         . "");
     }
     
+    /**
+     * @return string Gets html string for the logout button
+     */
     public static function getLogoutButtonHTML (): string
     {
         return html_entity_decode(""
@@ -113,6 +63,9 @@ class GenerateHTML {
                 . "");
     }
     
+    /**
+     * @return string Gets the html content for creating a login button
+     */
     public static function getLoginButtonHTML (): string
     {
         return ""
@@ -123,6 +76,9 @@ class GenerateHTML {
         . "</a>";
     }
     
+    /**
+     * @return string Gets the html content for creating a "generate token" button
+     */
     public static function getGenerateTokenButtonHTML (): string
     {
         return ""
@@ -133,6 +89,10 @@ class GenerateHTML {
         . "</a>";
     }
     
+    /**
+     * @param int $id Takes token id, used to specify which token to delete
+     * @return string returns html content for the delete token button
+     */
     public static function getDeleteTokenButtonHTML (int $id): string
     {
         return ""

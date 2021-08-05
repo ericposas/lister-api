@@ -1,0 +1,121 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : Aug 5, 2021, 9:19:23 AM
+    Author     : webdev00
+*/
+html, body {
+  margin: 0;
+}
+
+.header__titlebar {
+  margin: 0;
+  padding: 2rem;
+  color: #FFF;
+  background-color: #1E88E5;
+}
+
+.header__subtitle {
+  font-size: 1.35rem;
+}
+
+.username {
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+.username--right {
+  right: 6rem;
+  color: #fff;
+  top: 1.25rem;
+  font-weight: bold;
+  text-align: right;
+  position: absolute;
+}
+
+.container {
+  margin: 1rem;
+}
+
+.api-token-row {
+  padding: 1rem;
+  margin: 0 0 1rem 0;
+  border-radius: 3px;
+  border: #BDBDBD solid 1px;
+  background-color: #E0E0E0;
+  word-wrap: break-word;
+}
+
+.api-token-row__inner {
+  cursor: pointer;
+}
+
+.api-token-row__tooltip {
+  left: 0;
+  right: 0;
+  width: 10%;
+  color: #fff;
+  bottom: 1rem;
+  margin: auto;
+  padding: 10px;
+  background: #222;
+  margin-top: 0.5rem;
+  position: relative;
+  text-align: center;
+  border-radius: 4px;
+  margin-bottom: -2.5rem;
+}
+
+.api-token-row__tooltip--hidden {
+  visibility: hidden;
+}
+
+.api-token-row__tooltip--visible {
+  visibility: visible;
+}
+
+.button-hover {
+  transition: all 0.15s;
+}
+
+.button-hover:hover {
+  cursor: pointer;
+  transition: all 0.25s;
+  transform: scale(1.05);
+}
+
+.logout-button, .login-button, .generate-button, .delete-button {
+  color: #fff;
+  border: none;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 3px;
+}
+
+.delete-button {
+  margin: -0.5rem 0 0 0;
+  background-color: #F44336;
+}
+
+.generate-button {
+  margin: -0.5rem 0 0 0;
+  background-color: #1976D2;
+}
+
+.login-button {
+  margin: 0.75rem 0 0 0;
+  background-color: #1976D2;
+}
+
+.logout-button {
+  top: 0.75rem;
+  right: 0.75rem;
+  border-radius: 3px;
+  position: absolute;
+  background-color: #FF5722;
+}
+
+/*# sourceMappingURL=main.css.map */
