@@ -12,7 +12,14 @@ use Auth0\SDK\Helpers\Tokens\AsymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\SymmetricVerifier;
 use Auth0\SDK\Helpers\Tokens\IdTokenVerifier;
 
-\Dotenv\Dotenv::createImmutable(__DIR__."/../..")->load();
+$dotenvPath = __DIR__ . "/../..";
+
+\Dotenv\Dotenv::createImmutable($dotenvPath)->load();
+if ($_ENV["ENV"] === "local") {
+    \Dotenv\Dotenv::createImmutable($dotenvPath, ".env.local")->load();
+} else {
+    \Dotenv\Dotenv::createImmutable($dotenvPath, ".env.stage")->load();
+}
 
 /**
  * Description of VerifyJWTMiddleware

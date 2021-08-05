@@ -25,6 +25,12 @@ use Auth0\SDK\Auth0;
 
 \Dotenv\Dotenv::createImmutable(__DIR__)->load();
 
+if ($_ENV["ENV"] === "local") {
+    \Dotenv\Dotenv::createImmutable(__DIR__, ".env.local")->load();
+} else {
+    \Dotenv\Dotenv::createImmutable(__DIR__, ".env.stage")->load();
+}
+
 /////////////////////////////////////////////////////
 //
 //  SLIM

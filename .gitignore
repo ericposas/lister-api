@@ -1,4 +1,6 @@
 .env
+.env.local
+.env.stage
 .htaccess
 vendor/
 /nbproject/private/

@@ -16,8 +16,22 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
         $auth0 = new Auth0($auth0Config);
         
 	$userInfo = $auth0->getUser();
-
-        echo "<h1>Lister API</h1>";
+        
+        echo \PHPapp\HTMLHelpers\GenerateHTML::getHeadContent();
+        echo \PHPapp\HTMLHelpers\GenerateHTML::getHeaderTitleBar();
+        echo ""
+        . "<div style=\""
+                . "color: #fff;"
+                . "top: 1.25rem;"
+                . "right: 6rem;"
+                . "text-align: right;"
+                . "position: absolute;"
+                . "font-weight: bold;"
+                . "\">"
+                . "{$userInfo["name"]}"
+        . "</div>"
+        . "<br>"
+        . "<div class=\"container\">";
         
         # upon successful login, save or update our APIUser
         $em = $this->getEntityManager();
@@ -32,7 +46,16 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
             "name" => $auth0->getUser()["name"]
         ]);
         $existingApiUser = $existingApiUser[0];
-
+        
+        if (empty($existingApiUser)) {
+            $html = "<div>Please login to manage your tokens</div>"
+                  . \PHPapp\HTMLHelpers\GenerateHTML::getLoginButtonHTML();
+            $response->getBody()->write(html_entity_decode($html));
+            return $response;
+        } else {
+            echo \PHPapp\HTMLHelpers\GenerateHTML::getLogoutButtonHTML();
+        }
+        
         if (empty($existingWhitelistedToken)) {
             $existingWhitelistedToken = $existingWhitelistedToken[0];
             $deletedTokensRepo = $em->getRepository(\PHPapp\Entity\DeletedToken::class);
@@ -41,13 +64,9 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
                 $token = new \PHPapp\Entity\WhitelistedToken();
                 $token->setJWT($auth0->getIdToken());
                 $token->addOwner($existingApiUser);
-            } else {
-//                    echo "Looks like this token has already been deleted.<br>";
-//                    echo "Please generate a new one.";
-//                    return $response;
-
-                echo "<div>You have no tokens</div><br>";
-                echo "<a style=\"margin-left: 0rem;\" href=\"/generate-new-token\"><button style=\"font-size: 1rem;\">Generate New Token</button></a>";
+            } else if(empty ($existingApiUser->getTokens()) || count($existingApiUser->getTokens()) == 0) {
+                echo "<div>You have no tokens</div><br>"
+                . \PHPapp\HTMLHelpers\GenerateHTML::getGenerateTokenButtonHTML();
                 return $response;
             }
         }
@@ -63,13 +82,21 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
         }
 
         $_s = count($existingTokens) > 1 ? "s" : "";
-        echo "<a style=\"margin-left: 0rem;\" href=\"/generate-new-token\"><button style=\"font-size: 1rem;\">Generate New Token</button></a><br><br>";
-        echo "<div>Your API Token{$_s}:</div>";
+        echo \PHPapp\HTMLHelpers\GenerateHTML::getGenerateTokenButtonHTML()
+                . "<br><br>"
+                . "<h3>"
+                . "Your API Token{$_s}:"
+                . "</h3>";
         foreach ($existingTokens as $existingToken) {
             $tokId = $existingToken->getId();
-            echo "<br><div>{$existingToken->getJWT()}</div>";
-            echo "<br><a href=\"/delete-token/{$existingToken->getId()}\"><button>Delete Token</button></a><br>";
+            echo ""
+            . "<div class=\"api-token-row\">"
+            .       "<div>{$existingToken->getJWT()}</div>"
+            . \PHPapp\HTMLHelpers\GenerateHTML::getDeleteTokenButtonHTML($existingToken->getId())
+            . "</div>";
         }
+        
+        echo "</div>"; // closes .container 
 
         return $response;
 

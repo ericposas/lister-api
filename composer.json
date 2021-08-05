@@ -29,7 +29,8 @@
             "PHPapp\\Controllers\\": "src/Controllers",
             "PHPapp\\ExtendedRepositories\\": "src/ExtendedRepositories",
             "PHPapp\\Middleware\\": "src/Middleware",
-            "PHPapp\\Helpers\\": "src/Helpers"
+            "PHPapp\\Helpers\\": "src/Helpers",
+            "PHPapp\\HTMLHelpers\\": "src/HTMLHelpers"
         }
     }
 }

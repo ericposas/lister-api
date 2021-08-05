@@ -15,8 +15,13 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
 // get env vars
-$denv = \Dotenv\Dotenv::createImmutable(__DIR__.'/..');
-$denv->load();
+$dotenvPath = __DIR__ . "/..";
+\Dotenv\Dotenv::createImmutable($dotenvPath)->load();
+if ($_ENV["ENV"] === "local") {
+    \Dotenv\Dotenv::createImmutable($dotenvPath, ".env.local")->load();
+} else {
+    \Dotenv\Dotenv::createImmutable($dotenvPath, ".env.stage")->load();
+}
 
 abstract class EntityManagerResource
 {
@@ -49,19 +54,6 @@ abstract class EntityManagerResource
     $config = Setup::createAnnotationMetadataConfiguration(array('Models'), $isDevMode, $proxyDir, $cache, $useSimpleAnnotationReader);
 
     $conn = \PHPapp\Helpers\DBConnectionHelper::getDBConnection();
-    
-    // database configuration parameters
-//    $conn = array(
-//        'driver' => 'pdo_mysql',
-//        'host' => $_ENV['DB_HOST'],
-//        'port' => 3306,
-//        'dbname' => $_ENV['DB_NAME'],
-//        'user' => $_ENV['DB_ROOT_USER'],
-//        'password' => $_ENV['DB_ROOT_PASSWORD'],
-//        'charset' => 'utf8'
-//    );
-
-    // return "why no .env vars? {$_ENV}";
 
     // obtaining the entity manager
     return EntityManager::create($conn, $config);

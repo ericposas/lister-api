@@ -20,16 +20,20 @@ class HomeController extends \PHPapp\EntityManagerResource {
 
         $userInfo = $auth0->getUser();
 
-        echo "<h1>Lister API</h1>";
-
+        echo \PHPapp\HTMLHelpers\GenerateHTML::getHeadContent();
+        echo \PHPapp\HTMLHelpers\GenerateHTML::getHeaderTitleBar();
+        
         if (!$userInfo) {
-            $html = "<div>"
+            $html = "<div class=\"container\">"
                     . "<div>Log in to manage your API tokens</div>"
                     . "<div>"
-                    . "<a href=\"/login\"><button style=\"font-size: 1rem; margin: .75rem 0 0 0;\">Dashboard</button></a>"
+                    . "<a href=\"/login\"><button class=\"button-hover login-button\">"
+                    . "Dashboard"
+                    . "</button></a>"
                     . "</div>"
                   . "</div>";
         } else {
+            echo \PHPapp\HTMLHelpers\GenerateHTML::getLogoutButtonHTML();
             
             # upon successful login redirect, save or update our APIUser
             $em = $this->getEntityManager();
@@ -61,14 +65,16 @@ class HomeController extends \PHPapp\EntityManagerResource {
                         ->setUpdatedAt($userInfo["updated_at"]);
             }
             
-            $html = "<div>"
-                    . "<div>You are now logged in as {$auth0->getUser()["name"]}<div>"
-                    . "<div>"
-                            . "<a href=\"/my-tokens\"><button style=\"font-size: 1rem; margin: .75rem 0 0 0\">Go to my tokens</button></a>"
-                    . "</div>"
+            $html = "<div class=\"container\">"
+                    . "<div>You are now logged in as <span class=\"username\">{$auth0->getUser()["name"]}</span><div>"
+                        . "<div>"
+                            . "<a href=\"/my-tokens\">"
+                            . "<button class=\"button-hover login-button\">"
+                            . "Go to my tokens"
+                            . "</button></a>"
+                        . "</div>"
                   . "</div>";
         }
-
                 
         $response->getBody()->write($html);
         return $response;

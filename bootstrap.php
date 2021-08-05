@@ -6,6 +6,11 @@ use Doctrine\ORM\EntityManager;
 require_once "vendor/autoload.php";
 
 \Dotenv\Dotenv::createImmutable(__DIR__)->load();
+if ($_ENV["ENV"] === "local") {
+    \Dotenv\Dotenv::createImmutable(__DIR__, ".env.local")->load();
+} else {
+    \Dotenv\Dotenv::createImmutable(__DIR__, ".env.stage")->load();
+}
 
 // Create a simple "default" Doctrine ORM configuration for Annotations
 $isDevMode = true;

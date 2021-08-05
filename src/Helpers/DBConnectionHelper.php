@@ -2,7 +2,13 @@
 
 namespace PHPapp\Helpers;
 
-\Dotenv\Dotenv::createImmutable(__DIR__ . "/../..")->load();
+$dotenvPath = __DIR__ . "/../..";
+\Dotenv\Dotenv::createImmutable($dotenvPath)->load();
+if ($_ENV["ENV"] === "local") {
+    \Dotenv\Dotenv::createImmutable($dotenvPath, ".env.local")->load();
+} else {
+    \Dotenv\Dotenv::createImmutable($dotenvPath, ".env.stage")->load();
+}
 
 /**
  * Description of DBConnectionHelper
@@ -15,11 +21,11 @@ class DBConnectionHelper {
     {
         return array(
             'driver' => 'pdo_mysql',
-            'host' => $_ENV["ENV"] == "local" ? $_ENV["LOCAL_DB_HOST"] : $_ENV["GOOGLE_DB_HOST"],
+            'host' => $_ENV["DB_HOST"],
             'port' => 3306,
-            'dbname' => $_ENV["ENV"] == "local" ? $_ENV["LOCAL_DB_NAME"] : $_ENV["GOOGLE_DB_NAME"],
-            'user' => $_ENV["ENV"] == "local" ? $_ENV["LOCAL_DB_ROOT_USER"] : $_ENV["GOOGLE_DB_ROOT_USER"],
-            'password' => $_ENV["ENV"] == "local" ? $_ENV["LOCAL_DB_ROOT_PASSWORD"] : $_ENV["GOOGLE_DB_ROOT_PASSWORD"],
+            'dbname' => $_ENV["DB_NAME"],
+            'user' => $_ENV["DB_ROOT_USER"],
+            'password' => $_ENV["DB_ROOT_PASSWORD"],
             'charset' => 'utf8'
         );
     }
