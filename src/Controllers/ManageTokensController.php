@@ -21,47 +21,23 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
         
         # upon successful login, save or update our APIUser
         $em = $this->getEntityManager();
-        $repo = $em->getRepository(\PHPapp\Entity\APIUser::class);
+        $apiUserRepo = $em->getRepository(APIUser::class);
         $tokRepo = $em->getRepository(\PHPapp\Entity\WhitelistedToken::class);
-        $existingApiUser = $repo->findBy([ "name" => $userInfo["name"] ]);
+        
         $existingWhitelistedToken = $tokRepo->findBy([
             "jwt" => $auth0->getIdToken()
         ]);
 
-        if (!$existingApiUser) {
-            echo "No user by the name {$userInfo["name"]} <br><br>";
-            echo "Creating user and saving to database... <br><br>";
-            $apiUser = new APIUser();
-            $apiUser->setName($userInfo["name"])
-                    ->setNickname($userInfo["nickname"])
-                    ->setPicture($userInfo["picture"])
-                    ->setEmail($userInfo["email"])
-                    ->setEmailVerified($userInfo["email_verified"])
-                    ->setUpdatedAt($userInfo["updated_at"]);
-            $em->persist($apiUser);
-            #$em->flush();
-            # display new token
-            $tokens[] = $auth0->getIdToken();
-            # set existingApiUser to newly created one
-            $existingApiUser = $apiUser;
-
-        } else {
-            $existingApiUser = $existingApiUser[0];
-            echo "You're logged in as {$auth0->getUser()["name"]}<br><br>";
-            # api user is already in our database, so update them
-            $existingApiUser->setName($userInfo["name"])
-                    ->setNickname($userInfo["nickname"])
-                    ->setPicture($userInfo["picture"])
-                    ->setEmail($userInfo["email"])
-                    ->setEmailVerified($userInfo["email_verified"])
-                    ->setUpdatedAt($userInfo["updated_at"]);
-        }
+        $existingApiUser = $apiUserRepo->findBy([
+            "name" => $auth0->getUser()["name"]
+        ]);
+        $existingApiUser = $existingApiUser[0];
 
         if (empty($existingWhitelistedToken)) {
             $existingWhitelistedToken = $existingWhitelistedToken[0];
             $deletedTokensRepo = $em->getRepository(\PHPapp\Entity\DeletedToken::class);
             $deletedTokenRecords = $deletedTokensRepo->findBy([ "jwt" => $auth0->getIdToken() ]);
-            if (empty($deletedTokenRecords)) {
+            if (empty($deletedTokenRecords) && isset($existingApiUser)) {
                 $token = new \PHPapp\Entity\WhitelistedToken();
                 $token->setJWT($auth0->getIdToken());
                 $token->addOwner($existingApiUser);

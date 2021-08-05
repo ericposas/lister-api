@@ -16,7 +16,7 @@ class LoginController extends \PHPapp\EntityManagerResource {
     public function __invoke() {
         $auth0Config = \PHPapp\Helpers\AuthConfig::getConfig();
         $auth0 = new Auth0($auth0Config);
-        $auth0->login();
+        $auth0->login(); # redirects us to / 
     }
     
 }

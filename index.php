@@ -3,6 +3,7 @@
 require 'vendor/autoload.php';
 
 use Slim\Factory\AppFactory;
+use PHPapp\Controllers\HomeController;
 use PHPapp\Controllers\UserController;
 use PHPapp\Controllers\ItemController;
 use PHPapp\Controllers\ListsController;
@@ -61,32 +62,7 @@ $app->get("/logout", LogoutController::class);
 //
 /////////////////////////////////////////////////////
 
-$app->get("/", function (Request $request, Response $response) {
-    $auth0Config = \PHPapp\Helpers\AuthConfig::getConfig();
-    $auth0 = new Auth0($auth0Config);
-
-    $userInfo = $auth0->getUser();
-
-    echo "<h1>Lister API</h1>";
-
-    if (!$userInfo) {
-        $html = "<div>"
-                . "<div>Log in to manage your API tokens</div>"
-                . "<div>"
-                . "<a href=\"/login\"><button style=\"font-size: 1rem; margin: .75rem 0 0 0;\">Dashboard</button></a>"
-                . "</div>"
-              . "</div>";
-    } else {
-        $html = "<div>"
-                . "<div>You are now logged in as {$auth0->getUser()["name"]}<div>"
-                . "<div>"
-                        . "<a href=\"/my-tokens\"><button style=\"font-size: 1rem; margin: .75rem 0 0 0\">Go to my tokens</button></a>"
-                . "</div>"
-              . "</div>";
-    }
-    $response->getBody()->write($html);
-    return $response;
-});
+$app->get("/", HomeController::class);
 
 //$app->get("/", function (Request $request, Response $response) {
 //    return $response->write("<h2>Home Updated.</h2>");
