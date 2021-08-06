@@ -2,6 +2,7 @@
 
 require 'vendor/autoload.php';
 
+use DI\Container;
 use Slim\Factory\AppFactory;
 use PHPapp\Controllers\HomeController;
 use PHPapp\Controllers\UserController;
@@ -13,6 +14,7 @@ use PHPapp\Controllers\LogoutController;
 use PHPapp\Controllers\ContactController;
 use PHPapp\Controllers\AuthCodeController;
 use PHPapp\Controllers\ManageTokensController;
+use PHPapp\Controllers\DocumentationController;
 
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -22,6 +24,19 @@ use PHPapp\Middleware\CountMiddleware;
 use PHPapp\Middleware\VerifyJWTMiddleware;
 
 use Auth0\SDK\Auth0;
+
+use OpenApi\Annotations as OA;
+
+use Slim\Views\Twig;
+use Slim\Views\TwigExtension;
+use Slim\Views\TwigMiddleware;
+
+// Define named route
+//$app->get('/hello/{name}', function ($request, $response, $args) {
+//    return $this->view->render($response, 'profile.html', [
+//        'name' => $args['name']
+//    ]);
+//})->setName('profile');
 
 \Dotenv\Dotenv::createImmutable(__DIR__)->load();
 
@@ -37,10 +52,31 @@ if ($_ENV["ENV"] === "local") {
 //
 /////////////////////////////////////////////////////
 
+// Create Container
+$container = new Container();
+AppFactory::setContainer($container);
+
+// Create App
 $app = AppFactory::create();
+
 $app->addRoutingMiddleware();
 $app->addBodyParsingMiddleware();
 $app->addErrorMiddleware(true, true, true);
+
+/////////////////////////////////////////////////////
+//
+//  TWIG TEMPLATES
+//
+/////////////////////////////////////////////////////
+
+// Add Twig-View Middleware
+//$basePath = "/base-path";
+
+$routeParser = $app->getRouteCollector()->getRouteParser();
+//$twig = new Twig("/twig/templates", [ "cache" => "/twig/cache" ]);
+
+//$twigMiddleware = new TwigMiddleware($twig, $container, $routeParser, __DIR__); //$basePath);
+//$app->add($twigMiddleware);
 
 /////////////////////////////////////////////////////
 //
@@ -84,11 +120,45 @@ $app->get("/generate-new-token", TokenController::class . ":generate");
 
 /////////////////////////////////////////////////////
 //
+//  API DOCS
+//
+/////////////////////////////////////////////////////
+
+/**
+ * @OA\Info(title="Lister API", version="0.1")
+ */
+
+ /**
+ * @OA\Get(
+ *      path="/api-docs/resource.json",
+ *      tags={"documentation"},
+ *      summary="OpenAPI JSON File that describes the API",
+ *      @OA\Response(
+ *          response="200",
+ *          description="OpenAPI Description File"
+ *      ),
+ * )
+ */
+$app->get("/api-docs", DocumentationController::class . ":jsonResponse");
+
+$app->get("/documentation", DocumentationController::class . ":view");
+
+/////////////////////////////////////////////////////
+//
 //  USERS
 //
 /////////////////////////////////////////////////////
 
-# Gets all Users 
+/**
+ * @OA\Get(
+ *      path="/users",
+ *      summary="Endpoint for listing all created Users",
+ *      @OA\Response(
+ *          response="200",
+ *          description="Gets all users"
+ *      ),
+ * )
+ */ 
 $app->get("/users", UserController::class . ":index")->add(VerifyJWTMiddleware::class);
 
 # Gets a single User by $id
