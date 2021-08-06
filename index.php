@@ -92,10 +92,10 @@ $app->get("/generate-new-token", TokenController::class . ":generate");
 $app->get("/users", UserController::class . ":index")->add(VerifyJWTMiddleware::class);
 
 # Gets a single User by $id
-$app->get("/users/{id}", UserController::class . ":show");
+$app->get("/users/{id}", UserController::class . ":show")->add(VerifyJWTMiddleware::class);
 
 # Get a single Users lists by User id
-$app->get("/users/{id}/lists", UserController::class . ":showLists");
+$app->get("/users/{id}/lists", UserController::class . ":showLists")->add(VerifyJWTMiddleware::class);
 
 # Creates a new User
 /**
@@ -104,7 +104,7 @@ $app->get("/users/{id}/lists", UserController::class . ":showLists");
 $app->post("/users", UserController::class . ":create")->add(VerifyJWTMiddleware::class);
 
 # Deletes a User
-$app->delete("/users/{id}", UserController::class . ":delete");
+$app->delete("/users/{id}", UserController::class . ":delete")->add(VerifyJWTMiddleware::class);
 
 
 /////////////////////////////////////////////////////
@@ -117,10 +117,10 @@ $app->delete("/users/{id}", UserController::class . ":delete");
 /**
  * @param requestBody $body { email?, phone? }
  */
-$app->post("/users/{id}/contact", ContactController::class . ":create");
+$app->post("/users/{id}/contact", ContactController::class . ":create")->add(VerifyJWTMiddleware::class);
 
 # Delete a Contact by Contact id
-$app->delete("/contacts/{id}", ContactController::class . ":delete");
+$app->delete("/contacts/{id}", ContactController::class . ":delete")->add(VerifyJWTMiddleware::class);
 
 # Update a Contact card by Contact id
 //$app->put("/contacts/{id}", ContactController::class . ":update");
@@ -133,19 +133,19 @@ $app->delete("/contacts/{id}", ContactController::class . ":delete");
 /////////////////////////////////////////////////////
 
 # Get all Lists
-$app->get("/lists", ListsController::class . ":index");
+$app->get("/lists", ListsController::class . ":index")->add(VerifyJWTMiddleware::class);
 
 # Get and show a List by id
-$app->get("/lists/{id}", ListsController::class . ":show");
+$app->get("/lists/{id}", ListsController::class . ":show")->add(VerifyJWTMiddleware::class);
 
 # Creates a new List and attaches to a User at $id 
-$app->post("/users/{id}/list", ListsController::class . ":create");
+$app->post("/users/{id}/list", ListsController::class . ":create")->add(VerifyJWTMiddleware::class);
 
 # Update a List by List id
 //$app->put("/lists/{id}", ListsController::class . ":update");
 
 # Deletes a List of $id
-$app->delete("/lists/{id}", ListsController::class . ":delete");
+$app->delete("/lists/{id}", ListsController::class . ":delete")->add(VerifyJWTMiddleware::class);
 
 
 /////////////////////////////////////////////////////
@@ -168,13 +168,13 @@ $app->delete("/lists/{id}", ListsController::class . ":delete");
 //$app->get("/items/{id}", ItemController::class . ":show");
 
 # Creates a new Item and assigns to designated List id
-$app->post("/lists/{id}/item", ItemController::class . ":create");
+$app->post("/lists/{id}/item", ItemController::class . ":create")->add(VerifyJWTMiddleware::class);
 
 # Updates and Item by id
-$app->put("/items/{id}", ItemController::class . ":update");
+$app->put("/items/{id}", ItemController::class . ":update")->add(VerifyJWTMiddleware::class);
 
 # Delete an Item by Item id
-$app->delete("/items/{id}", ItemController::class . ":delete");
+$app->delete("/items/{id}", ItemController::class . ":delete")->add(VerifyJWTMiddleware::class);
 
 
 # Run Slim Framework
