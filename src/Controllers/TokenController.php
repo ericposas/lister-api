@@ -17,6 +17,16 @@ class TokenController extends EntityManagerResource {
 
     public function delete (Request $request, Response $response, array $params)
     {
+        # Place in a middleware function --
+        $auth0 = new Auth0(\PHPapp\Helpers\AuthConfig::getConfig());
+        $user = $auth0->getUser();
+        
+        if (! $user) {
+            $response->getBody()->write("You need be logged in to perform this action");
+            return $response;
+        }
+        # Place in a middleware function --
+        
         $em = $this->getEntityManager();
         $whitelistedTokenRepo = $em->getRepository(\PHPapp\Entity\WhitelistedToken::class);
         $deletedTokenRepo = $em->getRepository(\PHPapp\Entity\DeletedToken::class);
@@ -36,10 +46,17 @@ class TokenController extends EntityManagerResource {
     
     public function generate (Request $request, Response $response)
     {
-        $em = $this->getEntityManager();
+        # Place in a middleware function --
+        $auth0 = new Auth0(\PHPapp\Helpers\AuthConfig::getConfig());
+        $user = $auth0->getUser();
         
-        $auth0Config = \PHPapp\Helpers\AuthConfig::getConfig();
-        $auth0 = new Auth0($auth0Config);
+        if (! $user) {
+            $response->getBody()->write("You need be logged in to perform this action");
+            return $response;
+        }
+        # Place in a middleware function --
+        
+        $em = $this->getEntityManager();
         
         $auth0->logout();
         $auth0->login();

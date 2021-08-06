@@ -70,13 +70,9 @@ $app->get("/logout", LogoutController::class);
 
 $app->get("/", HomeController::class);
 
-//$app->get("/", function (Request $request, Response $response) {
-//    return $response->write("<h2>Home Updated.</h2>");
-//})->add(CountMiddleware::class . ":appendUserCount");
-
 /////////////////////////////////////////////////////
 //
-//  API TOKENS
+//  API TOKENS -- Only available to logged in API Users
 //
 /////////////////////////////////////////////////////
 

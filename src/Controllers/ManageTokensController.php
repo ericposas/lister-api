@@ -47,11 +47,8 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
         ]);
         $existingApiUser = $existingApiUser[0];
         
-        if (empty($existingApiUser)) {
-            $html = "<div>Please login to manage your tokens</div>"
-                  . \PHPapp\HTMLHelpers\GenerateHTML::getLoginButtonHTML();
-            $response->getBody()->write(html_entity_decode($html));
-            return $response;
+        if (empty($existingApiUser) || empty($userInfo)) {
+            return $response->withRedirect("/");
         } else {
             echo \PHPapp\HTMLHelpers\GenerateHTML::getLogoutButtonHTML();
         }
