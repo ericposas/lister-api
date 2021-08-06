@@ -44,13 +44,21 @@ html, body {
   padding: 1rem;
   margin: 0 0 1rem 0;
   border-radius: 3px;
-  border: #BDBDBD solid 1px;
-  background-color: #E0E0E0;
+  border: #64B5F6 solid 1px;
+  background-color: #BBDEFB;
   word-wrap: break-word;
+  border-radius: 0.5rem;
 }
 
 .api-token-row__inner {
   cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.api-token-row__inner:hover {
+  color: #FFF;
+  background-color: #64B5F6;
 }
 
 .api-token-row__tooltip {
@@ -96,6 +104,7 @@ html, body {
 }
 
 .delete-button {
+  float: right;
   margin: -0.5rem 0 0 0;
   background-color: #F44336;
 }

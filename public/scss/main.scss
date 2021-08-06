@@ -8,8 +8,9 @@ and open the template in the editor.
     Author     : webdev00
 */
 
-$rowBorder: #BDBDBD;
-$rowBg: #E0E0E0;
+$rowBorder: #64B5F6;
+$rowTextHighlight: #64B5F6;
+$rowBg: #BBDEFB;
 
 $buttonRed: #F44336;
 $buttonBlue: #1976D2;
@@ -49,9 +50,16 @@ html, body {
     border: $rowBorder solid 1px;
     background-color: $rowBg;
     word-wrap: break-word;
+    border-radius: .5rem;
 }
 .api-token-row__inner {
     cursor: pointer;
+    padding: .5rem;
+    border-radius: .5rem;
+}
+.api-token-row__inner:hover {
+    color: #FFF;
+    background-color: $rowTextHighlight;
 }
 .api-token-row__tooltip {
     left: 0;
@@ -91,6 +99,7 @@ html, body {
 }
 .delete-button {
     @extend %button-base;
+    float: right;
     margin: -.5rem 0 0 0;
     background-color: $buttonRed;
 }
