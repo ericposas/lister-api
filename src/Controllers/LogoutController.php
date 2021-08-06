@@ -13,6 +13,8 @@ class LogoutController {
         $auth0Config = \PHPapp\Helpers\AuthConfig::getConfig();
         $auth0 = new Auth0($auth0Config);
         
+        unset($_SESSION["log_count"]);
+        
 	$auth0->logout();
         
         return $response->withRedirect("/");

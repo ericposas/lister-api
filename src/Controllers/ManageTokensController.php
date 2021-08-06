@@ -12,6 +12,15 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
     
     public function __invoke(Request $request, Response $response) {
         
+        session_start();
+        if (empty($_SESSION["log_count"])) {
+            $_SESSION["log_count"] = 1;
+        } else {
+            $_SESSION["log_count"]++;
+        }
+        
+//        echo $_SESSION["log_count"];
+        
         $auth0Config = \PHPapp\Helpers\AuthConfig::getConfig();
         $auth0 = new Auth0($auth0Config);
         
@@ -47,19 +56,25 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
             echo \PHPapp\HTMLHelpers\GenerateHTML::getLogoutButtonHTML();
         }
         
-        if (empty($existingWhitelistedToken)) {
-            $existingWhitelistedToken = $existingWhitelistedToken[0];
-            $deletedTokensRepo = $em->getRepository(\PHPapp\Entity\DeletedToken::class);
-            $deletedTokenRecords = $deletedTokensRepo->findBy([ "jwt" => $auth0->getIdToken() ]);
-            if (empty($deletedTokenRecords) && isset($existingApiUser)) {
-                $token = new \PHPapp\Entity\WhitelistedToken();
-                $token->setJWT($auth0->getIdToken());
-                $token->addOwner($existingApiUser);
-            } else if(empty ($existingApiUser->getTokens()) || count($existingApiUser->getTokens()) == 0) {
-                echo "<div>You have no tokens</div><br>"
-                . \PHPapp\HTMLHelpers\GenerateHTML::getGenerateTokenButtonHTML();
-                return $response;
+        if ($_SESSION["log_count"] > 1) {
+            $queryParams = $request->getQueryParams();
+//            echo count($queryParams);
+            if (empty($existingWhitelistedToken) && (int)count($queryParams) !== 0) {
+                $existingWhitelistedToken = $existingWhitelistedToken[0];
+                $deletedTokensRepo = $em->getRepository(\PHPapp\Entity\DeletedToken::class);
+                $deletedTokenRecords = $deletedTokensRepo->findBy([ "jwt" => $auth0->getIdToken() ]);
+                if (empty($deletedTokenRecords) && isset($existingApiUser)) {
+                    $token = new \PHPapp\Entity\WhitelistedToken();
+                    $token->setJWT($auth0->getIdToken());
+                    $token->addOwner($existingApiUser);
+                } else if(empty ($existingApiUser->getTokens()) || count($existingApiUser->getTokens()) == 0) {
+                    echo "<div>You have no tokens</div><br>"
+                    . \PHPapp\HTMLHelpers\GenerateHTML::getGenerateTokenButtonHTML();
+                    return $response;
+                }
             }
+        } else {
+            return $response->withRedirect("/my-tokens");
         }
 
         $em->flush();

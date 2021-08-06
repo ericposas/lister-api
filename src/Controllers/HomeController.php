@@ -28,7 +28,7 @@ class HomeController extends \PHPapp\EntityManagerResource {
                     . "<div>Log in to manage your API tokens</div>"
                     . "<div>"
                     . "<a href=\"/login\"><button class=\"button-hover login-button\">"
-                    . "Dashboard"
+                    . "Log in / Dashboard"
                     . "</button></a>"
                     . "</div>"
                   . "</div>";

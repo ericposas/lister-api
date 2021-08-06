@@ -15,6 +15,7 @@ class GenerateHTML {
     public static function getHeadContent(): string {
         return ""
         . "<head>"
+            . "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
             . "<link rel=\"stylesheet\" href=\"./public/css/main.css\" />"
             . "<script src=\"./public/js/main.js\"></script>"
         . "</head>";
