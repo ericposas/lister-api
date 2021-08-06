@@ -48,6 +48,7 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
         $existingApiUser = $existingApiUser[0];
         
         if (empty($existingApiUser) || empty($userInfo)) {
+            unset($_SESSION["log_count"]);
             return $response->withRedirect("/");
         } else {
             echo \PHPapp\HTMLHelpers\GenerateHTML::getLogoutButtonHTML();
