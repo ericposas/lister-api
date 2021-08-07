@@ -2,8 +2,6 @@
 
 require 'vendor/autoload.php';
 
-use DI\Container;
-use Slim\Factory\AppFactory;
 use PHPapp\Controllers\HomeController;
 use PHPapp\Controllers\UserController;
 use PHPapp\Controllers\ItemController;
@@ -12,27 +10,19 @@ use PHPapp\Controllers\LoginController;
 use PHPapp\Controllers\TokenController;
 use PHPapp\Controllers\LogoutController;
 use PHPapp\Controllers\ContactController;
-use PHPapp\Controllers\AuthCodeController;
 use PHPapp\Controllers\ManageTokensController;
 use PHPapp\Controllers\DocumentationController;
 
-use Slim\Http\Response as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+# Request, Response Interfaces to use in Slim4 
+#use Slim\Http\Response as Response;
+#use Psr\Http\Message\ServerRequestInterface as Request;
+#use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
-use PHPapp\Middleware\CountMiddleware;
 use PHPapp\Middleware\VerifyJWTMiddleware;
 
-use Auth0\SDK\Auth0;
-
-use OpenApi\Annotations as OA;
-
-use Slim\Views\Twig;
-use Slim\Views\TwigExtension;
-use Slim\Views\TwigMiddleware;
-
+# load base .env
 \Dotenv\Dotenv::createImmutable(__DIR__)->load();
-
+# load conditional .envs based on above ENV variable
 if ($_ENV["ENV"] === "local") {
     \Dotenv\Dotenv::createImmutable(__DIR__, ".env.local")->load();
 } else {
@@ -45,31 +35,7 @@ if ($_ENV["ENV"] === "local") {
 //
 /////////////////////////////////////////////////////
 
-// Create Container
-$container = new Container();
-AppFactory::setContainer($container);
-
-$app = AppFactory::create();
-
-$app->addRoutingMiddleware();
-$app->addBodyParsingMiddleware();
-$app->addErrorMiddleware(true, true, true);
-
-/////////////////////////////////////////////////////
-//
-//  TWIG TEMPLATES
-//
-/////////////////////////////////////////////////////
-
-// ......
-
-/////////////////////////////////////////////////////
-//
-//  MIDDLEWARE
-//
-/////////////////////////////////////////////////////
-
-// ......
+$app = \PHPapp\Helpers\AppHelper::createAppInstance();
 
 /////////////////////////////////////////////////////
 //
@@ -116,7 +82,7 @@ $app->get("/generate-new-token", TokenController::class . ":generate");
  /**
  * @OA\Get(
  *      path="/api-docs",
- *      tags={"documentation"},
+ *      tags={"Documentation"},
  *      summary="OpenAPI JSON File that describes the API",
  *      @OA\Response(
  *          response="200",
@@ -129,6 +95,7 @@ $app->get("/api-docs", DocumentationController::class . ":jsonResponse");
 /**
  * @OA\Get(
  *      path="/documentation",
+ *      tags={"Documentation"},
  *      summary="Lister API documentation",
  *      @OA\Response(
  *          response="200",
@@ -147,6 +114,7 @@ $app->get("/documentation", DocumentationController::class . ":view");
 /**
  * @OA\Get(
  *      path="/users",
+ *      tags={"Users"},
  *      summary="Endpoint for listing all created Users",
  *      @OA\Response(
  *          response="200",
@@ -159,10 +127,11 @@ $app->get("/users", UserController::class . ":index")->add(VerifyJWTMiddleware::
 /**
  * @OA\Get(
  *      path="/users/{id}",
+ *      tags={"Users"},
  *      @OA\Parameter(
  *          name="id",
  *          in="path",
- *          required="true",
+ *          required=true,
  *          description="User identifying integer",
  *          @OA\Schema(type="int")
  *      ),
@@ -175,7 +144,24 @@ $app->get("/users", UserController::class . ":index")->add(VerifyJWTMiddleware::
  */ 
 $app->get("/users/{id}", UserController::class . ":show")->add(VerifyJWTMiddleware::class);
 
-# Get a single Users lists by User id
+/**
+ * @OA\Get(
+ *      path="/users/{id}/lists",
+ *      tags={"Users"},
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required=true,
+ *          description="User identifying integer",
+ *          @OA\Schema(type="int")
+ *      ),
+ *      summary="Endpoint for retrieving a single User's List entities",
+ *      @OA\Response(
+ *          response="200",
+ *          description="Gets a single User's List objects"
+ *      ),
+ * )
+ */ 
 $app->get("/users/{id}/lists", UserController::class . ":showLists")->add(VerifyJWTMiddleware::class);
 
 # Creates a new User

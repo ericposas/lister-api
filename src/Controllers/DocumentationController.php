@@ -11,7 +11,16 @@ use OpenApi;
  */
 class DocumentationController {
     
+    protected $container = null;
     
+    protected $twig = null;
+
+    # need to pass the DI Container here in order to get our container dependencies for use in the class 
+    public function __construct(\Psr\Container\ContainerInterface $container) {
+        $this->container = $container;
+        $this->twig = $container->get("twig");
+    }
+
     public function jsonResponse($request, $response, $args) {
         $swagger = \OpenApi\scan(__DIR__."/../../index.php");
         $response->getBody()->write(json_encode($swagger));
@@ -20,12 +29,8 @@ class DocumentationController {
     
     public function view($request, $response, $args)
     {
-        $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . "/../../templates");
-        $twig = new \Twig\Environment($loader, [
-            __DIR__ . "/var/cache"
-        ]);
         $response->getBody()->write(
-            $twig->render("profile.html.twig")  //, [ "boop" => $args["boop"], "test" => "this is a test" ])
+            $this->twig->render("profile.html.twig")
         );
         return $response;
     }
