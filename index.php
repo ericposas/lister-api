@@ -118,7 +118,16 @@ $app->get("/documentation", DocumentationController::class . ":view");
  *      summary="Endpoint for listing all created Users",
  *      @OA\Response(
  *          response="200",
- *          description="Gets all users"
+ *          description="Gets all users",
+ *          @OA\JsonContent(
+ *              @OA\Property(
+ *                  property="users",
+ *                  type="array",
+ *                  @OA\Items(
+ *                      ref="#/components/schemas/User"
+ *                  )
+ *              )
+ *          )
  *      ),
  * )
  */ 
@@ -138,7 +147,8 @@ $app->get("/users", UserController::class . ":index")->add(VerifyJWTMiddleware::
  *      summary="Endpoint for retrieving a single User entity",
  *      @OA\Response(
  *          response="200",
- *          description="Gets a single User"
+ *          description="Gets a single User",
+ *          @OA\JsonContent(ref="#/components/schemas/User")
  *      ),
  * )
  */ 
@@ -158,7 +168,16 @@ $app->get("/users/{id}", UserController::class . ":show")->add(VerifyJWTMiddlewa
  *      summary="Endpoint for retrieving a single User's List entities",
  *      @OA\Response(
  *          response="200",
- *          description="Gets a single User's List objects"
+ *          description="Gets a single User's List objects",
+ *          @OA\JsonContent(
+ *              @OA\Property(
+ *                  property="lists",
+ *                  type="array",
+ *                  @OA\Items(
+ *                      ref="#/components/schemas/GenericList")
+ *                  )
+ *              )
+ *          )
  *      ),
  * )
  */ 

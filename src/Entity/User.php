@@ -24,13 +24,11 @@ class User
    * @Id
    * @Column(type="integer", length=32, unique=true, nullable=false)
    * @GeneratedValue(strategy="IDENTITY")
-   * @var int
    */
   protected $id;
 
   /**
    * @Column(type="string")
-   * @var string
    */
   protected $name;
   

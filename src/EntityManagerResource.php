@@ -52,7 +52,7 @@ abstract class EntityManagerResource
     $cache = null;
     $useSimpleAnnotationReader = false;
     $config = Setup::createAnnotationMetadataConfiguration(array('Models'), $isDevMode, $proxyDir, $cache, $useSimpleAnnotationReader);
-
+    
     $conn = \PHPapp\Helpers\DBConnectionHelper::getDBConnection();
 
     // obtaining the entity manager

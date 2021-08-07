@@ -22,19 +22,16 @@ class GenericList
      * @Id
      * @Column(type="integer", length=32, unique=true, nullable=false)
      * @GeneratedValue(strategy="IDENTITY")
-     * @var int
      */
     protected $id;
     
     /**
      * @Column(type="string", length=255, unique=false, nullable=false)
-     * @var string
      */
     protected $name;
     
     /**
      * @Column(type="string", length=999, unique=false, nullable=true)
-     * @var string
      */
     protected $description;
     
