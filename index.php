@@ -31,13 +31,6 @@ use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 use Slim\Views\TwigMiddleware;
 
-// Define named route
-//$app->get('/hello/{name}', function ($request, $response, $args) {
-//    return $this->view->render($response, 'profile.html', [
-//        'name' => $args['name']
-//    ]);
-//})->setName('profile');
-
 \Dotenv\Dotenv::createImmutable(__DIR__)->load();
 
 if ($_ENV["ENV"] === "local") {
@@ -56,7 +49,6 @@ if ($_ENV["ENV"] === "local") {
 $container = new Container();
 AppFactory::setContainer($container);
 
-// Create App
 $app = AppFactory::create();
 
 $app->addRoutingMiddleware();
@@ -69,14 +61,7 @@ $app->addErrorMiddleware(true, true, true);
 //
 /////////////////////////////////////////////////////
 
-// Add Twig-View Middleware
-//$basePath = "/base-path";
-
-$routeParser = $app->getRouteCollector()->getRouteParser();
-//$twig = new Twig("/twig/templates", [ "cache" => "/twig/cache" ]);
-
-//$twigMiddleware = new TwigMiddleware($twig, $container, $routeParser, __DIR__); //$basePath);
-//$app->add($twigMiddleware);
+// ......
 
 /////////////////////////////////////////////////////
 //
@@ -130,7 +115,7 @@ $app->get("/generate-new-token", TokenController::class . ":generate");
 
  /**
  * @OA\Get(
- *      path="/api-docs/resource.json",
+ *      path="/api-docs",
  *      tags={"documentation"},
  *      summary="OpenAPI JSON File that describes the API",
  *      @OA\Response(
@@ -141,6 +126,16 @@ $app->get("/generate-new-token", TokenController::class . ":generate");
  */
 $app->get("/api-docs", DocumentationController::class . ":jsonResponse");
 
+/**
+ * @OA\Get(
+ *      path="/documentation",
+ *      summary="Lister API documentation",
+ *      @OA\Response(
+ *          response="200",
+ *          description="HTML Generated Swagger OpenAPI docs for Lister API"
+ *      ),
+ * )
+ */ 
 $app->get("/documentation", DocumentationController::class . ":view");
 
 /////////////////////////////////////////////////////
@@ -161,7 +156,23 @@ $app->get("/documentation", DocumentationController::class . ":view");
  */ 
 $app->get("/users", UserController::class . ":index")->add(VerifyJWTMiddleware::class);
 
-# Gets a single User by $id
+/**
+ * @OA\Get(
+ *      path="/users/{id}",
+ *      @OA\Parameter(
+ *          name="id",
+ *          in="path",
+ *          required="true",
+ *          description="User identifying integer",
+ *          @OA\Schema(type="int")
+ *      ),
+ *      summary="Endpoint for retrieving a single User entity",
+ *      @OA\Response(
+ *          response="200",
+ *          description="Gets a single User"
+ *      ),
+ * )
+ */ 
 $app->get("/users/{id}", UserController::class . ":show")->add(VerifyJWTMiddleware::class);
 
 # Get a single Users lists by User id

@@ -18,4 +18,16 @@ class DocumentationController {
         return $response->withHeader('Content-Type', 'application/json');
     }
     
+    public function view($request, $response, $args)
+    {
+        $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . "/../../templates");
+        $twig = new \Twig\Environment($loader, [
+            __DIR__ . "/var/cache"
+        ]);
+        $response->getBody()->write(
+            $twig->render("profile.html.twig")  //, [ "boop" => $args["boop"], "test" => "this is a test" ])
+        );
+        return $response;
+    }
+    
 }
