@@ -9,7 +9,7 @@ class GenericList
 {
     /**
      * @var integer
-     * @OA\Property(description="generated id")
+     * @OA\Property
      */
     protected $id;
     
@@ -21,13 +21,13 @@ class GenericList
     
     /**
      * @var string
-     * @OA\Property(description="List name")
+     * @OA\Property
      */
     protected $name;
     
     /**
      * @var string
-     * @OA\Property()
+     * @OA\Property
      */
     protected $description;
     

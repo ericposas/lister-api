@@ -79,30 +79,8 @@ $app->get("/generate-new-token", TokenController::class . ":generate");
  * @OA\Info(title="Lister API", version="0.1")
  */
 
- /**
- * @OA\Get(
- *      path="/api-docs",
- *      tags={"Documentation"},
- *      summary="OpenAPI JSON File that describes the API",
- *      @OA\Response(
- *          response="200",
- *          description="OpenAPI Description File"
- *      ),
- * )
- */
 $app->get("/api-docs", DocumentationController::class . ":jsonResponse");
 
-/**
- * @OA\Get(
- *      path="/documentation",
- *      tags={"Documentation"},
- *      summary="Lister API documentation",
- *      @OA\Response(
- *          response="200",
- *          description="HTML Generated Swagger OpenAPI docs for Lister API"
- *      ),
- * )
- */ 
 $app->get("/documentation", DocumentationController::class . ":view");
 
 /////////////////////////////////////////////////////
@@ -141,7 +119,7 @@ $app->get("/users", UserController::class . ":index")->add(VerifyJWTMiddleware::
  *          name="id",
  *          in="path",
  *          required=true,
- *          description="User identifying integer",
+ *          description="id to query for User",
  *          @OA\Schema(type="int")
  *      ),
  *      summary="Endpoint for retrieving a single User entity",
@@ -162,7 +140,7 @@ $app->get("/users/{id}", UserController::class . ":show")->add(VerifyJWTMiddlewa
  *          name="id",
  *          in="path",
  *          required=true,
- *          description="User identifying integer",
+ *          description="id of User whose Lists to retrieve",
  *          @OA\Schema(type="int")
  *      ),
  *      summary="Endpoint for retrieving a single User's List entities",

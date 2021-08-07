@@ -9,19 +9,19 @@ class Contact {
 
     /**
      * @var integer
-     * @OA\Property(description="id of Contact entity")
+     * @OA\Property
      */
     protected $id;
     
     /**
      * @var string
-     * @OA\Property(description="phone number")
+     * @OA\Property
      */
     protected $phone;
     
     /**
      * @var string
-     * @OA\Property(description="email address")
+     * @OA\Property
      */
     protected $email;
     

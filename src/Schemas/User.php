@@ -9,12 +9,12 @@ namespace PHPapp\Schemas;
 class User
 {
   /**
-   * @OA\Property(type="integer", description="generated id of User entity")
+   * @OA\Property(type="integer")
    */
   protected $id;
 
   /**
-   * @OA\Property(type="string", description="name of User entity")
+   * @OA\Property(type="string")
    */
   protected $name;
   
