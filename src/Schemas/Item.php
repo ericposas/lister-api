@@ -48,11 +48,5 @@ class Item {
      * @OA\Property
      */
     protected $description;
-    
-    /**
-     * @var int
-     * @OA\Property(property="parentlist_id")
-     */
-    protected $parentlist;
 
 }

@@ -6,7 +6,7 @@ namespace PHPapp\ExtendedRepositories;
 class ItemRepository extends \Doctrine\ORM\EntityRepository
 {
     
-    static $props = [ "Id", "Icon", "Image", "Link", "Meta", "Name" ];
+    static $props = [ "Id", "Name", "Icon", "Image", "Link", "Meta", "Description" ];
     
     /**
      * @param Item[] $items Takes an $items array, iterates through each getter and uses dynamicGetAllItemProperties to 

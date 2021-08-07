@@ -25,10 +25,4 @@ class Contact {
      */
     protected $email;
     
-    /**
-     * @var integer
-     * @OA\Property(property="user_id")
-     */
-    protected $user;
-    
 }

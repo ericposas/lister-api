@@ -19,7 +19,7 @@ class User
   protected $name;
   
   /**
-   * @OA\Property(ref="#/components/schemas/Contact")
+   * @OA\Property(property="contactInfo", ref="#/components/schemas/Contact")
    */
   protected $contact;
   

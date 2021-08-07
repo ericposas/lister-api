@@ -14,9 +14,10 @@ class ListRepository extends \Doctrine\ORM\EntityRepository
             $itemData = $itemRepo->getItemData($items);
 
             $listData[] = [
-                "owner" => $list->getOwner()->getName(),
                 "id" => $list->getId(),
+                "owner" => $list->getOwner()->getName(),
                 "name" => $list->getName(),
+                "description" => $list->getDescription(),
                 "items" => $itemData
             ];
         }

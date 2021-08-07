@@ -15,6 +15,12 @@ class GenericList
     
     /**
      * @var string
+     * @OA\Property
+     */
+    protected $owner;
+    
+    /**
+     * @var string
      * @OA\Property(description="List name")
      */
     protected $name;
@@ -33,11 +39,5 @@ class GenericList
      * )
      */
     protected $items;
-
-    /**
-     * @var integer
-     * @OA\Property(property="owner_id")
-     */
-    protected $owner;
 
 }
