@@ -255,7 +255,7 @@ $app->delete("/contacts/{id}", ContactController::class . ":delete")->add(Verify
  *          @OA\JsonContent(
  *              @OA\Property(
  *                  property="Contact",
- *                  example="Created new Contact info and attached to USER->NAME"
+ *                  example="Changed Contact info and attached to USER->NAME"
  *              )
  *          )
  *      ),
