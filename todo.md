@@ -4,6 +4,8 @@
 - PUT needs to be differentiated from the :create method and to use a new :update method \
         we might redirect (if a User exists) to the :update method from the :create method 
 
+- Move all endpoints away from the index.php file to an api endpoints file
+
 - Change api paths to /api/v1/ at base 
 - Learn how to use Slim's, or rather PHP-DI's Container for Dependency Injection
 - Move Twig templates and (possibly) EntityManager to the Dependency Container 
