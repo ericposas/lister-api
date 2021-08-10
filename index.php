@@ -96,7 +96,7 @@ $app->get("/documentation", DocumentationController::class . ":view");
  *      summary="Endpoint for listing all created Users",
  *      @OA\Response(
  *          response="200",
- *          description="Gets all users",
+ *          description="Response lists all Users with associated Lists, Contact info, etc.",
  *          @OA\JsonContent(
  *              @OA\Property(
  *                  property="users",
@@ -125,7 +125,7 @@ $app->get("/users", UserController::class . ":index")->add(VerifyJWTMiddleware::
  *      summary="Endpoint for retrieving a single User entity",
  *      @OA\Response(
  *          response="200",
- *          description="Gets a single User",
+ *          description="Return a single User object with associated Lists, Contact info, etc.",
  *          @OA\JsonContent(ref="#/components/schemas/User")
  *      ),
  * )
@@ -135,7 +135,7 @@ $app->get("/users/{id}", UserController::class . ":show")->add(VerifyJWTMiddlewa
 /**
  * @OA\Get(
  *      path="/users/{id}/lists",
- *      tags={"Users"},
+ *      tags={"Lists"},
  *      @OA\Parameter(
  *          name="id",
  *          in="path",
@@ -161,13 +161,42 @@ $app->get("/users/{id}", UserController::class . ":show")->add(VerifyJWTMiddlewa
  */ 
 $app->get("/users/{id}/lists", UserController::class . ":showLists")->add(VerifyJWTMiddleware::class);
 
-# Creates a new User
 /**
- * @param requestBody $body { name, email?, phone? }
+ * @OA\Post(
+ *      path="/users",
+ *      tags={"Users"},
+ *      summary="Endpoint for creating a new User",
+ *      @OA\Response(
+ *          response="201",
+ *          description="Message for successful cretion of User",
+ *          @OA\JsonContent(
+ *              @OA\Property(
+ *                  property="message",
+ *                  example="New user USER->NAME created."
+ *              )
+ *          )
+ *      ),
+ * )
  */
 $app->post("/users", UserController::class . ":create")->add(VerifyJWTMiddleware::class);
 
-# Deletes a User
+/**
+ * @OA\Delete(
+ *      path="/users/{id}",
+ *      tags={"Users"},
+ *      summary="Endpoint for deleting a User by id",
+ *      @OA\Response(
+ *          response="200",
+ *          description="Message for successful deletion of a specified User",
+ *          @OA\JsonContent(
+ *              @OA\Property(
+ *                  property="message",
+ *                  example="USER->NAME User removed"
+ *              )
+ *          )
+ *      ),
+ * )
+ */ 
 $app->delete("/users/{id}", UserController::class . ":delete")->add(VerifyJWTMiddleware::class);
 
 
@@ -177,18 +206,62 @@ $app->delete("/users/{id}", UserController::class . ":delete")->add(VerifyJWTMid
 //
 /////////////////////////////////////////////////////
 
-# Adds or Updates User contact data
 /**
- * @param requestBody $body { email?, phone? }
- */
+ * @OA\Post(
+ *      path="/users/{id}/contact",
+ *      tags={"Contact"},
+ *      summary="Endpoint for creating a new Contact info and attaching to a specified User",
+ *      @OA\Response(
+ *          response="200",
+ *          description="Creates Contact info for a specified User",
+ *          @OA\JsonContent(
+ *              @OA\Property(
+ *                  property="Contact",
+ *                  example="Created new Contact info and attached to USER->NAME"
+ *              )
+ *          )
+ *      ),
+ * )
+ */ 
 $app->post("/users/{id}/contact", ContactController::class . ":create")->add(VerifyJWTMiddleware::class);
 
-# Delete a Contact by Contact id
+/**
+ * @OA\Delete(
+ *      path="/contacts/{id}",
+ *      tags={"Contact"},
+ *      summary="Endpoint for deleting a single Contact entity",
+ *      @OA\Response(
+ *          response="200",
+ *          description="Response for successful deletion of Contact info",
+ *          @OA\JsonContent(
+ *              @OA\Property(
+ *                  property="Contact",
+ *                  example="Contact with id of INTEGER was deleted"
+ *              )
+ *          )
+ *      ),
+ * )
+ */
 $app->delete("/contacts/{id}", ContactController::class . ":delete")->add(VerifyJWTMiddleware::class);
 
-# Update a Contact card by Contact id
-//$app->put("/contacts/{id}", ContactController::class . ":update");
-
+/**
+ * @OA\Put(
+ *      path="/contacts/{id}",
+ *      tags={"Contact"},
+ *      summary="Endpoint for updating an existing Contact info",
+ *      @OA\Response(
+ *          response="200",
+ *          description="Returns a success message upon updating a Contact info entity",
+ *          @OA\JsonContent(
+ *              @OA\Property(
+ *                  property="Contact",
+ *                  example="Created new Contact info and attached to USER->NAME"
+ *              )
+ *          )
+ *      ),
+ * )
+ */ 
+$app->put("/contacts/{id}", ContactController::class . ":create")->add(VerifyJWTMiddleware::class); # right now, :create method updates a Contact if one by specified id exists
 
 /////////////////////////////////////////////////////
 //
