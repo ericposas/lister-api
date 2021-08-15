@@ -3,7 +3,7 @@ DB_NAME=ListerAPI
 DB_HOST=db-local
 DB_ROOT_USER=root
 DB_ROOT_PASSWORD=WHATEVER_YOU_WANT
-## note: if you change your db password or anything related, you may need to run docker volume rm and/or docker-compose rm -v and remove all lingering volumes
+### note: if you change your db password or anything related, you may need to run docker volume rm and/or docker-compose rm -v and remove all lingering volumes
 
 # Sign up for Auth0 account -- configure these values
 AUTH0_SUB=
