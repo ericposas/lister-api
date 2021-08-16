@@ -7,97 +7,63 @@ use PHPapp\EntityManagerResource;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class UserController extends EntityManagerResource
+class UserController
 {
+    protected $container = null; 
+    protected $entityManager = null;
     
+    public function __construct(\Psr\Container\ContainerInterface $container) {
+        $this->container = $container;
+        $this->entityManager = $container->get(\Doctrine\ORM\EntityManager::class);
+    }
+
     public function index(Request $request, Response $response)
     {
-        $users = $this->getEntityManager()
-                ->getRepository(User::class)
-                ->findAll();
-        $listRepo = $this->getEntityManager()
-                ->getRepository(\PHPapp\Entity\GenericList::class);
+        $repo = $this->entityManager
+                ->getRepository(User::class);
+        $users = $repo->findAll();
         
         if (empty($users)) {
             return $response->withJson([ "message" => "We couldn't find any Users" ]);
         }
         
-        $data = array();
-        foreach ($users as $user) {
-            $contact = $user->getContact();
-            $contactInfo = [
-                "id" => isset($contact) ? $contact->getId() : null,
-                "email" => isset($contact) ? $contact->getEmail() : null,
-                "phone" => isset($contact) ? $contact->getPhone() : null,
-            ];
-            $lists = $user->getLists();
-            $listData = $listRepo->getListData($lists);
-            
-            $data[] = [
-                "id" => $user->getId(),
-                "name" => $user->getName(),
-                "contactInfo" => $contactInfo,
-                "lists" => $listData
-            ];
-        }
-        
+        $data = $repo->getAllUsers($users);        
         return $response->withJson([
             "users" => $data
         ]);
-        
     }
     
     public function create(Request $request, Response $response)
     {
         $body = json_decode($request->getBody());
         
-        if (isset($body->name))
-        {
-            $em = $this->getEntityManager();
+        if (isset($body->name)) {
+            $em = $this->entityManager;
             $repo = $em->getRepository(User::class);
-            
             $user = $repo->createNewUser($body);
             
             if (isset($user)) {
-                return $response->withJson([
-                    "message" => "New user {$body->name} created."
-                ]);
+                return $response->withJson([ "message" => "New user {$body->name} created." ]);
             } else {
-                return $response->withJson([
-                    "message" => "Could not create a new User."
-                ]);
+                return $response->withJson([ "message" => "Could not create a new User." ]);
             }
         } else {
-            return $response->withJson([
-                "message" => "Could not create a new User. Send at least a name in request body."
-            ]);
+            return $response->withJson([ "message" => "Could not create a new User. Send at least a name in request body." ]);
         }
-        
     }
     
     public function show(Request $request, Response $response, array $params)
     {
         $id = $params["id"];
-        
         if (isset($id)) {
+            $em = $this->entityManager;
+            $repo = $em->getRepository(User::class);
+            $user = $repo->getUser($id);
             
-            $user = $this->getEntityManager()
-                    ->getRepository(User::class)
-                    ->find($id);
-            $data = [];
-            $contact = $user->getContact();
-            $email = isset($contact) ? $contact->getEmail() : null;
-            $phone = isset($contact) ? $contact->getPhone() : null;
-            isset($user) ? $data["name"] = $user->getName() : null;
-            isset($email) ? $data["email"] = $email : null;
-            isset($phone) ? $data["phone"] = $phone : null;
-            
-            return $response->withJson([ "user" => $data ]);
-            
+            return $response->withJson([ "user" => $user ]);
         } else {
             return $response->withJson([ "message" => "No User found with an id of {$id}" ]);
         }
-        
         return $response->withJson([
             "message" => "Could not get the User"
         ]);
@@ -107,10 +73,10 @@ class UserController extends EntityManagerResource
     {
         $id = $params["id"];
         if (isset($id)) {
-            $em = $this->getEntityManager();
+            $em = $this->entityManager;
             $user = $em->getRepository(User::class)
                     ->find($id);
-            $listRepo = $this->getEntityManager()
+            $listRepo = $this->entityManager
                 ->getRepository(\PHPapp\Entity\GenericList::class);
             
             if (empty($user)) {
@@ -137,7 +103,7 @@ class UserController extends EntityManagerResource
     {
         $id = $params["id"];
         if (isset($id)) {
-            $em = $this->getEntityManager();
+            $em = $this->entityManager;
             $user = $em->getRepository(User::class)
                     ->find($id);
 

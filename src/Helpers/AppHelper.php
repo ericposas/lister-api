@@ -63,6 +63,25 @@ class AppHelper {
                         (bool)$settings["log_errors"],
                         (bool)$settings["log_error_details"]
                 );
+            },
+            \Doctrine\ORM\EntityManager::class => function(\Psr\Container\ContainerInterface $container) {
+                // Create a simple "default" Doctrine ORM configuration for Annotations
+                $isDevMode = true;
+                $proxyDir = null;
+                $cache = null;
+                $useSimpleAnnotationReader = false;
+                $config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration(
+                    array('Models'),
+                    $isDevMode,
+                    $proxyDir,
+                    $cache,
+                    $useSimpleAnnotationReader
+                );
+                
+                $conn = \PHPapp\Helpers\DBConnectionHelper::getDBConnection();
+
+                // obtaining the entity manager
+                return \Doctrine\ORM\EntityManager::create($conn, $config);
             }
         ]);
         

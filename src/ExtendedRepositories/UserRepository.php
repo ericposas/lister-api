@@ -8,6 +8,37 @@ use PHPapp\Entity\Contact;
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
     
+    /**
+     * @param Array $users takes an array of Users
+     * @return Array returns an array of Users with contact info and Lists
+     */
+    public function getAllUsers(array $users)
+    {
+        $listRepo = $this->getEntityManager()
+                ->getRepository(\PHPapp\Entity\GenericList::class);
+        
+        $data = array();
+        foreach ($users as $user) {
+            $contact = $user->getContact();
+            $contactInfo = [
+                "id" => isset($contact) ? $contact->getId() : null,
+                "email" => isset($contact) ? $contact->getEmail() : null,
+                "phone" => isset($contact) ? $contact->getPhone() : null,
+            ];
+            $lists = $user->getLists();
+            $listData = $listRepo->getListData($lists);
+            
+            $data[] = [
+                "id" => $user->getId(),
+                "name" => $user->getName(),
+                "contactInfo" => $contactInfo,
+                "lists" => $listData
+            ];
+        }
+        
+        return $data;
+    }
+    
     public function getAllUsersIncludeContactInfo()
     {
         $contacts = $this
@@ -22,6 +53,10 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         return $data;
     }
     
+    /**
+     * @param object $body takes a request body
+     * @return /PHPapp/Entity/User returns a single User entity
+     */
     public function createNewUser($body)
     {
         $em = $this->getEntityManager();
@@ -33,7 +68,6 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             $contact->setEmail($body->email);
             $contact->setPhone($body->phone);
             $contact->addUser($user);
-//            $user->addContact($contact);
             $em->persist($contact);
             $em->flush();
         }
@@ -43,6 +77,36 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
         return $user;
     }
     
+    public function getUser(int $id)
+    {
+        $user = $this->getEntityManager()
+                ->getRepository(User::class)
+                ->find($id);
+        $data = [];
+        $contactInfo = [];
+        $contact = $user->getContact();
+        $contactId = isset($contact) ? $contact->getId() : null;
+        $email = isset($contact) ? $contact->getEmail() : null;
+        $phone = isset($contact) ? $contact->getPhone() : null;
+        if (isset($user)) {
+            $data["id"] = $user->getId();
+            $data["name"] = $user->getName();
+        }
+        $contactInfo["id"] = $contactId;
+        $contactInfo["email"] = $email;
+        $contactInfo["phone"] = $phone;
+        $data["contactInfo"] = $contactInfo;
+        
+        # Need to include User's list data..
+        
+        
+        return $data;
+    }
+    
+    /**
+     * @param int $id takes an id int and returns the corresponding User from db
+     * @return Array returns an array with user info
+     */
     public function getSingleUser(int $id)
     {
         $results = $this
