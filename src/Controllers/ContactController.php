@@ -8,74 +8,50 @@ use PHPapp\Entity\Contact;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class ContactController extends \PHPapp\EntityManagerResource
+class ContactController
 {
+    protected $container;
+    protected $entityManager;
+
+    public function __construct(\Psr\Container\ContainerInterface $container)
+    {
+        $this->container = $container;
+        $this->entityManager = $container->get(\Doctrine\ORM\EntityManager::class);
+    }
     
     public function create(Request $request, Response $response, array $params)
     {
-        $id = $params["id"];
         $body = json_decode($request->getBody());
-        $em = $this->getEntityManager();
-        $userRepo = $em->getRepository(User::class);
+        $contactRepo = $this->entityManager
+                ->getRepository(Contact::class);
         
-        $user = $userRepo->find($id);
-        if (isset($id) && isset($body)) {
-            if (empty($user)) {
-                return $response->withJson([ "message" => "Couldn't find a User with id of {$id}" ], 404);
+        if (isset($body)) {
+            $updateResult = $contactRepo->createOrUpdateContact($params["id"], $body); # string returned
+            if ($updateResult["status"] === "No user") {
+                return $response->withJson([ "message" => "Couldn't find a User with id of {$params["id"]}" ], 404);
             }
-            $createdOrChanged = "";
-            $contactExist = $user->getContact();
-            if (isset($contactExist)) {
-                $createdOrChanged = "Changed";
-                isset($body->email) ? $contactExist->setEmail($body->email) : null;
-                isset($body->phone) ? $contactExist->setPhone($body->phone) : null;
-            } else {
-                $createdOrChanged = "Created new";
-                $contact = new Contact();
-                isset($body->email) ? $contact->setEmail($body->email) : null;
-                isset($body->phone) ? $contact->setPhone($body->phone) : null;
-                $em->persist($contact);
-                $contact->addUser($user);
-                $user->addContact($contact);
-            }
-            $em->flush(); # flush changes to db aka close the transaction
         } else {
             return $response->withJson([
-                "message" => "Please provide a User {$id} and some body request data i.e. { 'email':'mymail@mail.com', 'phone': '000000000' }"
+                "message" => "Please provide some body request data i.e. { 'email':'mymail@mail.com', 'phone': '000000000' }"
             ]);
         }
-        
         return $response->withJson([
-            "message" => "{$createdOrChanged} Contact info and attached to {$user->getName()}"
+            "message" => "{$updateResult["status"]} Contact info and attached to {$updateResult["user"]->getName()}"
         ], 200);
-        
     }
     
     public function delete(Request $request, Response $response, array $params)
     {
-        $id = $params["id"];
-        $em = $this->getEntityManager();
-        $contact = $em->getRepository(Contact::class)
-                ->find($id);
-        if (isset($contact)) {
-            $user = $contact->getUser();
-            if (isset($user)) {
-                $contact->addUser(null);
-                $user->addContact(null);
-                $em->flush();
-            } else {
-                return $response->write('boop');
-            }
-            $em->remove($contact);
-            $em->flush();
-            
+        $em = $this->entityManager;
+        $contactRepo = $em->getRepository(Contact::class);   
+        $deleteOperationSucceeded = $contactRepo->deleteContact($params["id"]);
+        if ($deleteOperationSucceeded === true) {
             return $response->withJson([
-                "message" => "Contact with id of {$id} was deleted"
+                "message" => "Contact with id of {$params["id"]} was deleted"
             ]);
         }
-        
         return $response->withJson([
-            "message" => "Couldn't find a Contact with id {$id}"
+            "message" => "Couldn't find a Contact with id {$params["id"]}"
         ]);
     }
     

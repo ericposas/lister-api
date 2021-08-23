@@ -83,235 +83,245 @@ $app->get("/api-docs", DocumentationController::class . ":jsonResponse");
 
 $app->get("/documentation", DocumentationController::class . ":view");
 
-/////////////////////////////////////////////////////
-//
-//  USERS
-//
-/////////////////////////////////////////////////////
-
-/**
- * @OA\Get(
- *      path="/users",
- *      tags={"Users"},
- *      summary="Endpoint for listing all created Users",
- *      @OA\Response(
- *          response="200",
- *          description="Response lists all Users with associated Lists, Contact info, etc.",
- *          @OA\JsonContent(
- *              @OA\Property(
- *                  property="users",
- *                  type="array",
- *                  @OA\Items(
- *                      ref="#/components/schemas/User"
- *                  )
- *              )
- *          )
- *      ),
- * )
- */ 
-$app->get("/users", UserController::class . ":index")->add(VerifyJWTMiddleware::class);
-
-/**
- * @OA\Get(
- *      path="/users/{id}",
- *      tags={"Users"},
- *      @OA\Parameter(
- *          name="id",
- *          in="path",
- *          required=true,
- *          description="id to query for User",
- *          @OA\Schema(type="int")
- *      ),
- *      summary="Endpoint for retrieving a single User entity",
- *      @OA\Response(
- *          response="200",
- *          description="Return a single User object with associated Lists, Contact info, etc.",
- *          @OA\JsonContent(ref="#/components/schemas/User")
- *      ),
- * )
- */ 
-$app->get("/users/{id}", UserController::class . ":show")->add(VerifyJWTMiddleware::class);
-
-/**
- * @OA\Get(
- *      path="/users/{id}/lists",
- *      tags={"Lists"},
- *      @OA\Parameter(
- *          name="id",
- *          in="path",
- *          required=true,
- *          description="id of User whose Lists to retrieve",
- *          @OA\Schema(type="int")
- *      ),
- *      summary="Endpoint for retrieving a single User's List entities",
- *      @OA\Response(
- *          response="200",
- *          description="Gets a single User's List objects",
- *          @OA\JsonContent(
- *              @OA\Property(
- *                  property="lists",
- *                  type="array",
- *                  @OA\Items(
- *                      ref="#/components/schemas/GenericList")
- *                  )
- *              )
- *          )
- *      ),
- * )
- */ 
-$app->get("/users/{id}/lists", UserController::class . ":showLists")->add(VerifyJWTMiddleware::class);
-
-/**
- * @OA\Post(
- *      path="/users",
- *      tags={"Users"},
- *      summary="Endpoint for creating a new User",
- *      @OA\Response(
- *          response="201",
- *          description="Message for successful cretion of User",
- *          @OA\JsonContent(
- *              @OA\Property(
- *                  property="message",
- *                  example="New user USER->NAME created."
- *              )
- *          )
- *      ),
- * )
- */
-$app->post("/users", UserController::class . ":create")->add(VerifyJWTMiddleware::class);
-
-/**
- * @OA\Delete(
- *      path="/users/{id}",
- *      tags={"Users"},
- *      summary="Endpoint for deleting a User by id",
- *      @OA\Response(
- *          response="200",
- *          description="Message for successful deletion of a specified User",
- *          @OA\JsonContent(
- *              @OA\Property(
- *                  property="message",
- *                  example="USER->NAME User removed"
- *              )
- *          )
- *      ),
- * )
- */ 
-$app->delete("/users/{id}", UserController::class . ":delete")->add(VerifyJWTMiddleware::class);
 
 
 /////////////////////////////////////////////////////
 //
-//  CONTACT
+//  API GROUP
 //
 /////////////////////////////////////////////////////
 
-/**
- * @OA\Post(
- *      path="/users/{id}/contact",
- *      tags={"Contact"},
- *      summary="Endpoint for creating a new Contact info and attaching to a specified User",
- *      @OA\Response(
- *          response="200",
- *          description="Creates Contact info for a specified User",
- *          @OA\JsonContent(
- *              @OA\Property(
- *                  property="Contact",
- *                  example="Created new Contact info and attached to USER->NAME"
- *              )
- *          )
- *      ),
- * )
- */ 
-$app->post("/users/{id}/contact", ContactController::class . ":create")->add(VerifyJWTMiddleware::class);
+$app->group("", function (Slim\Routing\RouteCollectorProxy $group) {
 
-/**
- * @OA\Delete(
- *      path="/contacts/{id}",
- *      tags={"Contact"},
- *      summary="Endpoint for deleting a single Contact entity",
- *      @OA\Response(
- *          response="200",
- *          description="Response for successful deletion of Contact info",
- *          @OA\JsonContent(
- *              @OA\Property(
- *                  property="Contact",
- *                  example="Contact with id of INTEGER was deleted"
- *              )
- *          )
- *      ),
- * )
- */
-$app->delete("/contacts/{id}", ContactController::class . ":delete")->add(VerifyJWTMiddleware::class);
+    /////////////////////////////////////////////////////
+    //
+    //  USERS
+    //
+    /////////////////////////////////////////////////////
 
-/**
- * @OA\Put(
- *      path="/contacts/{id}",
- *      tags={"Contact"},
- *      summary="Endpoint for updating an existing Contact info",
- *      @OA\Response(
- *          response="200",
- *          description="Returns a success message upon updating a Contact info entity",
- *          @OA\JsonContent(
- *              @OA\Property(
- *                  property="Contact",
- *                  example="Changed Contact info and attached to USER->NAME"
- *              )
- *          )
- *      ),
- * )
- */ 
-$app->put("/contacts/{id}", ContactController::class . ":create")->add(VerifyJWTMiddleware::class); # right now, :create method updates a Contact if one by specified id exists
+    /**
+     * @OA\Get(
+     *      path="/users",
+     *      tags={"Users"},
+     *      summary="Endpoint for listing all created Users",
+     *      @OA\Response(
+     *          response="200",
+     *          description="Response lists all Users with associated Lists, Contact info, etc.",
+     *          @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="users",
+     *                  type="array",
+     *                  @OA\Items(
+     *                      ref="#/components/schemas/User"
+     *                  )
+     *              )
+     *          )
+     *      ),
+     * )
+     */ 
+    $group->get("/users", UserController::class . ":index");
 
-/////////////////////////////////////////////////////
-//
-//  LISTS
-//
-/////////////////////////////////////////////////////
+    /**
+     * @OA\Get(
+     *      path="/users/{id}",
+     *      tags={"Users"},
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          required=true,
+     *          description="id to query for User",
+     *          @OA\Schema(type="int")
+     *      ),
+     *      summary="Endpoint for retrieving a single User entity",
+     *      @OA\Response(
+     *          response="200",
+     *          description="Return a single User object with associated Lists, Contact info, etc.",
+     *          @OA\JsonContent(ref="#/components/schemas/User")
+     *      ),
+     * )
+     */ 
+    $group->get("/users/{id}", UserController::class . ":show");
 
-# Get all Lists
-$app->get("/lists", ListsController::class . ":index")->add(VerifyJWTMiddleware::class);
+    /**
+     * @OA\Get(
+     *      path="/users/{id}/lists",
+     *      tags={"Lists"},
+     *      @OA\Parameter(
+     *          name="id",
+     *          in="path",
+     *          required=true,
+     *          description="id of User whose Lists to retrieve",
+     *          @OA\Schema(type="int")
+     *      ),
+     *      summary="Endpoint for retrieving a single User's List entities",
+     *      @OA\Response(
+     *          response="200",
+     *          description="Gets a single User's List objects",
+     *          @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="lists",
+     *                  type="array",
+     *                  @OA\Items(
+     *                      ref="#/components/schemas/GenericList")
+     *                  )
+     *              )
+     *          )
+     *      ),
+     * )
+     */ 
+    $group->get("/users/{id}/lists", UserController::class . ":showLists");
 
-# Get and show a List by id
-$app->get("/lists/{id}", ListsController::class . ":show")->add(VerifyJWTMiddleware::class);
+    /**
+     * @OA\Post(
+     *      path="/users",
+     *      tags={"Users"},
+     *      summary="Endpoint for creating a new User",
+     *      @OA\Response(
+     *          response="201",
+     *          description="Message for successful cretion of User",
+     *          @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="message",
+     *                  example="New user USER->NAME created."
+     *              )
+     *          )
+     *      ),
+     * )
+     */
+    $group->post("/users", UserController::class . ":create");
 
-# Creates a new List and attaches to a User at $id 
-$app->post("/users/{id}/list", ListsController::class . ":create")->add(VerifyJWTMiddleware::class);
+    /**
+     * @OA\Delete(
+     *      path="/users/{id}",
+     *      tags={"Users"},
+     *      summary="Endpoint for deleting a User by id",
+     *      @OA\Response(
+     *          response="200",
+     *          description="Message for successful deletion of a specified User",
+     *          @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="message",
+     *                  example="USER->NAME User removed"
+     *              )
+     *          )
+     *      ),
+     * )
+     */ 
+    $group->delete("/users/{id}", UserController::class . ":delete");
 
-# Update a List by List id
-//$app->put("/lists/{id}", ListsController::class . ":update");
+    /////////////////////////////////////////////////////
+    //
+    //  CONTACT
+    //
+    /////////////////////////////////////////////////////
 
-# Deletes a List of $id
-$app->delete("/lists/{id}", ListsController::class . ":delete")->add(VerifyJWTMiddleware::class);
+    /**
+     * @OA\Post(
+     *      path="/users/{id}/contact",
+     *      tags={"Contact"},
+     *      summary="Endpoint for creating a new Contact info and attaching to a specified User",
+     *      @OA\Response(
+     *          response="200",
+     *          description="Creates Contact info for a specified User",
+     *          @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="Contact",
+     *                  example="Created new Contact info and attached to USER->NAME"
+     *              )
+     *          )
+     *      ),
+     * )
+     */ 
+    $group->post("/users/{id}/contact", ContactController::class . ":create");
+
+    /**
+     * @OA\Delete(
+     *      path="/contacts/{id}",
+     *      tags={"Contact"},
+     *      summary="Endpoint for deleting a single Contact entity",
+     *      @OA\Response(
+     *          response="200",
+     *          description="Response for successful deletion of Contact info",
+     *          @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="Contact",
+     *                  example="Contact with id of INTEGER was deleted"
+     *              )
+     *          )
+     *      ),
+     * )
+     */
+    $group->delete("/contacts/{id}", ContactController::class . ":delete");
+
+    /**
+     * @OA\Put(
+     *      path="/contacts/{id}",
+     *      tags={"Contact"},
+     *      summary="Endpoint for updating an existing Contact info",
+     *      @OA\Response(
+     *          response="200",
+     *          description="Returns a success message upon updating a Contact info entity",
+     *          @OA\JsonContent(
+     *              @OA\Property(
+     *                  property="Contact",
+     *                  example="Changed Contact info and attached to USER->NAME"
+     *              )
+     *          )
+     *      ),
+     * )
+     */ 
+    $group->put("/contacts/{id}", ContactController::class . ":create"); # right now, :create method updates a Contact if one by specified id exists
+
+    /////////////////////////////////////////////////////
+    //
+    //  LISTS
+    //
+    /////////////////////////////////////////////////////
+
+    # Get all Lists    
+    $group->get("/lists", ListsController::class . ":index");
+
+    # Get and show a List by id        
+    $group->get("/lists/{id}", ListsController::class . ":show");
+
+    # Creates a new List and attaches to a User at $id 
+    $group->post("/users/{id}/list", ListsController::class . ":create");
+
+    # Update a List by List id
+    //$app->put("/lists/{id}", ListsController::class . ":update");
+
+    # Deletes a List of $id
+    $group->delete("/lists/{id}", ListsController::class . ":delete");
+
+    /////////////////////////////////////////////////////
+    //
+    //  SHARES
+    //
+    /////////////////////////////////////////////////////
 
 
-/////////////////////////////////////////////////////
-//
-//  SHARES
-//
-/////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////
+    //
+    //  ITEMS
+    //
+    /////////////////////////////////////////////////////
 
+    # List all Items
+    //$app->get("/items", ItemController::class . ":index");
 
-/////////////////////////////////////////////////////
-//
-//  ITEMS
-//
-/////////////////////////////////////////////////////
+    # Get a single Item by id
+    //$app->get("/items/{id}", ItemController::class . ":show");
 
-# List all Items
-//$app->get("/items", ItemController::class . ":index");
+    # Creates a new Item and assigns to designated List id
+    $group->post("/lists/{id}/item", ItemController::class . ":create")->add(VerifyJWTMiddleware::class);
 
-# Get a single Item by id
-//$app->get("/items/{id}", ItemController::class . ":show");
+    # Updates and Item by id
+    $group->put("/items/{id}", ItemController::class . ":update")->add(VerifyJWTMiddleware::class);
 
-# Creates a new Item and assigns to designated List id
-$app->post("/lists/{id}/item", ItemController::class . ":create")->add(VerifyJWTMiddleware::class);
+    # Delete an Item by Item id
+    $group->delete("/items/{id}", ItemController::class . ":delete")->add(VerifyJWTMiddleware::class);
 
-# Updates and Item by id
-$app->put("/items/{id}", ItemController::class . ":update")->add(VerifyJWTMiddleware::class);
-
-# Delete an Item by Item id
-$app->delete("/items/{id}", ItemController::class . ":delete")->add(VerifyJWTMiddleware::class);
+})->add(VerifyJWTMiddleware::class);
 
 
 # Run Slim Framework
