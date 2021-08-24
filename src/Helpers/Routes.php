@@ -161,11 +161,11 @@ class Routes
              *      summary="Endpoint for creating a new User",
              *      @OA\Response(
              *          response="201",
-             *          description="Message for successful cretion of User",
+             *          description="Message for successful creation of User",
              *          @OA\JsonContent(
              *              @OA\Property(
              *                  property="message",
-             *                  example="New user USER->NAME created."
+             *                  example="New user {$user->getName()} created."
              *              )
              *          )
              *      ),
@@ -184,7 +184,7 @@ class Routes
              *          @OA\JsonContent(
              *              @OA\Property(
              *                  property="message",
-             *                  example="USER->NAME User removed"
+             *                  example="{$user->getName()} User removed"
              *              )
              *          )
              *      ),
@@ -209,7 +209,7 @@ class Routes
              *          @OA\JsonContent(
              *              @OA\Property(
              *                  property="Contact",
-             *                  example="Created new Contact info and attached to USER->NAME"
+             *                  example="Created new Contact info and attached to {$user->getName()}"
              *              )
              *          )
              *      ),
@@ -228,7 +228,7 @@ class Routes
              *          @OA\JsonContent(
              *              @OA\Property(
              *                  property="Contact",
-             *                  example="Contact with id of INTEGER was deleted"
+             *                  example="Contact with id of {$contact->getId()} was deleted"
              *              )
              *          )
              *      ),
@@ -247,7 +247,7 @@ class Routes
              *          @OA\JsonContent(
              *              @OA\Property(
              *                  property="Contact",
-             *                  example="Changed Contact info and attached to USER->NAME"
+             *                  example="Changed Contact info and attached to {$user->getName()}"
              *              )
              *          )
              *      ),
@@ -260,20 +260,89 @@ class Routes
             //  LISTS
             //
             /////////////////////////////////////////////////////
-
-            # Get all Lists    
+            
+            /**
+             * @OA\Get(
+             *      path="/lists",
+             *      tags={"Lists"},
+             *      summary="Endpoint listing all Lists",
+             *      @OA\Response(
+             *          response="200",
+             *          description="Returns a list of all defined Lists",
+             *          @OA\JsonContent(
+             *              @OA\Property(
+             *                  property="lists",
+             *                  type="array",
+             *                  @OA\Items(
+             *                      ref="#/components/schemas/GenericList"
+             *                  )
+             *              )
+             *          )
+             *      ),
+             * )
+             */ 
             $group->get("/lists", ListsController::class . ":index");
 
-            # Get and show a List by id        
+            /**
+             * @OA\Get(
+             *      path="/lists/{id}",
+             *      tags={"Lists"},
+             *      @OA\Parameter(
+             *          name="id",
+             *          in="path",
+             *          required=true,
+             *          description="id to query for GenericList entity",
+             *          @OA\Schema(type="int")
+             *      ),
+             *      summary="Endpoint for retrieving a single GenericList entity",
+             *      @OA\Response(
+             *          response="200",
+             *          description="Return a single List object with associated Items",
+             *          @OA\JsonContent(ref="#/components/schemas/GenericList")
+             *      ),
+             * )
+             */ 
             $group->get("/lists/{id}", ListsController::class . ":show");
 
-            # Creates a new List and attaches to a User at $id 
+            /**
+             * @OA\Post(
+             *      path="/users/{id}/list",
+             *      tags={"Lists"},
+             *      summary="Endpoint for creating a new List and attaching it to a User",
+             *      @OA\Response(
+             *          response="201",
+             *          description="Message for successful creation of new List",
+             *          @OA\JsonContent(
+             *              @OA\Property(
+             *                  property="message",
+             *                  example="Added a new list for User {$user->getName()}"
+             *              )
+             *          )
+             *      ),
+             * )
+             */
             $group->post("/users/{id}/list", ListsController::class . ":create");
 
             # Update a List by List id
             //$app->put("/lists/{id}", ListsController::class . ":update");
 
-            # Deletes a List of $id
+            /**
+             * @OA\Delete(
+             *      path="/lists/{id}",
+             *      tags={"Lists"},
+             *      summary="Endpoint for deleting a single List entity",
+             *      @OA\Response(
+             *          response="200",
+             *          description="Response for successful deletion of a List",
+             *          @OA\JsonContent(
+             *              @OA\Property(
+             *                  property="Contact",
+             *                  example="Successfully deleted User {$list->getOwner()->getName()}'s List {$list->getName()}"
+             *              )
+             *          )
+             *      ),
+             * )
+             */
             $group->delete("/lists/{id}", ListsController::class . ":delete");
 
             /////////////////////////////////////////////////////

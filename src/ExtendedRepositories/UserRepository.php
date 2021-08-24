@@ -54,6 +54,35 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
     }
     
     /**
+     * @param int $id takes in a User id int
+     * @param requestBody $body takes in a decoded request body object
+     * @return array returns an array with the $user and a bool success indicator
+     */
+    public function addNewList($id, $body)
+    {
+        try {
+            $user = $this->getEntityManager()
+                    ->getRepository(User::class)
+                    ->find($id);
+            $newList = new \PHPapp\Entity\GenericList();
+            $newList->addOwner($user);
+            $newList->setName($body->name);
+            if (isset($body->description)) {
+                $newList->setDescription($body->description);
+            }
+            $this->getEntityManager()->persist($newList);
+            $this->getEntityManager()->flush();
+
+            return [
+                "user" => $user,
+                "success" => true
+            ];
+        } catch (Exception $ex) {
+            throw new Exception($ex);
+        }
+    }
+    
+    /**
      * @param object $body takes a request body
      * @return /PHPapp/Entity/User returns a single User entity
      */
