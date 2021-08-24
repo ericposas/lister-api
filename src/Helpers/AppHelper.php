@@ -2,13 +2,15 @@
 
 namespace PHPapp\Helpers;
 
+use PHPapp\Helpers\Routes;
+
 /**
  * Description of AppHelper
  *
  * @author webdev00
  */
-class AppHelper {
-    
+class AppHelper
+{    
     /**
      * @return \Slim\App returns a DI configured instance of the Slim App class
      */
@@ -89,6 +91,7 @@ class AppHelper {
         $container = $containerBuilder->build();
         # create app instance via container
         $app = $container->get(\Slim\App::class);
+        Routes::createRoutes($app);
         
         return $app;
     }
