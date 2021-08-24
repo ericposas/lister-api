@@ -19,11 +19,14 @@ class ContactController
         $this->entityManager = $container->get(\Doctrine\ORM\EntityManager::class);
     }
     
+    public function update(Request $request, Response $response, array $params) {
+        return $this->create($request, $response, $params);
+    }
+    
     public function create(Request $request, Response $response, array $params)
     {
         $body = json_decode($request->getBody());
-        $contactRepo = $this->entityManager
-                ->getRepository(Contact::class);
+        $contactRepo = $this->entityManager->getRepository(Contact::class);
         
         if (isset($body)) {
             $updateResult = $contactRepo->createOrUpdateContact($params["id"], $body); # string returned
@@ -43,7 +46,7 @@ class ContactController
     public function delete(Request $request, Response $response, array $params)
     {
         $em = $this->entityManager;
-        $contactRepo = $em->getRepository(Contact::class);   
+        $contactRepo = $em->getRepository(\PHPapp\Entity\Contact::class);   
         $deleteOperationSucceeded = $contactRepo->deleteContact($params["id"]);
         if ($deleteOperationSucceeded === true) {
             return $response->withJson([

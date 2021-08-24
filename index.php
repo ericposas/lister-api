@@ -270,8 +270,8 @@ $app->group("", function (Slim\Routing\RouteCollectorProxy $group) {
      *      ),
      * )
      */ 
-    $group->put("/contacts/{id}", ContactController::class . ":create"); # right now, :create method updates a Contact if one by specified id exists
-
+    $group->put("/users/{id}/contact", ContactController::class . ":update");
+    
     /////////////////////////////////////////////////////
     //
     //  LISTS
