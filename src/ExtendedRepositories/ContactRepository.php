@@ -6,13 +6,11 @@ class ContactRepository extends \Doctrine\ORM\EntityRepository
 {
     /**
      * @param string $id takes in the id of the Contact entity to delete from the database
+     * @return bool returns true if delete op was successful
      */
     public function deleteContact(string $id)
     {
-        $em = $this->getEntityManager();
-        $contact = $em
-                ->getRepository(\PHPapp\Entity\Contact::class)
-                ->find($id);
+        $contact = $this->find($id);
         if (!$contact) {
             return false;
         }
@@ -34,15 +32,16 @@ class ContactRepository extends \Doctrine\ORM\EntityRepository
     }
     
     /**
-     * @param string $id takes an instance of User entity
+     * @param User $id takes in a User id int
      * @param requestBody $body request body with params passed in
      * @return array returns an array with a status string, either "Created new", "Changed", or "No user" and the $user
      */
-    public function createOrUpdateContact(string $id, $body)
+    public function createOrUpdateContact(int $id, $body)
     {
         $user = $this->getEntityManager()
                 ->getRepository(\PHPapp\Entity\User::class)
                 ->find($id);
+        
         $createdOrChanged = "";
         if (!$user) {
             $createdOrChanged = "No user";
@@ -51,21 +50,26 @@ class ContactRepository extends \Doctrine\ORM\EntityRepository
                 "status" => $createdOrChanged
             ];
         }
-        $contactExist = $user->getContact();
-        if (isset($contactExist)) {
-            $createdOrChanged = "Changed";
-            isset($body->email) ? $contactExist->setEmail($body->email) : null;
-            isset($body->phone) ? $contactExist->setPhone($body->phone) : null;
-        } else {
-            $createdOrChanged = "Created new";
-            $contact = new Contact();
-            isset($body->email) ? $contact->setEmail($body->email) : null;
-            isset($body->phone) ? $contact->setPhone($body->phone) : null;
-            $this->getEntityManager()->persist($contact);
-            $contact->addUser($user);
-            $user->addContact($contact);
+        try {
+            $contactExist = $user->getContact();
+            if (isset($contactExist)) {
+                $createdOrChanged = "Changed";
+                isset($body->email) ? $contactExist->setEmail($body->email) : null;
+                isset($body->phone) ? $contactExist->setPhone($body->phone) : null;
+            } else {
+                $createdOrChanged = "Created new";
+                $contact = new \PHPapp\Entity\Contact();
+                isset($body->email) ? $contact->setEmail($body->email) : null;
+                isset($body->phone) ? $contact->setPhone($body->phone) : null;
+                $this->getEntityManager()->persist($contact);
+                $contact->addUser($user);
+                $user->addContact($contact);
+            }
+            $this->getEntityManager()
+                    ->flush(); # flush changes to db aka close the transaction
+        } catch (Exception $ex) {
+            throw new Exception($ex);
         }
-        $this->getEntityManager()->flush(); # flush changes to db aka close the transaction
         return [
             "user" => $user,
             "status" => $createdOrChanged
