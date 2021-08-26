@@ -84,6 +84,23 @@ class ListsController
         return $response->withJson([ "message" => "Added a new list for User {$addListResult["user"]->getName()}" ], 201);
     }
     
+    public function update(Request $request, Response $response, array $params)
+    {
+        $body = json_decode($request->getBody());
+        $repo = $this->entityManager->getRepository(GenericList::class);
+        
+        if (!$body) {
+            return $response->withJson([ "message" => "You need to provide a request body" ]);
+        }
+        
+        $status = $repo->updateList($params["id"], $body);
+        if ($status["status"] === "success" && isset($status["user"])) {
+            return $response->withJson([ "message" => "{$status["user"]->getName()} List was successfully updated" ]);
+        }
+        
+        return $response->withJson([ "message" => "Could not update the user" ]);
+    }
+    
     public function delete(Request $request, Response $response, array $params)
     {
         $id = $params["id"];

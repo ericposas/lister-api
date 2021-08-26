@@ -134,6 +134,15 @@ class GenericList
     {
         return $this->items;
     }
+    
+    /**
+     * Set the value of the items array
+     */
+    public function setEmptyItems()
+    {
+        $this->items[] = [];
+        return $this;
+    }
 
     /**
      * Set the value of items
