@@ -323,8 +323,24 @@ class Routes
              */
             $group->post("/users/{id}/list", ListsController::class . ":create");
 
-            # Update a List by List id
-            //$app->put("/lists/{id}", ListsController::class . ":update");
+            /**
+             * @OA\Put(
+             *      path="/lists/{id}",
+             *      tags={"Lists"},
+             *      summary="Endpoint for updating an existing List",
+             *      @OA\Response(
+             *          response="201",
+             *          description="Message for successful update of a List",
+             *          @OA\JsonContent(
+             *              @OA\Property(
+             *                  property="message",
+             *                  example="Updated a List for User {$user->getName()}"
+             *              )
+             *          )
+             *      ),
+             * )
+             */
+            $group->put("/lists/{id}", ListsController::class . ":update");
 
             /**
              * @OA\Delete(
