@@ -22,7 +22,7 @@ class DocumentationController {
     }
 
     public function jsonResponse($request, $response, $args) {
-        $dir = \OpenApi\scan([ __DIR__ . "/../../src/Schemas", __DIR__ . "/../Helpers/Routes.php" ]);
+        $dir = \OpenApi\scan([ __DIR__ . "/../../schemas", __DIR__ . "/../Helpers/Routes.php" ]);
         $response->getBody()->write(json_encode($dir));
         return $response->withHeader('Content-Type', 'application/json');
     }

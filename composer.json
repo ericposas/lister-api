@@ -31,7 +31,7 @@
         "psr-4": {
             "PHPapp\\": "src/",
             "PHPapp\\Entity\\": "src/Entity",
-            "PHPapp\\Schemas\\": "src/Schemas",
+            "PHPapp\\Schemas\\": "schemas",
             "PHPapp\\Controllers\\": "src/Controllers",
             "PHPapp\\ExtendedRepositories\\": "src/ExtendedRepositories",
             "PHPapp\\Middleware\\": "src/Middleware",

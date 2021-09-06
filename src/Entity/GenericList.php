@@ -45,6 +45,16 @@ class GenericList
      * @ORM\JoinColumn(name="owner_id", referencedColumnName="id", onDelete="cascade")
      */
     protected $owner;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="Share", inversedBy="lists")
+     * @ORM\JoinTable(
+     *      name="shares_lists",
+     *      joinColumns={@ORM\JoinColumn(name="share_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="list_id", referencedColumnName="id")}
+     *  )
+     */
+    protected $lists;
 
     public function __construct()
     {
