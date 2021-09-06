@@ -2,7 +2,6 @@
 
 namespace PHPapp\Controllers;
 
-use PHPapp\Entity\User;
 use PHPapp\Entity\Contact;
 
 use Slim\Http\Response as Response;

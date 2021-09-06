@@ -2,19 +2,27 @@
 
 namespace PHPapp\Controllers;
 
-use PHPapp\EntityManagerResource;
+use Auth0\SDK\Auth0;
 use Slim\Http\Response as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-
-use Auth0\SDK\Auth0;
         
 /**
  * Description of TokenController
  *
  * @author webdev00
  */
-class TokenController extends EntityManagerResource {
+class TokenController
+{
 
+    protected $container;
+    protected $entityManager;
+
+    public function __construct(\Psr\Container\ContainerInterface $container)
+    {
+        $this->container = $container;
+        $this->entityManager = $container->get(\Doctrine\ORM\EntityManager::class);
+    }
+    
     public function delete (Request $request, Response $response, array $params)
     {
         # Place in a middleware function --
@@ -23,13 +31,13 @@ class TokenController extends EntityManagerResource {
         
         if (! $user) {
             $response->getBody()->write("You need be logged in to perform this action");
+            $response->withStatus(401);
             return $response;
         }
         # Place in a middleware function --
         
-        $em = $this->getEntityManager();
+        $em = $this->entityManager;
         $whitelistedTokenRepo = $em->getRepository(\PHPapp\Entity\WhitelistedToken::class);
-        $deletedTokenRepo = $em->getRepository(\PHPapp\Entity\DeletedToken::class);
         
         $tokenToDelete = $whitelistedTokenRepo->find($params["id"]);
         $em->remove($tokenToDelete);
@@ -41,7 +49,6 @@ class TokenController extends EntityManagerResource {
         $em->flush();
         
         return $response->withRedirect("/my-tokens");
-        
     }
     
     public function generate (Request $request, Response $response)
@@ -52,11 +59,10 @@ class TokenController extends EntityManagerResource {
         
         if (! $user) {
             $response->getBody()->write("You need be logged in to perform this action");
+            $response->withStatus(401);
             return $response;
         }
-        # Place in a middleware function --
-        
-        $em = $this->getEntityManager();
+        # Place in a middleware function -- 
         
         $auth0->logout();
         $auth0->login();

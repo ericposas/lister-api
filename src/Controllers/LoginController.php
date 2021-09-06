@@ -3,15 +3,14 @@
 namespace PHPapp\Controllers;
 
 use Auth0\SDK\Auth0;
-use Slim\Http\Response as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Description of LoginController
  *
  * @author webdev00
  */
-class LoginController extends \PHPapp\EntityManagerResource {
+class LoginController
+{
     
     public function __invoke() {
         $auth0Config = \PHPapp\Helpers\AuthConfig::getConfig();

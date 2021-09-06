@@ -11,10 +11,19 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  *
  * @author webdev00
  */
-class HomeController extends \PHPapp\EntityManagerResource {
+class HomeController
+{
+    protected $container;
+    protected $entityManager;
+
+    public function __construct(\Psr\Container\ContainerInterface $container)
+    {
+        $this->container = $container;
+        $this->entityManager = $container->get(\Doctrine\ORM\EntityManager::class);
+    }
     
-    public function __invoke(Request $request, Response $response) {
-        
+    public function __invoke(Request $request, Response $response)
+    {    
         $auth0Config = \PHPapp\Helpers\AuthConfig::getConfig();
         $auth0 = new Auth0($auth0Config);
 
@@ -36,7 +45,7 @@ class HomeController extends \PHPapp\EntityManagerResource {
             echo \PHPapp\HTMLHelpers\GenerateHTML::getLogoutButtonHTML();
             
             # upon successful login redirect, save or update our APIUser
-            $em = $this->getEntityManager();
+            $em = $this->entityManager;
             $repo = $em->getRepository(\PHPapp\Entity\APIUser::class);
             $existingApiUser = $repo->findBy([ "name" => $userInfo["name"] ]);
             

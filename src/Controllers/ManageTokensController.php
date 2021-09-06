@@ -8,18 +8,26 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 use PHPapp\Entity\APIUser;
 
-class ManageTokensController extends \PHPapp\EntityManagerResource {
+class ManageTokensController
+{
     
-    public function __invoke(Request $request, Response $response) {
-        
+    protected $container;
+    protected $entityManager;
+
+    public function __construct(\Psr\Container\ContainerInterface $container)
+    {
+        $this->container = $container;
+        $this->entityManager = $container->get(\Doctrine\ORM\EntityManager::class);
+    }
+    
+    public function __invoke(Request $request, Response $response)
+    {    
         session_start();
         if (empty($_SESSION["log_count"])) {
             $_SESSION["log_count"] = 1;
         } else {
             $_SESSION["log_count"]++;
         }
-        
-//        echo $_SESSION["log_count"];
         
         $auth0Config = \PHPapp\Helpers\AuthConfig::getConfig();
         $auth0 = new Auth0($auth0Config);
@@ -34,7 +42,7 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
         . "<div class=\"container\">";
         
         # upon successful login, save or update our APIUser
-        $em = $this->getEntityManager();
+        $em = $this->entityManager;
         $apiUserRepo = $em->getRepository(APIUser::class);
         $tokRepo = $em->getRepository(\PHPapp\Entity\WhitelistedToken::class);
         
@@ -42,10 +50,10 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
             "jwt" => $auth0->getIdToken()
         ]);
 
-        $existingApiUser = $apiUserRepo->findBy([
+        $_existingApiUser = $apiUserRepo->findBy([
             "name" => $auth0->getUser()["name"]
         ]);
-        $existingApiUser = $existingApiUser[0];
+        $existingApiUser = $_existingApiUser[0];
         
         if (empty($existingApiUser) || empty($userInfo)) {
             unset($_SESSION["log_count"]);
@@ -56,7 +64,6 @@ class ManageTokensController extends \PHPapp\EntityManagerResource {
         
         if ($_SESSION["log_count"] > 1) {
             $queryParams = $request->getQueryParams();
-//            echo count($queryParams);
             if (empty($existingWhitelistedToken) && (int)count($queryParams) !== 0) {
                 $existingWhitelistedToken = $existingWhitelistedToken[0];
                 $deletedTokensRepo = $em->getRepository(\PHPapp\Entity\DeletedToken::class);
