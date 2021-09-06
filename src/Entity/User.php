@@ -48,76 +48,39 @@ class User
       $this->lists = new ArrayCollection();
   }
 
-  /**
-   * Get the value of id
-   * @return  int
-   */ 
-  public function getId()
+  public function getId(): int
   {
     return $this->id;
   }
 
-  /**
-   * Get the value of name
-   * @return  string
-   */ 
-  public function getName()
+  public function getName(): string
   {
     return $this->name;
   }
 
-  /**
-   * Set the value of name
-   * @param  string  $name
-   * @return  self
-   */ 
   public function setName(string $name)
   {
     $this->name = $name;
     return $this;
   }
 
-  /**
-   * Get arrayCollection of List objects
-   *
-   * @return  GenericList[]
-   */ 
   public function getLists()
   {
     return $this->lists;
   }
 
-  /**
-   * Set arrayCollection of List objects
-   *
-   * @param  GenericList[]  $lists  ArrayCollection of List objects
-   *
-   * @return  self
-   */ 
-  public function setList($list)
+  public function setList(GenericList $list)
   {
     $this->lists[] = $list;
     return $this;
   }
 
-  /**
-   * Get the value of contactInfo
-   *
-   * @return  string
-   */ 
-  public function getContact()
+  public function getContact()  //: Contact -- currently returns null is no contact is set
   {
     return $this->contact;
   }
 
-  /**
-   * Set the value of contactInfo
-   *
-   * @param  string  $contactInfo
-   *
-   * @return  self
-   */ 
-  public function addContact($contact)
+  public function addContact(Contact $contact)
   {
     $this->contact = $contact;
     return $this;

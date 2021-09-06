@@ -61,105 +61,57 @@ class GenericList
         $this->items = new ArrayCollection();
     }
 
-    /**
-     * Get the value of id
-     *
-     * @return  int
-     */ 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Get the value of owner
-     */ 
-    public function getOwner()
+    public function getOwner(): User
     {
         return $this->owner;
     }
 
-    /**
-     * Set the value of owner
-     *
-     * @return  self
-     */ 
-    public function addOwner($owner)
+    public function addOwner(User $owner)
     {
         $owner->setList($this);
         $this->owner = $owner;
         return $this;
     }
 
-    /**
-     * Get the value of name
-     *
-     * @return  string
-     */ 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * Set the value of name
-     *
-     * @param  string  $name
-     *
-     * @return  self
-     */ 
     public function setName(string $name)
     {
         $this->name = $name;
         return $this;
     }
 
-    /**
-     * Get the value of description
-     *
-     * @return  string
-     */ 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * Set the value of description
-     *
-     * @param  string  $description
-     *
-     * @return  self
-     */ 
     public function setDescription(string $description)
     {
         $this->description = $description;
         return $this;
     }
 
-    /**
-     * Get the value of items
-     */ 
     public function getItems()
     {
         return $this->items;
     }
     
-    /**
-     * Set the value of the items array
-     */
     public function setEmptyItems()
     {
         $this->items[] = [];
         return $this;
     }
 
-    /**
-     * Set the value of items
-     *
-     * @return  self
-     */ 
-    public function setItem($items)
+    public function setItem(Item $items)
     {
         $this->items[] = $items;
         return $this;

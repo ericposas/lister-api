@@ -37,12 +37,12 @@ class Share {
         $this->lists = new ArrayCollection();
     }
     
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
     
-    public function getSenderId()
+    public function getSenderId(): int
     {
         return $this->senderId;
     }
@@ -52,7 +52,7 @@ class Share {
         $this->senderId = $id;
     }
     
-    public function getRecipientId()
+    public function getRecipientId(): int
     {
         return $this->recipientId;
     }
