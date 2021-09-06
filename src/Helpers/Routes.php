@@ -124,7 +124,10 @@ class Routes
              * )
              */ 
             $group->get("/users/{id}", UserController::class . ":show");
-
+            
+            # get user by passing in User name in req. body 
+            #$group->get("/users", UserController::class . ":getUserByName");
+            
             /**
              * @OA\Get(
              *      path="/users/{id}/lists",
@@ -191,6 +194,9 @@ class Routes
              * )
              */ 
             $group->delete("/users/{id}", UserController::class . ":delete");
+            
+            # pass in email identifier via req. body to delete User by unique email
+            #$group->delete("/users", UserController::class . ":deleteUserByEmail");
 
             /////////////////////////////////////////////////////
             //
@@ -341,6 +347,9 @@ class Routes
              * )
              */
             $group->put("/lists/{id}", ListsController::class . ":update");
+            
+            # pass list name as request body data
+            #$group->put("/lists", ListsController::class . ":updateByListName");
 
             /**
              * @OA\Delete(
@@ -360,13 +369,29 @@ class Routes
              * )
              */
             $group->delete("/lists/{id}", ListsController::class . ":delete");
+            
+            # pass list name as request body data..
+            #$group->delete("/lists", ListsController::class . ":deleteByListName");
 
             /////////////////////////////////////////////////////
             //
             //  SHARES
             //
             /////////////////////////////////////////////////////
-
+            
+            #$group->get("/shares", SharesController::class . ":index");
+            
+            #$group->get("/shares/{id}", SharesController::class . ":show");
+            
+            # get shares by user id
+            #$group->get("/users/{id}/shares", SharesController::class . ":getSharesByUserId");
+            
+            # create -- post some body data 
+            #$group->post("/shares", SharesController::class . ":create");
+            
+            #$group->put("/shares/{id}", SharesController::class . ":update");
+            
+            #$group->delete("/shares/{id}", SharesController::class . ":delete");
 
             /////////////////////////////////////////////////////
             //
