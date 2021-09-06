@@ -24,13 +24,11 @@ class UserController
         $users = $repo->findAll();
         
         if (empty($users)) {
-            return $response->withJson([ "message" => "We couldn't find any Users" ]);
+            return $response->withJson([ "message" => "We couldn't find any Users" ], 400);
         }
         
         $data = $repo->getAllUsers($users);        
-        return $response->withJson([
-            "users" => $data
-        ]);
+        return $response->withJson([ "users" => $data ], 200);
     }
     
     public function create(Request $request, Response $response)
@@ -43,12 +41,12 @@ class UserController
             $user = $repo->createNewUser($body);
             
             if (isset($user)) {
-                return $response->withJson([ "message" => "New user {$body->name} created." ]);
+                return $response->withJson([ "message" => "New user {$body->name} created." ], 201);
             } else {
-                return $response->withJson([ "message" => "Could not create a new User." ]);
+                return $response->withJson([ "message" => "Could not create a new User." ], 400);
             }
         } else {
-            return $response->withJson([ "message" => "Could not create a new User. Send at least a name in request body." ]);
+            return $response->withJson([ "message" => "Could not create a new User. Send at least a name in request body." ], 422);
         }
     }
     
@@ -60,13 +58,11 @@ class UserController
             $repo = $em->getRepository(User::class);
             $user = $repo->getUser($id);
             
-            return $response->withJson([ "user" => $user ]);
+            return $response->withJson([ "user" => $user ], 200);
         } else {
-            return $response->withJson([ "message" => "No User found with an id of {$id}" ]);
+            return $response->withJson([ "message" => "No User found with an id of {$id}" ], 404);
         }
-        return $response->withJson([
-            "message" => "Could not get the User"
-        ]);
+        return $response->withJson([ "message" => "Could not get the User" ], 400);
     }
     
     public function showLists(Request $request, Response $response, array $params)
@@ -80,23 +76,15 @@ class UserController
                 ->getRepository(\PHPapp\Entity\GenericList::class);
             
             if (empty($user)) {
-                return $response->withJson([
-                    "message" => "User does not exist"
-                ]);
+                return $response->withJson([ "message" => "User does not exist" ], 404);
             }
             $lists = $user->getLists();
             $listData = $listRepo->getListData($lists);
             if (empty($listData)) {
-                return $response->withJson([
-                    "message" => "User {$user->getName()} has no lists"
-                ]);
+                return $response->withJson([ "message" => "User {$user->getName()} has no lists" ], 400);
             }
         }
-        
-        return $response->withJson([
-            "lists" => $listData
-        ]);
-        
+        return $response->withJson([ "lists" => $listData ], 200);
     }
     
     public function delete(Request $request, Response $response, array $params)
@@ -106,12 +94,11 @@ class UserController
             $em = $this->entityManager;
             $user = $em->getRepository(User::class)
                     ->find($id);
-
+            
             $contact = $user->getContact();
             if (isset($contact)) {
                 $emailRef = $user->getContact()->getEmail();
             }
-            
             if (isset($user)) {
                 $contact = $user->getContact();
                 $user->addContact(null); # set any contact_id REFERENCE to null 
@@ -123,16 +110,12 @@ class UserController
 
                 return $response->withJson([
                     "message" => isset($emailRef) ? "Removed User {$user->getName()} at {$emailRef}" : "{$user->getName()} User removed"
-                ]);
+                ], 202);
             } else {
-                return $response->withJson([
-                    "message" => "No User with an id of {$id} exists"
-                ]);
+                return $response->withJson([ "message" => "No User with an id of {$id} exists" ], 404);
             }
         }
-        return $response->withJson([
-            "message" => "No User id parameter provided"
-        ]);
+        return $response->withJson([ "message" => "No User id parameter provided" ], 422);
     }
     
 }

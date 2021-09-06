@@ -100,6 +100,16 @@ class Routes
              *              )
              *          )
              *      ),
+             *      @OA\Response(
+             *          response="400",
+             *          description="No Users added yet",
+             *          @OA\JsonContent(
+             *              @OA\Property(
+             *                  property="message",
+             *                  example="We couldn't find any Users"
+             *              )
+             *          )
+             *      ),
              * )
              */ 
             $group->get("/users", UserController::class . ":index");
@@ -120,6 +130,26 @@ class Routes
              *          response="200",
              *          description="Return a single User object with associated Lists, Contact info, etc.",
              *          @OA\JsonContent(ref="#/components/schemas/User")
+             *      ),
+             *      @OA\Response(
+             *          response="400",
+             *          description="Could not get the User",
+             *          @OA\JsonContent(
+             *              @OA\Property(
+             *                  property="message",
+             *                  example="Could not get the User"
+             *              )
+             *          )
+             *      ),
+             *      @OA\Response(
+             *          response="404",
+             *          description="If no $id is supplied",
+             *          @OA\JsonContent(
+             *              @OA\Property(
+             *                  property="message",
+             *                  example="No User found with an id of {$id}"
+             *              )
+             *          )
              *      ),
              * )
              */ 
@@ -150,6 +180,26 @@ class Routes
              *                  @OA\Items(
              *                      ref="#/components/schemas/GenericList")
              *                  )
+             *              )
+             *          )
+             *      ),
+             *      @OA\Response(
+             *          response="404",
+             *          description="If the User does not exist",
+             *          @OA\JsonContent(
+             *              @OA\Property(
+             *                  property="message",
+             *                  description="User does not exist"
+             *              )
+             *          )
+             *      ),
+             *      @OA\Response(
+             *          response="400",
+             *          description="If the User has not created any Lists",
+             *          @OA\JsonContent(
+             *              @OA\Property(
+             *                  property="message",
+             *                  description="User {$user->getName()} has no lists"
              *              )
              *          )
              *      ),
@@ -214,7 +264,7 @@ class Routes
              *          description="Creates Contact info for a specified User",
              *          @OA\JsonContent(
              *              @OA\Property(
-             *                  property="Contact",
+             *                  property="message",
              *                  example="Created new Contact info and attached to {$user->getName()}"
              *              )
              *          )
@@ -233,7 +283,7 @@ class Routes
              *          description="Response for successful deletion of Contact info",
              *          @OA\JsonContent(
              *              @OA\Property(
-             *                  property="Contact",
+             *                  property="message",
              *                  example="Contact with id of {$contact->getId()} was deleted"
              *              )
              *          )
@@ -252,7 +302,7 @@ class Routes
              *          description="Returns a success message upon updating a Contact info entity",
              *          @OA\JsonContent(
              *              @OA\Property(
-             *                  property="Contact",
+             *                  property="message",
              *                  example="Changed Contact info and attached to {$user->getName()}"
              *              )
              *          )
@@ -361,7 +411,7 @@ class Routes
              *          description="Response for successful deletion of a List",
              *          @OA\JsonContent(
              *              @OA\Property(
-             *                  property="Contact",
+             *                  property="message",
              *                  example="Successfully deleted User {$list->getOwner()->getName()}'s List {$list->getName()}"
              *              )
              *          )
@@ -405,13 +455,61 @@ class Routes
             # Get a single Item by id
             //$app->get("/items/{id}", ItemController::class . ":show");
 
-            # Creates a new Item and assigns to designated List id
+            /**
+             * @OA\Post(
+             *      path="/lists/{id}/item",
+             *      tags={"Items"},
+             *      summary="Endpoint for creating a new Item and adding it to a List",
+             *      @OA\Response(
+             *          response="201",
+             *          description="Message for successful creation of new list Item",
+             *          @OA\JsonContent(
+             *              @OA\Property(
+             *                  property="message",
+             *                  example="Added a new Item to List {$list->getName()}"
+             *              )
+             *          )
+             *      ),
+             * )
+             */
             $group->post("/lists/{id}/item", ItemController::class . ":create")->add(VerifyJWTMiddleware::class);
 
-            # Updates and Item by id
+            /**
+             * @OA\Put(
+             *      path="/items/{id}",
+             *      tags={"Items"},
+             *      summary="Endpoint for updating an existing Item",
+             *      @OA\Response(
+             *          response="201",
+             *          description="Message for successful update of an Item",
+             *          @OA\JsonContent(
+             *              @OA\Property(
+             *                  property="message",
+             *                  example="Updated an Item for List {$list->getName()}"
+             *              )
+             *          )
+             *      ),
+             * )
+             */
             $group->put("/items/{id}", ItemController::class . ":update")->add(VerifyJWTMiddleware::class);
 
-            # Delete an Item by Item id
+            /**
+             * @OA\Delete(
+             *      path="/items/{id}",
+             *      tags={"Items"},
+             *      summary="Endpoint for deleting a single Item entity",
+             *      @OA\Response(
+             *          response="200",
+             *          description="Response for successful deletion of an Item",
+             *          @OA\JsonContent(
+             *              @OA\Property(
+             *                  property="message",
+             *                  example="Successfully deleted Item from List {$item->getParentlist()->getName()}"
+             *              )
+             *          )
+             *      ),
+             * )
+             */
             $group->delete("/items/{id}", ItemController::class . ":delete")->add(VerifyJWTMiddleware::class);
 
         })->add(VerifyJWTMiddleware::class);
