@@ -58,7 +58,7 @@ class APIUser {
         $this->tokens = new ArrayCollection();
     }
     
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -74,7 +74,7 @@ class APIUser {
         return $this;
     }
     
-    public function getNickname()
+    public function getNickname(): string
     {
         return $this->nickname;
     }
@@ -85,7 +85,7 @@ class APIUser {
         return $this;
     }
     
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -96,7 +96,7 @@ class APIUser {
         return $this;
     }
     
-    public function getPicture()
+    public function getPicture(): string
     {
         return $this->picture;
     }
@@ -107,7 +107,7 @@ class APIUser {
         return $this;
     }
     
-    public function getUpdatedAt()
+    public function getUpdatedAt(): string
     {
         return $this->updated_at;
     }
@@ -118,7 +118,7 @@ class APIUser {
         return $this;
     }
     
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -129,7 +129,7 @@ class APIUser {
         return $this;
     }
     
-    public function getEmailVerified()
+    public function getEmailVerified(): string
     {
         return $this->email_verified;
     }

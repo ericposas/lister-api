@@ -11,7 +11,6 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity(repositoryClass="\PHPapp\ExtendedRepositories\ContactRepository")
@@ -24,7 +23,7 @@ class Contact {
      * @GeneratedValue
      * @Column(type="integer", length=32, nullable=true)
      */
-    protected $id;
+    protected int $id;
     
     /**
      * @Column(type="string", length=32, nullable=true)
@@ -40,69 +39,41 @@ class Contact {
      * @OneToOne(targetEntity="User", cascade={"persist", "remove"})
      * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
      */
-    protected $user;
+    protected User $user;
 
-    /**
-     * Get the value of id
-     */ 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Get the value of phone
-     */ 
     public function getPhone()
     {
         return $this->phone;
     }
 
-    /**
-     * Set the value of phone
-     *
-     * @return  self
-     */ 
-    public function setPhone($phone)
+    public function setPhone(string $phone)
     {
         $this->phone = $phone;
         return $this;
     }
 
-    /**
-     * Get the value of email
-     */ 
     public function getEmail()
     {
         return $this->email;
     }
 
-    /**
-     * Set the value of email
-     *
-     * @return  self
-     */ 
-    public function setEmail($email)
+    public function setEmail(string $email)
     {
         $this->email = $email;
         return $this;
     }
 
-
-    /**
-     * Get the value of user
-     */ 
-    public function getUser()
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    /**
-     * Set the value of user
-     *
-     * @return  self
-     */ 
-    public function addUser($user)
+    public function addUser(User $user)
     {
         if (!empty($user)) {
             $user->addContact($this);

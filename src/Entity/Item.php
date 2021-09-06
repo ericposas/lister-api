@@ -15,7 +15,7 @@ class Item {
      * @ORM\Column(type="integer", length=32, unique=true, nullable=false)
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $id;
+    protected int $id;
     
     /**
      * @ORM\Column(type="string", length=255, unique=false, nullable=false)
@@ -51,145 +51,86 @@ class Item {
      * @ORM\ManyToOne(targetEntity="GenericList", fetch="LAZY")
      * @ORM\JoinColumn(name="parentlist_id", referencedColumnName="id", onDelete="cascade")
      */
-    protected $parentlist;
+    protected GenericList $parentlist;
 
-    /**
-     * Get the value of id
-     */ 
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Get the value of name
-     */ 
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * Set the value of name
-     *
-     * @return  self
-     */ 
     public function setName(string $name)
     {
         $this->name = $name;
         return $this;
     }
 
-    /**
-     * Get the value of icon
-     */ 
     public function getIcon()
     {
         return $this->icon;
     }
 
-    /**
-     * Set the value of icon
-     *
-     * @return  self
-     */ 
     public function setIcon(string $icon)
     {
         $this->icon = $icon;
         return $this;
     }
 
-    /**
-     * Get the value of image
-     */ 
     public function getImage()
     {
         return $this->image;
     }
 
-    /**
-     * Set the value of image
-     *
-     * @return  self
-     */ 
     public function setImage(string $image)
     {
         $this->image = $image;
         return $this;
     }
 
-    /**
-     * Get the value of link
-     */ 
     public function getLink()
     {
         return $this->link;
     }
 
-    /**
-     * Set the value of link
-     *
-     * @return  self
-     */ 
     public function setLink(string $link)
     {
         $this->link = $link;
         return $this;
     }
 
-    /**
-     * Get the value of meta
-     */ 
     public function getMeta()
     {
         return $this->meta;
     }
 
-    /**
-     * Set the value of meta
-     *
-     * @return  self
-     */ 
     public function setMeta(string $meta)
     {
         $this->meta = $meta;
         return $this;
     }
 
-    /**
-     * Get the value of parentlist
-     */ 
-    public function getParentlist()
+    public function getParentlist(): GenericList
     {
         return $this->parentlist;
     }
 
-    /**
-     * Set the value of parentlist
-     *
-     * @return  self
-     */ 
-    public function addParentlist($parentlist)
+    public function addParentlist(GenericList $parentlist)
     {
         $parentlist->setItem($this);
         $this->parentlist = $parentlist;
         return $this;
     }
 
-    /**
-     * Get the value of description
-     */ 
     public function getDescription()
     {
         return $this->description;
     }
 
-    /**
-     * Set the value of description
-     *
-     * @return  self
-     */ 
-    public function setDescription($description)
+    public function setDescription(string $description)
     {
         $this->description = $description;
         return $this;

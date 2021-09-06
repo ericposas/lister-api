@@ -17,24 +17,24 @@ class DeletedToken {
      * @ORM\Column(type="integer", length=32, unique=true, nullable=false)
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $id;
+    protected int $id;
     
     /**
      * @ORM\Column(type="text", length="65535")
      */
-    protected $jwt;
+    protected string $jwt;
     
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
     
-    public function getJWT()
+    public function getJWT(): string
     {
         return $this->jwt;
     }
     
-    public function setJWT($jwt)
+    public function setJWT(string $jwt)
     {
         $this->jwt = $jwt;
         return $this;

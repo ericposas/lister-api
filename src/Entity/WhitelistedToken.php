@@ -28,7 +28,7 @@ class WhitelistedToken {
      */
     protected $owner;
     
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -38,18 +38,18 @@ class WhitelistedToken {
         return $this->jwt;
     }
     
-    public function setJWT($jwt)
+    public function setJWT(string $jwt)
     {
         $this->jwt = $jwt;
         return $this;
     }
     
-    public function getOwner()
+    public function getOwner(): APIUser
     {
         return $this->owner;
     }
     
-    public function addOwner($owner)
+    public function addOwner(APIUser $owner)
     {
         $this->owner = $owner;
         $owner->setToken($this);
